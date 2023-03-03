@@ -14,7 +14,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forRoot("mongodb+srv://sangnv:smartfarming@cluster0.efz6xks.mongodb.net/?retryWrites=true&w=majority", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    })],
+    })
+  ],
   controllers: [AppController, SensorController],
   providers: [AppService],
 })
