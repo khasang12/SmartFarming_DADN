@@ -7,9 +7,16 @@ import { UserModule } from './user/user.module';
 import { HttpModule } from '@nestjs/axios/dist';
 import { GardenModule } from './garden/garden.module';
 import { AuthModule } from './auth/auth.module';
-
+import { MongooseModule } from '@nestjs/mongoose';
 @Module({
-  imports: [SensorModule, UserModule, HttpModule, GardenModule, AuthModule],
+  imports: [
+    SensorModule,
+    UserModule,
+    HttpModule,
+    GardenModule,
+    AuthModule,
+    MongooseModule.forRoot('mongodb://localhost/authentication'),
+  ],
   controllers: [AppController, SensorController],
   providers: [AppService],
 })
