@@ -1,11 +1,16 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, Injectable, Post } from '@nestjs/common';
+import { Controller, Get, Injectable, Post, UseGuards, Param, Body } from '@nestjs/common';
 import axios from 'axios';
-
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+class DeviceDTO {
+  feed_key:string
+}
 @Injectable()
 @Controller('sensor')
 export class SensorController {
   constructor(private readonly http: HttpService) {}
+ 
+  @UseGuards(JwtAuthGuard)
   @Get()
   public async getFeed() {
     const url =
@@ -13,10 +18,12 @@ export class SensorController {
     const res = await fetch(url);
     return res.json();
   }
-  @Post()
-  public onlyFans() {
+
+  @UseGuards(JwtAuthGuard)
+  @Post('device/fan/control')
+  public onlyFans(state: number) {
     const data = {
-      value: 0,
+      value: state,
     };
     const config = {
       headers: {
@@ -30,10 +37,12 @@ export class SensorController {
     );
   }
 
-  @Get('data')
-  public async getData() {
+  @UseGuards(JwtAuthGuard)
+  @Post('device/')
+  public async getDeviceData(@Body() body:DeviceDTO) {
     const url =
-      'https://io.adafruit.com/api/v2/Potato_Stack/feeds/iot-cnpm.sensor1/data';
+      `https://io.adafruit.com/api/v2/Potato_Stack/feeds/${body.feed_key}/data`;
+    console.log(url);
     const res = await fetch(url);
     return res.json();
   }
