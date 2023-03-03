@@ -6,14 +6,14 @@ import { User, UserDocument } from './user.model';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel('user') private readonly userModel: Model<UserDocument>,
-  ) {}
+   /*  @InjectModel('user') private readonly userModel: Model<UserDocument>, */
+   ) {}
 
-  async createUser(...props : any): Promise<User> {
-    return this.userModel.create({
-      // property
-    });
-  }
+  // async createUser(...props : any): Promise<User> {
+  //   return this.userModel.create({
+  //     // property
+  //   });
+  // }
   private readonly users = [
     {
       id: 1,

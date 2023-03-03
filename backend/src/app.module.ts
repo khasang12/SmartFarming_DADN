@@ -15,7 +15,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     HttpModule,
     GardenModule,
     AuthModule,
-    MongooseModule.forRoot('mongodb://localhost/authentication'),
+    // MongooseModule.forRoot(''),
   ],
   controllers: [AppController, SensorController],
   providers: [AppService],
