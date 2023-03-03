@@ -1,6 +1,13 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
 import { AuthModule } from 'src/auth/auth.module';
-
-@Module({ imports: [HttpModule, AuthModule] })
-export class SensorModule {}
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { SensorController } from './sensor.controller';
+import { SensorSchema } from './models/sensor.model';
+@Module({
+    imports: [HttpModule, AuthModule,
+        MongooseModule.forFeature([{ name: 'Sensor', schema: SensorSchema }]),
+    ],
+    controllers: [SensorController],
+})
+export class SensorModule { }
