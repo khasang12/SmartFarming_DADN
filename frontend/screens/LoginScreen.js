@@ -16,7 +16,11 @@ const LoginScreen = () => {
     <View className="flex-1 justify-center bg-[#9ff731]">
       <View className="px-5">
         <View className="items-center">
-          <Image source={Logo} style={{ width: 200, height: 200 }} className="mb-4"/>
+          <Image
+            source={Logo}
+            style={{ width: 200, height: 200 }}
+            className="mb-4"
+          />
         </View>
 
         <Text
@@ -41,7 +45,7 @@ const LoginScreen = () => {
               style={{ marginRight: 5 }}
             />
           }
-          keyboardType="name"
+          keyboardType="ascii-capable"
         />
 
         <InputField
@@ -57,7 +61,10 @@ const LoginScreen = () => {
           inputType="password"
         />
 
-        <CustomButton label={"Login"} onPress={() => {}} />
+        <CustomButton
+          label={"Login"}
+          onPress={() => navigation.navigate("Home")}
+        />
 
         <View className="flex-row justify-center, mb-5">
           <Text>No account yet?</Text>

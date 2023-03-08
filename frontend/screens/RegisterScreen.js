@@ -113,7 +113,10 @@ const RegisterScreen = () => {
           inputType="password"
         />
 
-        <CustomButton label={"Register"} onPress={() => {}} />
+        <CustomButton
+          label={"Register"}
+          onPress={() => navigation.navigate("Login")}
+        />
 
         <View className="flex-row justify-center, mb-5">
           <Text>Got an account?</Text>
