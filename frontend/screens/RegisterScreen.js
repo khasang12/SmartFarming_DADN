@@ -7,7 +7,7 @@ import GlobalStyles from "../config/GlobalStyles";
 import CustomButton from "../components/CustomButton";
 import InputField from "../components/InputField";
 import Logo from "../assets/ArgiVision.png";
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -16,7 +16,11 @@ const LoginScreen = () => {
     <View className="flex-1 justify-center bg-[#9ff731]">
       <View className="px-5">
         <View className="items-center">
-          <Image source={Logo} style={{ width: 200, height: 200 }} className="mb-4"/>
+          <Image
+            source={Logo}
+            style={{ width: 200, height: 200 }}
+            className="mb-4"
+          />
         </View>
 
         <Text
@@ -28,8 +32,47 @@ const LoginScreen = () => {
             marginBottom: 30,
           }}
         >
-          Login
+          Register
         </Text>
+
+        <InputField
+          label={"Full name"}
+          icon={
+            <MaterialIcons
+              name="drive-file-rename-outline"
+              size={20}
+              color="#666"
+              style={{ marginRight: 5 }}
+            />
+          }
+          keyboardType="default"
+        />
+
+        <InputField
+          label={"Email"}
+          icon={
+            <MaterialIcons
+              name="alternate-email"
+              size={20}
+              color="#666"
+              style={{ marginRight: 5 }}
+            />
+          }
+          keyboardType="email-address"
+        />
+
+        <InputField
+          label={"Phone"}
+          icon={
+            <MaterialIcons
+              name="local-phone"
+              size={20}
+              color="#666"
+              style={{ marginRight: 5 }}
+            />
+          }
+          keyboardType="phone-pad"
+        />
 
         <InputField
           label={"Username"}
@@ -41,7 +84,7 @@ const LoginScreen = () => {
               style={{ marginRight: 5 }}
             />
           }
-          keyboardType="name"
+          keyboardType="default"
         />
 
         <InputField
@@ -57,15 +100,25 @@ const LoginScreen = () => {
           inputType="password"
         />
 
-        <CustomButton label={"Login"} onPress={() => {}} />
+        <InputField
+          label={"Retype Password"}
+          icon={
+            <Ionicons
+              name="ios-lock-closed-outline"
+              size={20}
+              color="#666"
+              style={{ marginRight: 5 }}
+            />
+          }
+          inputType="password"
+        />
+
+        <CustomButton label={"Register"} onPress={() => {}} />
 
         <View className="flex-row justify-center, mb-5">
-          <Text>No account yet?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ color: "#4285F4", fontWeight: "700" }}>
-              {" "}
-              Register
-            </Text>
+          <Text>Got an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={{ color: "#4285F4", fontWeight: "700" }}> Login</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -73,4 +126,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
