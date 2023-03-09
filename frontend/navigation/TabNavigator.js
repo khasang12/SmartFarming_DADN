@@ -37,7 +37,7 @@ const HomeStack = () => {
 
 const GardenStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Garden">
       <Stack.Screen
         name="Garden"
         component={GardenScreen}

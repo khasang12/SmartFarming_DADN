@@ -17,9 +17,9 @@ const GardenNavigator = () => {
         tabBarStyle: { backgroundColor: "#9ff731", fontFamily: "HindLight" },
       }}
     >
-      <Tab.Screen name="Action Log" component={GardenActionPage} />
+      <Tab.Screen name="Action" component={GardenActionPage} />
       <Tab.Screen name="History" component={GardenHistoryPage} />
-      <Tab.Screen name="Information" component={GardenInfoPage} />
+      <Tab.Screen name="Info" component={GardenInfoPage} />
     </Tab.Navigator>
   );
 }
