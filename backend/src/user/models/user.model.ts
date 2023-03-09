@@ -1,22 +1,33 @@
-import { Schema, Document, ObjectId } from 'mongoose';
-const UserSchema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    phone: { type: String, required: true },
-    create_at: { type: Date, default: Date.now },
-    gardens: [{ type: Schema.Types.ObjectId, ref: 'Garden' }],
-},{
-    timestamps: true,
-    collection: 'users'
-})
-export {UserSchema};
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
-export interface User extends Document {
+
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Garden } from 'src/garden/models/garden.model';
+
+export type UserDocument = HydratedDocument<User>;
+
+@Schema()
+export class User {
+    @Prop({required: true})
     name: string;
+
+    @Prop({required: true, unique: true})
     email: string;
+
+    @Prop({required: true})
     password: string;
+
+    @Prop({required: true})
     phone: string;
+
+    @Prop({default: Date.now})
     create_at: Date;
-    gardens: ObjectId[];
+
+    @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Garden'}]})
+    gardens: Garden[];
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);
+
+
+
