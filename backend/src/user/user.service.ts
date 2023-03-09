@@ -5,22 +5,11 @@ import { User, UserDocument } from './models/user.model';
 // import { User, UserDocument } from './user.model';
 import { CreateUser } from './dto/create-user.dto';
 import { UpdateUser } from './dto/update-user.dto';
+import { Query } from '@nestjs/common/decorators';
+import { query } from 'express';
 @Injectable()
 export class UserService {
-  // private readonly users = [
-  //   {
-  //     id: 1,
-  //     name: 'david',
-  //     password: '123456',
-  //     email: 'davidhuynh0222@gmail.com',
-  //     phone: '0798222233',
-  //     create_at: '22-02-2023',
-  //     gardens: [],
-  //   },
-  // ];
-  // async findOne(username: string): Promise<any | undefined> {
-  //   return this.users.find((user) => user.name === username);
-  // }
+
   constructor(@InjectModel(User.name) private readonly model: Model<UserDocument>) {
 
   }
@@ -33,6 +22,10 @@ export class UserService {
     return await this.model.findById(id).exec();
   }
 
+  async findUserByName(username: string): Promise<User | undefined> {
+    return this.model.findOne({name: username}).exec();
+  }
+  
   async create(createUser: CreateUser): Promise<User> {
     return await new this.model({
       ...createUser,

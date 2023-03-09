@@ -5,6 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { SensorService } from './sensor.service';
 import { CreateSensor } from './dto/create-sensor.dto';
 import { UpdateSensor } from './dto/update-sensor.dto';
+import { MQTTSubcribers } from 'src/garden/mqtt.service';
 
 class DeviceDTO {
   feed_key:string
@@ -37,6 +38,13 @@ export class SensorController {
   @Delete(':id')
   async delete(@Param('id') id: string){
     return await this.sensorService.delete(id);
+  }
+
+  @Get('test/mqtt')
+  test() {
+    const mqtt = new MQTTSubcribers();
+    mqtt.launch();
+    
   }
 
 
