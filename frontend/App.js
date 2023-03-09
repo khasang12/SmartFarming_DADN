@@ -1,12 +1,9 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image } from "react-native";
+import "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen";
-import LoginScreen from "./screens/LoginScreen";
-import OnboardingScreen from "./screens/OnboardingScreen";
-import RegisterScreen from "./screens/RegisterScreen";
+import AuthStack from "./navigation/AuthStack";
+import AppStack from "./navigation/AppStack";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,12 +24,8 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-      </Stack.Navigator>
+      <AppStack />
+      {/* <AppStack /> */}
     </NavigationContainer>
   );
 }

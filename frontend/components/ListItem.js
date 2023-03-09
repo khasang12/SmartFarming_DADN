@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 
-export default function ListItem({ key, type, name, photo, onPress }) {
+export default function ListItem({ type, name, photo, onPress }) {
   const { width: windowWidth } = Dimensions.get("window");
   return (
     <View className="flex-row justify-between align-center mb-5">

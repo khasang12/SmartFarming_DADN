@@ -30,7 +30,7 @@ const HomeScreen = () => {
     setFarmTab(value);
   };
   return (
-    <View className="flex-1 justify-center bg-[#9ff731]">
+    <View className="pt-3 flex-1 justify-center bg-[#9ff731]">
       <ScrollView className="p-5">
         {/* Header */}
         <View className="flex-row justify-between mb-5">
