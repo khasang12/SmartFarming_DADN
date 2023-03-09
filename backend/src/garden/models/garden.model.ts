@@ -1,21 +1,26 @@
-import {Schema, Document} from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-const GardenSchema = new Schema({
-    name: {type: String, required: true},
-    desc: {type: String},
-    latitude: {type: Number, required: true},
-    longitude: {type: Number, required: true},
-    group_key: {type: String, required: true},
-    sensors: [{type: Schema.Types.ObjectId, ref: 'Sensor'}],
-});
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Sensor } from 'src/sensor/models/sensor.model';
 
-export {GardenSchema};
+export type GardenDocument = HydratedDocument<Garden>;
 
-export interface Garden extends Document {
+@Schema()
+export class Garden {
+    @Prop({ required: true })
     name: string;
+
+    @Prop()
     desc: string;
-    latitude: number;
-    longitude: number;
+
+    @Prop({ required: true })
+    boundary: [{ lat: number, lng: number }];
+
+    @Prop({ required: true })
     group_key: string;
-    sensors: string[];
+
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sensor' }] })
+    sensors: Sensor[];
 }
+
+export const GardenSchema = SchemaFactory.createForClass(Garden);
