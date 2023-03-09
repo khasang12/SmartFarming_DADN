@@ -11,14 +11,14 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 
-import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const CustomDrawer = (props) => {
   return (
     <View className="flex-1">
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ backgroundColor: "#9ff731", flex:1 }}
+        contentContainerStyle={{ backgroundColor: "#9ff731", flex: 1 }}
       >
         <ImageBackground
           source={require("../assets/menu-bg.jpeg")}
@@ -49,7 +49,7 @@ const CustomDrawer = (props) => {
       <View className="p-5 border-t-2 border-[#006500] bg-[#9ff731]">
         <TouchableOpacity onPress={() => {}} className="py-4">
           <View className="flex-row items-center">
-            <Ionicons name="exit-outline" size={22} />
+            <MaterialCommunityIcons name="location-exit" size={22} />
             <Text
               className="ml-2"
               style={{

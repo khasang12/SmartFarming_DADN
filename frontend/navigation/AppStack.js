@@ -2,14 +2,16 @@ import { View, Text } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import HomeScreen from "../screens/HomeScreen";
 import NotiScreen from "../screens/NotiScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import SettingScreen from "../screens/SettingScreen";
+import SettingScreen from "../screens/GardenScreen";
 
-import Ionicons from "react-native-vector-icons/Ionicons";
 import CustomDrawer from "../components/CustomDrawer";
+import TabNavigator from "./TabNavigator";
+import GardenScreen from "../screens/GardenScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,10 +34,19 @@ const AppStack = () => {
     >
       <Drawer.Screen
         name="Home"
-        component={HomeScreen}
+        component={TabNavigator}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="home-outline" size={22} color={color} />
+            <MaterialCommunityIcons name="home" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Gardens"
+        component={GardenScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="fence" size={22} color={color} />
           ),
         }}
       />
@@ -44,11 +55,7 @@ const AppStack = () => {
         component={NotiScreen}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons
-              name="ios-notifications-outline"
-              size={22}
-              color={color}
-            />
+            <MaterialCommunityIcons name="bell" size={22} color={color} />
           ),
         }}
       />
@@ -57,16 +64,7 @@ const AppStack = () => {
         component={ProfileScreen}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="ios-person-outline" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Settings"
-        component={SettingScreen}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Ionicons name="settings-outline" size={22} color={color} />
+            <MaterialCommunityIcons name="account" size={22} color={color} />
           ),
         }}
       />
