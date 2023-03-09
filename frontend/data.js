@@ -107,3 +107,133 @@ export const farmers = [
     ],
   },
 ];
+
+export const gardens = [
+  {
+    _id: {
+      $oid: "640232e530c0bba85e608a8b",
+    },
+    name: "Garden 1",
+    desc: "Desc Garden 1",
+    lat: "128.0",
+    lon: "129.0",
+    group_key: "groupkey1",
+    humid: "80",
+    temp: "33.6",
+    light: "75000",
+    devices: [
+      {
+        $oid: "640231f830c0bba85e608a88",
+      },
+      {
+        $oid: "6402327730c0bba85e608a89",
+      },
+      {
+        $oid: "6402329c30c0bba85e608a8a",
+      },
+    ],
+  },
+  {
+    _id: {
+      $oid: "640332e530c0bba85e608a8b",
+    },
+    name: "Garden 2",
+    desc: "Desc Garden 2",
+    lat: "158.0",
+    lon: "159.0",
+    group_key: "groupkey2",
+    humid: "80",
+    temp: "33.6",
+    light: "75000",
+    devices: [
+      {
+        $oid: "640231f830c0bba85e608a88",
+      },
+      {
+        $oid: "6402327730c0bba85e608a89",
+      },
+      {
+        $oid: "6402329c30c0bba85e608a8a",
+      },
+    ],
+  },
+  {
+    _id: {
+      $oid: "640232f530c0bba85e608a8b",
+    },
+    name: "Garden 3",
+    desc: "Desc Garden 3",
+    lat: "121.2",
+    lon: "123.6",
+    group_key: "groupkey3",
+    humid: "80",
+    temp: "33.6",
+    light: "75000",
+    devices: [
+      {
+        $oid: "640231f830c0bba85e608a88",
+      },
+      {
+        $oid: "6402327730c0bba85e608a89",
+      },
+      {
+        $oid: "6402329c30c0bba85e608a8a",
+      },
+    ],
+  },
+];
+
+export const gardenHistory = [
+  {
+    name: "Garden 1",
+    group_key: "groupkey1",
+    humid: "80",
+    temp: "33.6",
+    light: "75000",
+    timestamp: "08/12/2022 15:00:00",
+    color: "red"
+  },
+  {
+    name: "Garden 1",
+    group_key: "groupkey1",
+    humid: "80",
+    temp: "33.6",
+    light: "75000",
+    timestamp: "08/12/2022 18:00:00",
+    color:"orange"
+  },
+  {
+    name: "Garden 1",
+    group_key: "groupkey1",
+    humid: "80",
+    temp: "33.6",
+    light: "75000",
+    timestamp: "08/12/2022 21:00:00",
+    color: "green"
+  },
+];
+
+
+export const actionHistory = [
+  {
+    name: "Garden 1",
+    feed_key: "feedkey1",
+    desc: "Pump",
+    user: "Sang Kha",
+    timestamp: "12:46:23 08/12/2022",
+  },
+  {
+    name: "Garden 1",
+    feed_key: "feedkey2",
+    desc: "Curtain",
+    user: "IoT-Bot",
+    timestamp: "16:46:53 09/12/2022",
+  },
+  {
+    name: "Garden 1",
+    feed_key: "feedkey3",
+    desc: "Fan",
+    user: "Teddy Bear",
+    timestamp: "14:20:16 10/12/2022",
+  },
+];
