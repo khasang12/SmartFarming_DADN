@@ -2,6 +2,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import DeviceScreen from "../screens/DeviceScreen";
 import GardenDetailScreen from "../screens/GardenDetailScreen";
 import GardenScreen from "../screens/GardenScreen";
 import HomeScreen from "../screens/HomeScreen";
@@ -48,6 +49,16 @@ const GardenStack = () => {
         component={GardenDetailScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="GardenProfile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Device"
+        component={DeviceScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
@@ -92,6 +103,7 @@ const TabNavigator = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="bell" color={color} size={26} />
           ),
+          tabBarBadge: 3,
         }}
       />
       <Tab.Screen
