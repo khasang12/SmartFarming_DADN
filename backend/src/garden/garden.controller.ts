@@ -73,9 +73,9 @@ export class GardenController {
         - gardenName:
         - description:
         - group_key
-        -  userID --> To call DB to get UserInfo
+        -  ownerID --> To call DB to get UserInfo
         -  userList = [] --> List of workers participate in garden
-        -  topic_list --> sensors[] = {
+        -  topic_list --> {
           "sensor" : [
             'Potato_Stack/feeds/iot-cnpm.button1',
             'Potato_Stack/feeds/iot-cnpm.button2',

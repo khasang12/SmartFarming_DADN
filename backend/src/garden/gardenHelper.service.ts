@@ -6,7 +6,6 @@ interface Subject {
   unsubcribe(observer: Observer): void;
   notify(news: string): void;
 }
-
 /* 
 A Garden Contain:
 - List of users --> Done
@@ -15,6 +14,7 @@ A Garden Contain:
 - An SSE to for notification
 */
 export class ConcreteGarden implements Subject {
+
   constructor(
     public gardenName: string,
     public gardenDesc: string,
@@ -23,30 +23,43 @@ export class ConcreteGarden implements Subject {
     private observers: Observer[],
     private mqttManager: MqttManager,
   ) {};
-
   subcribe(observer: Observer): void {
     this.observers.push(observer);
   }
   unsubcribe(observer: Observer): void {
     this.observers = this.observers.filter((ele) => ele.id !== observer.id);
   }
-  notify(news: string): void {
-    this.observers.forEach((observer) => observer.update(news));
-  }
+
+  // Wrap this function as callback and pass to Subcribers --> becasue this context
+  notify = ((payload) => {
+    if(this.observers)
+      this.observers.forEach((observer) => observer.update(payload));
+  }).bind(this);
+
+
   /* devices : [MQTTSubcriber] */
   addDevice(topic: string[], type:string) {
     return;
   } 
   launch() {
+    this.subcribe(new Observer(this.Owner))
+    this.mqttManager.setNotify(this.notify);
     this.mqttManager.launch();
   }
+
 }
 
 export class Observer extends User {
-  constructor(public id: string, public name: string) {
-    super();
+  public static count = 0;
+  public id;
+  constructor(user:User) {
+    super()
+    super.name = user.name;
+    super.password = user.password;
+    //.......
+    this.id = Observer.count++;
   }
-  update(news: string): void {
-    console.log('New Feeds');
+  update(payload: any): void {
+    console.log(`${this.name} Receive Message: ${payload.toString()}`);
   }
 }

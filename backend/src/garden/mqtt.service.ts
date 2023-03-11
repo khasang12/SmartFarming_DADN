@@ -6,12 +6,12 @@ import { connect } from 'mqtt';
 @Injectable()
 export class MQTTSubscriber {
   public mqttClient;
+  public static cb; // Call back notify function
   constructor(
     protected topic: string[],
     protected username: string,
     protected password: string,
-  ) {}
-  launch() {
+  ) {
     const host = 'io.adafruit.com';
     const port = '1883';
     const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
@@ -26,16 +26,13 @@ export class MQTTSubscriber {
       password: this.password,
       reconnectPeriod: 5000,
     });
-
+  }
+  launch() {
     this.mqttClient.on('connect', () => {
       console.log('Connected');
       this.mqttClient.subscribe(this.topic, () => {
         console.log(`Subscribe to topic '${this.topic}'`);
       });
-    });
-
-    this.mqttClient.on('message', (topic, payload) => {
-      console.log('Received Message:', topic, payload.toString());
     });
   }
   unsubscribe(): void {
@@ -61,9 +58,35 @@ export class MQTTSubscriber {
 }
 
 @Injectable()
-export class SensorSubcriber extends MQTTSubscriber {}
+export class SensorSubcriber extends MQTTSubscriber {
+  launch() {
+    this.mqttClient.on('connect', () => {
+      console.log('Connected');
+      this.mqttClient.subscribe(this.topic, () => {
+        console.log(`Subscribe to topic '${this.topic}'`);
+      });
+    });
+    this.mqttClient.on('message', (topic, payload) => {
+      MQTTSubscriber.cb(topic,payload);
+      console.log('Received Message On Fan:');
+    });
+  }
+}
 @Injectable()
 export class PumpSubcriber extends MQTTSubscriber {
+  launch() {
+    this.mqttClient.on('connect', () => {
+      console.log('Connected');
+      this.mqttClient.subscribe(this.topic, () => {
+        console.log(`Subscribe to topic '${this.topic}'`);
+      });
+    });
+    this.mqttClient.on('message', (topic, payload) => {
+      MQTTSubscriber.cb(topic,payload);
+      console.log('Received Message On Pump:');
+    });
+  }
+
   publish(payload: string): string {
     console.log(`Publishing to ${this.topic}`);
     this.mqttClient.publish(this.topic + '/json', payload);
@@ -73,6 +96,18 @@ export class PumpSubcriber extends MQTTSubscriber {
 
 @Injectable()
 export class FanSubcriber extends MQTTSubscriber {
+  launch() {
+    this.mqttClient.on('connect', () => {
+      console.log('Connected');
+      this.mqttClient.subscribe(this.topic, () => {
+        console.log(`Subscribe to topic '${this.topic}'`);
+      });
+    });
+    this.mqttClient.on('message', (topic, payload) => {
+      MQTTSubscriber.cb(topic,payload);
+      console.log('Received Message On Fan:');
+    });
+  }
   publish(payload: string): string {
     console.log(`Publishing to ${this.topic}`);
     this.mqttClient.publish(this.topic + '/json', payload);
@@ -81,6 +116,18 @@ export class FanSubcriber extends MQTTSubscriber {
 }
 @Injectable()
 export class MotorSubcriber extends MQTTSubscriber {
+  launch() {
+    this.mqttClient.on('connect', () => {
+      console.log('Connected');
+      this.mqttClient.subscribe(this.topic, () => {
+        console.log(`Subscribe to topic '${this.topic}'`);
+      });
+    });
+    this.mqttClient.on('message', (topic, payload) => {
+      MQTTSubscriber.cb(topic,payload);
+      console.log('Received Message On Motor:');
+    });
+  }
   publish(payload: string): string {
     console.log(`Publishing to ${this.topic}`);
     this.mqttClient.publish(this.topic + '/json', payload);
@@ -88,6 +135,8 @@ export class MotorSubcriber extends MQTTSubscriber {
   }
 }
 
+
+// Factory Pattern
 class SubcriberFactory {
   createSubcriber(
     type: string,
@@ -111,6 +160,7 @@ class SubcriberFactory {
 @Injectable()
 export class MqttManager {
   private Subcribers;
+  private notifyFunction;
   constructor(private username: string, private password: string) {
     this.Subcribers = {};
   }
@@ -176,5 +226,9 @@ export class MqttManager {
       return true;
     }
     return false;
+  }
+
+  setNotify(cb:any) {
+    MQTTSubscriber.cb =cb; 
   }
 }
