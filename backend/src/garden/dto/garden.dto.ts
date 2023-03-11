@@ -4,4 +4,5 @@ export class Garden {
     boundary: [{ lat: number, lng: number }];
     group_key: string;
     sensors: string[];
+    
 }
