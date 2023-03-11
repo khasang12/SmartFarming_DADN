@@ -19,8 +19,9 @@ export const devices = [
       $oid: "640231f830c0bba85e608a88",
     },
     feed_key: "feedkeytest1",
-    type: "type1",
+    type: "curtain",
     status: true,
+    auto: true,
     value: {
       $numberDecimal: "12.8",
     },
@@ -36,8 +37,9 @@ export const devices = [
       $oid: "6402327730c0bba85e608a89",
     },
     feed_key: "feedkeytest2",
-    type: "type2",
+    type: "pump",
     status: false,
+    auto: true,
     value: {
       $numberDecimal: "198",
     },
@@ -53,8 +55,9 @@ export const devices = [
       $oid: "6402329c30c0bba85e608a8a",
     },
     feed_key: "feedkeytest3",
-    type: "type3",
+    type: "fan",
     status: true,
+    auto: false,
     value: {
       $numberDecimal: "128",
     },

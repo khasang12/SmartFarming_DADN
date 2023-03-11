@@ -6,6 +6,7 @@ export default function CustomSwitch({
   selectionMode,
   option1,
   option2,
+  option3,
   onSelectSwitch,
 }) {
   const [getSelectionMode, setSelectionMode] = useState(selectionMode);
@@ -51,6 +52,24 @@ export default function CustomSwitch({
           }}
         >
           {option2}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => updateSwitchData(3)}
+        className="flex-1 rounded-md justify-center items-center"
+        style={{
+          backgroundColor: getSelectionMode == 3 ? "#2cd368" : "white",
+        }}
+      >
+        <Text
+          style={{
+            color: getSelectionMode == 3 ? "white" : "#2cd368",
+            fontSize: 18,
+            fontFamily: "HindRegular",
+          }}
+        >
+          {option3}
         </Text>
       </TouchableOpacity>
     </View>

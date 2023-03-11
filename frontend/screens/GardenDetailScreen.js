@@ -9,7 +9,7 @@ const GardenDetailScreen = () => {
       {/* Header */}
       <View className="flex-row justify-between">
         <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>
-          Your gardens
+          Garden 1
         </Text>
         <TouchableOpacity
           onPress={() => {}}

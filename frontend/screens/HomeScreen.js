@@ -14,7 +14,8 @@ import Carousel from "react-native-snap-carousel";
 import BannerSlider from "../components/BannerSlider";
 import { Dimensions, StyleSheet } from "react-native";
 import CustomSwitch from "../components/CustomSwitch";
-import ListItem from "../components/ListItem";
+import FarmerListItem from "../components/FarmerListItem";
+import DeviceListItem from "../components/FarmerListItem";
 
 const HomeScreen = () => {
   const [farmTab, setFarmTab] = useState(1);
@@ -31,7 +32,7 @@ const HomeScreen = () => {
   };
   return (
     <View className="pt-3 flex-1 justify-center bg-[#9ff731]">
-      <ScrollView className="p-5">
+      <ScrollView className="p-5 mb-2">
         {/* Header */}
         <View className="flex-row justify-between mb-5">
           <Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
@@ -75,30 +76,48 @@ const HomeScreen = () => {
         <View style={{ marginVertical: 20 }}>
           <CustomSwitch
             selectionMode={1}
-            option1="Devices"
-            option2="Farmers"
+            option1="Outputs"
+            option2="Sensors"
+            option3="Farmers"
             onSelectSwitch={onSelectSwitch}
           />
         </View>
 
         {farmTab == 1 &&
-          devices.map((item,index) => (
-            <ListItem
+          devices.map((item, index) => (
+            <DeviceListItem
               key={index}
-              type="device"
+              otype="device"
               name={item.feed_key}
+              item={item}
+              disable={true}
               photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
               onPress={() => navigation.navigate("Device", item)}
             />
           ))}
         {farmTab == 2 &&
-          farmers.map((item,index) => (
-            <ListItem
+          devices.map((item, index) => (
+            <DeviceListItem
               key={index}
-              type="farmer"
+              otype="sensor"
+              name={item.feed_key}
+              item={item}
+              disable={true}
+              photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
+              onPress={() => navigation.navigate("Device", item)}
+            />
+          ))}
+        {farmTab == 3 &&
+          farmers.map((item, index) => (
+            <FarmerListItem
+              key={index}
+              otype="farmer"
               name={item.name}
+              email={item.email}
+              phone={item.phone}
+              disable={true}
               photo="https://icon2.cleanpng.com/20180420/gee/kisspng-computer-icons-farmer-icon-design-clip-art-farmer-5ada50596fc531.0730372315242568574578.jpg"
-              onPress={() => navigation.navigate("Farmer", item)}
+              onPress={() => {}}
             />
           ))}
       </ScrollView>

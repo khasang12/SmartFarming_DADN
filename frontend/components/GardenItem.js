@@ -4,7 +4,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from '@react-navigation/native';
 
 
-const GardenItem = ({key,name,desc,lat,lon,humid,light,temp}) => {
+const GardenItem = ({name,desc,lat,lon,humid,light,temp}) => {
   const navigation = useNavigation();
   
   return (
