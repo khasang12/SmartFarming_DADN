@@ -16,6 +16,9 @@ A Garden Contain:
 */
 export class ConcreteGarden implements Subject {
   constructor(
+    public gardenName: string,
+    public gardenDesc: string,
+    public gardenId : number,
     private Owner: User,
     private observers: Observer[],
     private mqttManager: MqttManager,
@@ -25,7 +28,7 @@ export class ConcreteGarden implements Subject {
     this.observers.push(observer);
   }
   unsubcribe(observer: Observer): void {
-    this.observers = this.observers.filter((ele) => ele.id === observer.id);
+    this.observers = this.observers.filter((ele) => ele.id !== observer.id);
   }
   notify(news: string): void {
     this.observers.forEach((observer) => observer.update(news));

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { HttpService } from '@nestjs/axios';
 import {
   Controller,
@@ -16,6 +17,9 @@ import { CreateSensor } from './dto/create-sensor.dto';
 import { UpdateSensor } from './dto/update-sensor.dto';
 import { MqttManager } from 'src/garden/mqtt.service';
 import { GardenBuilder } from 'src/garden/gardenbuilder.service';
+import { User } from 'src/user/models/user.model';
+import { ConcreteGarden } from 'src/garden/gardenHelper.service';
+import { GardenManagerService } from 'src/garden/gardenManager.service';
 
 class DeviceDTO {
   feed_key: string;
@@ -48,15 +52,6 @@ export class SensorController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return await this.sensorService.delete(id);
-  }
-
-  @Get('test/mqtt')
-  test() {
-    const username = 'davidhuynh22';
-    const password = 'aio_bycn1154ctLCUtXTwnacwJafCeWm';
-    const topic = ['Potato_Stack/feeds/iot-cnpm.button1', 'Potato_Stack/feeds/iot-cnpm.button2'];
-    const mqttManager = new MqttManager(username, password).addFanSubcriber(topic);
-    mqttManager.launch();
   }
 
   // @UseGuards(JwtAuthGuard)
