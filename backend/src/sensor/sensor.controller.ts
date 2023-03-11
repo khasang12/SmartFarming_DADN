@@ -1,53 +1,63 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Body, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import axios from 'axios';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { SensorService } from './sensor.service';
 import { CreateSensor } from './dto/create-sensor.dto';
 import { UpdateSensor } from './dto/update-sensor.dto';
-import { MQTTSubcribers } from 'src/garden/mqtt.service';
+import { MqttManager } from 'src/garden/mqtt.service';
+import { GardenBuilder } from 'src/garden/gardenbuilder.service';
 
 class DeviceDTO {
-  feed_key:string
+  feed_key: string;
 }
 //@Injectable()
 @Controller('sensor')
 export class SensorController {
   constructor(private readonly sensorService: SensorService) {}
- 
+
   @Get()
-  async index(){
+  async index() {
     return await this.sensorService.findAll();
   }
 
   @Get(':id')
-  async show(@Param('id') id: string){
+  async show(@Param('id') id: string) {
     return await this.sensorService.findOne(id);
   }
 
   @Post()
-  async create(@Body() createSensor: CreateSensor){
+  async create(@Body() createSensor: CreateSensor) {
     return await this.sensorService.create(createSensor);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateSensor: UpdateSensor){
+  async update(@Param('id') id: string, @Body() updateSensor: UpdateSensor) {
     return await this.sensorService.update(id, updateSensor);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string){
+  async delete(@Param('id') id: string) {
     return await this.sensorService.delete(id);
   }
 
   @Get('test/mqtt')
   test() {
-    const mqtt = new MQTTSubcribers();
-    mqtt.launch();
-    
+    const username = 'davidhuynh22';
+    const password = 'aio_bycn1154ctLCUtXTwnacwJafCeWm';
+    const topic = ['Potato_Stack/feeds/iot-cnpm.button1', 'Potato_Stack/feeds/iot-cnpm.button2'];
+    const mqttManager = new MqttManager(username, password).addFanSubcriber(topic);
+    mqttManager.launch();
   }
-
-
 
   // @UseGuards(JwtAuthGuard)
   // @Get()
@@ -85,7 +95,4 @@ export class SensorController {
   //   const res = await fetch(url);
   //   return res.json();
   // }
-
-
-
 }
