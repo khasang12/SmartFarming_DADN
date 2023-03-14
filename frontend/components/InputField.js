@@ -8,6 +8,8 @@ export default function InputField({
   keyboardType,
   fieldButtonLabel,
   fieldButtonFunction,
+  value,
+  onChangeText
 }) {
   return (
     <View className="flex-row border-b-[#ccc] border-b-2 pb-2 mb-6">
@@ -18,12 +20,16 @@ export default function InputField({
           keyboardType={keyboardType}
           className="flex-1 py-0"
           secureTextEntry={true}
+          value={value}
+          onChangeText={onChangeText}
         />
       ) : (
         <TextInput
           placeholder={label}
           keyboardType={keyboardType}
           className="flex-1 py-0"
+          value={value}
+          onChangeText={onChangeText}
         />
       )}
       <TouchableOpacity onPress={fieldButtonFunction}>

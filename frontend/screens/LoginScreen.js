@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useLayoutEffect, useContext } from "react";
+import React, { useLayoutEffect, useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -13,6 +13,8 @@ import { AuthContext } from "../context/AuthContext";
 const LoginScreen = () => {
   const navigation = useNavigation();
   const { login } = useContext(AuthContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -51,6 +53,8 @@ const LoginScreen = () => {
             />
           }
           keyboardType="ascii-capable"
+          value={username}
+          onChangeText={(t) => setUsername(t)}
         />
 
         <InputField
@@ -64,12 +68,14 @@ const LoginScreen = () => {
             />
           }
           inputType="password"
+          value={password}
+          onChangeText={(t) => setPassword(t)}
         />
 
         <CustomButton
           label={"Login"}
           onPress={() => {
-            login();
+            login(username, password);
           }}
         />
 
