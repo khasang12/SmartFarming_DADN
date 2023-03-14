@@ -14,9 +14,9 @@ function getMUICode(name) {
     return "curtains";
   }
 }
-const ActionHistory = ({ key, name, feed, desc, user, timestamp }) => {
+const ActionHistory = ({ name, feed, desc, user, timestamp }) => {
   return (
-    <View className="bg-[#2cd368] p-3 mb-5 rounded-md flex-row text-yellow-200 justify-between items-center">
+    <View className="bg-[#a7e9af] p-3 mb-5 rounded-md flex-row text-yellow-200 justify-between items-center">
       <View className="flex-row items-center justify-start">
         <MaterialCommunityIcons name={getMUICode(desc)} size={30}/>
         <View className="flex-col ml-3">

@@ -51,10 +51,10 @@ export default function FarmerListItem({
             onPress={() => {
               setShowInfo(!showInfo);
             }}
-            className="bg-[#00D8FF] p-3 w-25 rounded-md"
+            className="bg-[#6a8caf] p-3 w-25 rounded-md"
           >
             <Text
-              className="text-black align-center"
+              className="text-white align-center"
               style={{
                 fontFamily: "HindRegular",
                 fontSize: 14,

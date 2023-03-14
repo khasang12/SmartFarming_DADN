@@ -16,14 +16,14 @@ const OnboardingScreen = () => {
       onDone={() => navigation.navigate("Login")}
       pages={[
         {
-          backgroundColor: "#9ff731",
+          backgroundColor: "#eef9bf",
           fontFamily: "Montserrat",
           image: <Image source={require("../assets/ArgiVision_medium.png")} />,
           title: "Welcome to ArgiVision",
           subtitle: "An app that would ease your farmer life",
         },
         {
-          backgroundColor: "#9ff731",
+          backgroundColor: "#eef9bf",
           fontFamily: "Montserrat",
           image: <Image source={require("../assets/OB1.png")} />,
           title: "Information",
@@ -31,7 +31,7 @@ const OnboardingScreen = () => {
             "Visualize status from your fields and sensors in real-time environment",
         },
         {
-          backgroundColor: "#9ff731",
+          backgroundColor: "#eef9bf",
           fontFamily: "Montserrat",
           image: <Image source={require("../assets/OB2.png")} />,
           title: "Operation",
@@ -39,7 +39,7 @@ const OnboardingScreen = () => {
             "Create an scheduled plan for your devices to work automatically",
         },
         {
-          backgroundColor: "#9ff731",
+          backgroundColor: "#eef9bf",
           fontFamily: "Montserrat",
           image: <Image source={require("../assets/OB3.png")} />,
           title: "Cooperation",

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -13,8 +13,8 @@ const RegisterScreen = () => {
     navigation.setOptions({ headerShown: false });
   }, []);
   return (
-    <View className="flex-1 justify-center bg-[#9ff731]">
-      <View className="px-5">
+    <View className="flex-1 justify-center bg-[#eef9bf] pt-3">
+      <ScrollView className="px-5">
         <View className="items-center">
           <Image
             source={Logo}
@@ -124,7 +124,7 @@ const RegisterScreen = () => {
             <Text style={{ color: "#4285F4", fontWeight: "700" }}> Login</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

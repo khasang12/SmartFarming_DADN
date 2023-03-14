@@ -3,7 +3,7 @@ import React from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 
-const GardenHistory = ({ key, name, color, timestamp, humid, light, temp }) => {
+const GardenHistory = ({ name, color, timestamp, humid, light, temp }) => {
 
   return (
     <View

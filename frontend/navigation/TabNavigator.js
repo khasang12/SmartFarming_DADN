@@ -66,13 +66,13 @@ const GardenStack = () => {
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      activeColor="#00d8ff"
-      inactiveColor="#fff"
-      tabBarColor="#aaa"
-      barStyle={{ backgroundColor: "#006500" }}
+      activeColor="#6a8caf"
+      inactiveColor="#75b79e"
+      tabBarColor="#a7e9af"
+      barStyle={{ backgroundColor: "#a7e9af" }}
       screenOptions={{
         tabBarStyle: { position: "absolute" },
-        tabBarIconStyle: { backgroundColor: "#006500" },
+        tabBarIconStyle: { backgroundColor: "#6a8caf" },
       }}
     >
       <Tab.Screen

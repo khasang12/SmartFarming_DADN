@@ -10,9 +10,9 @@ const GardenInfoPage = () => {
   const navigation = useNavigation();
   // Define otype: Output/ Device/ Farmer
   return (
-    <ScrollView className="pt-3 flex-1 bg-[#9ff731]" nestedScrollEnabled={true}>
+    <ScrollView className="pt-3 flex-1 bg-[#eef9bf]" nestedScrollEnabled={true}>
       <View>
-        <View className="flex-col p-3 rounded-md bg-[#2cd368] mb-5 mx-1 flex-1">
+        <View className="flex-col p-3 rounded-md bg-[#a7e9af] mb-5 mx-1 flex-1">
           <Text className="text-lg mb-2 font-bold border-b-2">Members</Text>
 
           {farmers.map((item, index) => (
@@ -28,7 +28,7 @@ const GardenInfoPage = () => {
           ))}
         </View>
 
-        <View className="flex-col p-3 rounded-md bg-[#2cd368] mb-5 mx-1">
+        <View className="flex-col p-3 rounded-md bg-[#a7e9af] mb-5 mx-1">
           <Text className="text-lg mb-2 font-bold border-b-2">Sensors</Text>
           {devices.map((item, index) => (
             <DeviceListItem
@@ -43,7 +43,7 @@ const GardenInfoPage = () => {
           ))}
         </View>
 
-        <View className="flex-col p-3 rounded-md bg-[#2cd368] mb-5 mx-1">
+        <View className="flex-col p-3 rounded-md bg-[#a7e9af] mb-5 mx-1">
           <Text className="text-lg mb-2 font-bold border-b-2">
             Output Devices
           </Text>

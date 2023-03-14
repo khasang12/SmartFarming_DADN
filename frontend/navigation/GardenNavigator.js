@@ -14,7 +14,7 @@ const GardenNavigator = () => {
       screenOptions={{
         tabBarActiveTintColor: "#1677ff",
         tabBarLabelStyle: { fontSize: 14 },
-        tabBarStyle: { backgroundColor: "#9ff731", fontFamily: "HindLight" },
+        tabBarStyle: { backgroundColor: "#eef9bf", fontFamily: "HindLight" },
       }}
     >
       <Tab.Screen name="Action" component={GardenActionPage} />

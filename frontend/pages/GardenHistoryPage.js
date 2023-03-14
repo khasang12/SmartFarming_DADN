@@ -5,7 +5,7 @@ import GardenHistory from '../components/GardenHistory';
 
 const GardenHistoryPage = () => {
   return (
-    <View className="pt-3 flex-1 bg-[#9ff731]">
+    <View className="pt-3 flex-1 bg-[#eef9bf]">
       {/* List of Gardens */}
       {gardenHistory.map((item, index) => (
         <GardenHistory

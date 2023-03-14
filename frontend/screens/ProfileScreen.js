@@ -11,7 +11,7 @@ import React from "react";
 
 const ProfileScreen = ({ route, navigation }) => {
   return (
-    <View className="pt-5 flex-col flex-1 bg-[#9ff731] items-center">
+    <View className="pt-5 flex-col flex-1 bg-[#eef9bf] items-center">
       <View className="flex-1 mt-5 justify-center items-center flex-col w-full">
         <View className="pt-6">
           <ImageBackground
@@ -26,9 +26,7 @@ const ProfileScreen = ({ route, navigation }) => {
       </View>
 
       {/* Settings */}
-      <View>
-
-      </View>
+      <View></View>
     </View>
   );
 };

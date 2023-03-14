@@ -17,7 +17,7 @@ const OutputComponent = ({ props }) => {
 const DeviceScreen = ({ route, navigation }) => {
   const {otype} = route.params;
   return (
-    <View className="pt-10 flex-1 justify-start bg-[#9ff731] px-3">
+    <View className="pt-10 flex-1 justify-start bg-[#eef9bf] px-3">
       {otype === "output" && <OutputComponent props={route.params} />}
     </View>
   );
