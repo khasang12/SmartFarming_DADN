@@ -48,39 +48,23 @@ export class GardenController {
     return await this.gardenService.delete(id);
   }
 
-  @Post('test/createGarden')
+  @Post('create')
   async create(@Body() payload: CreateGardenDTO) {
-    /* Call API must include 
-        - gardenName:
-        - description:
-        - group_key:
-        -  ownerID --> To call DB to get UserInfo
-        -  userList = [] --> List of workers participate in garden
-        -  topic_list --> {
-          "sensor" : [
-            'Potato_Stack/feeds/iot-cnpm.button1',
-            'Potato_Stack/feeds/iot-cnpm.button2',
-          ],
-          "fan" : [],
-          "pump" : [],
-          "motor" : [],
-        }
-        *boundary[]
-      */
-
     // call DB to get user info
     const gardenName = payload.name;
     const desc = payload.desc;
-    
     let owner:User = await this.userService.findOne(payload.userId);
-
     const gkey = payload.group_key;
-    const owner_x_aio_key = payload.x_aio_key;
+    const owner_x_aio_key = owner.x_aio_key;
+    if(!owner_x_aio_key) {
+      return {
+        code: 403,
+        message: "Missing x_aio_key"
+      }
+    }  
     const topic_list = payload.topic_list;
     const userList = [];
     const username = payload.adaUserName;
-    /* Constructing Garden */
-    // Create mqttManager
     const mqttManager = new MqttManager(username, owner_x_aio_key);
     for (let k in topic_list) {
       mqttManager.addSubcriber(k, topic_list[k]);
@@ -102,7 +86,7 @@ export class GardenController {
     };
   }
 
-  @Get('test/get/:id')
+  @Get('get/:id')
   getGarden(@Param('id') id: number) {
     const garden: ConcreteGarden = GardenManagerService.getGarden(id);
     if (garden === undefined)
@@ -113,6 +97,16 @@ export class GardenController {
       name: garden.gardenName,
       id: garden.gardenId,
     };
+  }
+
+  @Post('/find')
+  findGarden(@Body() payload : any) {
+      if(payload.gardenName){
+        return GardenManagerService.findGarden(payload.gardenName)
+      }
+      return {
+        error: "Missing gardenName"
+      }
   }
 
   @Post('/publish')
