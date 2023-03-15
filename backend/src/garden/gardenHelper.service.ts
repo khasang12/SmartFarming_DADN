@@ -1,6 +1,5 @@
 import { User } from 'src/user/models/user.model';
 import { MqttManager, MQTTSubscriber } from './mqtt.service';
-
 interface Subject {
   subcribe(observer: Observer): void;
   unsubcribe(observer: Observer): void;
@@ -19,6 +18,7 @@ export class ConcreteGarden implements Subject {
     public gardenName: string,
     public gardenDesc: string,
     public gardenId : number,
+    private groupKey: string,
     private Owner: User,
     private observers: Observer[],
     private mqttManager: MqttManager,
@@ -41,11 +41,17 @@ export class ConcreteGarden implements Subject {
   addDevice(topic: string[], type:string) {
     return;
   } 
+
+  getMqttManager() {
+    return this.mqttManager
+  }
+  
   launch() {
     this.subcribe(new Observer(this.Owner))
     this.mqttManager.setNotify(this.notify);
     this.mqttManager.launch();
   }
+
 
 }
 

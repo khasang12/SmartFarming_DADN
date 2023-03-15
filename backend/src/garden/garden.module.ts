@@ -4,16 +4,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Garden, GardenSchema } from './models/garden.model';
 import { GardenService } from './garden.service';
 import { UserModule } from 'src/user/user.module';
-import { User } from 'src/user/models/user.model';
-import { GardenManagerService } from './gardenManager.service';
+import { SensorModule } from 'src/sensor/sensor.module';
+import { SensorService } from 'src/sensor/sensor.service';
+
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Garden.name, schema: GardenSchema }]),
-    UserModule
+    MongooseModule.forFeature([
+      { name: Garden.name, schema: GardenSchema },
+    ]),
+    UserModule,
+    SensorModule,
   ],
   controllers: [GardenController],
   providers: [GardenService],
   exports: [GardenService],
-
 })
 export class GardenModule {}

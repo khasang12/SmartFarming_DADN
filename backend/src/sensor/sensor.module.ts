@@ -5,8 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { SensorController } from './sensor.controller';
 import { Sensor, SensorSchema } from './models/sensor.model';
 import { SensorService } from './sensor.service';
-import { GardenModule } from 'src/garden/garden.module';
-import { GardenManagerService } from 'src/garden/gardenManager.service';
 @Module({
     imports: [HttpModule, AuthModule,
         MongooseModule.forFeature([{ name: Sensor.name, schema: SensorSchema}]),
