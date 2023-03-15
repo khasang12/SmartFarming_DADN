@@ -1,10 +1,11 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
 import { ConcreteGarden } from "./gardenHelper.service";
 
 // Singleton Pattern for Garden Manager
 @Injectable()
 export class GardenManagerService implements OnModuleInit {
     public static gardenList = {};
+    private static backUpFile = "./gardenManangerBackup";
     private static count = 0;
     onModuleInit() {
         return;
@@ -21,5 +22,13 @@ export class GardenManagerService implements OnModuleInit {
     }
     static getGarden(id : number) {
         return this.gardenList[id];
+    }
+}
+
+@Injectable()
+class GardenManagerBackup implements OnModuleDestroy {
+    onModuleDestroy() {
+        // Backup GardenManagerService
+        return;
     }
 }

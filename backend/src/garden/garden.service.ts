@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Garden, GardenDocument } from './models/garden.model';
-import { CreateGarden } from './dto/create-garden.dto';
 import { UpdateGarden } from './dto/update-garden.dto';
+import { CreateGardenDTO } from './dto/create-garden.dto';
 
 @Injectable()
 export class GardenService {
@@ -17,7 +17,7 @@ export class GardenService {
   async findOne(id: string): Promise<Garden> {
     return await this.model.findById(id).exec();
   }
-  async create(createGarden: CreateGarden): Promise<Garden> {
+  async create(createGarden: CreateGardenDTO): Promise<Garden> {
     return await new this.model({
       ...createGarden,
       create_at: new Date(),
