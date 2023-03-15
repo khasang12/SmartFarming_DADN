@@ -7,4 +7,5 @@ export class User{
     phone: string;
     create_at: Date;
     gardens: ObjectId[];
+    x_aio_key: string;
 }
