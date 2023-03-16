@@ -1,4 +1,9 @@
 import { Garden } from "./garden.dto";
 
-export class CreateGarden extends Garden {
+
+export class CreateGardenDTO extends Garden {
+    userId : string;
+    adaUserName: string;
+    topic_list: [];
+    x_aio_key: string;
 }

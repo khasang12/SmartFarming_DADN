@@ -1,11 +1,12 @@
+import { Injectable } from '@nestjs/common';
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
 import mongoose, { HydratedDocument } from 'mongoose';
 
 export type SensorDocument = HydratedDocument<Sensor>;
-
 @Schema()
 export class Sensor {
+
     @Prop({required: true})
     name: string;
 

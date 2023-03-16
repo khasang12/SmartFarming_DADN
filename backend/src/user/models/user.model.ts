@@ -1,8 +1,8 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 
 
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Garden } from 'src/garden/models/garden.model';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -24,7 +24,10 @@ export class User {
     create_at: Date;
 
     @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Garden'}]})
-    gardens: Garden[];
+    gardens: ObjectId[];
+
+    @Prop({required: true})
+    x_aio_key: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

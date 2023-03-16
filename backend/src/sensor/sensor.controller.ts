@@ -20,6 +20,7 @@ import { GardenBuilder } from 'src/garden/gardenbuilder.service';
 import { User } from 'src/user/models/user.model';
 import { ConcreteGarden } from 'src/garden/gardenHelper.service';
 import { GardenManagerService } from 'src/garden/gardenManager.service';
+import { ApiBadRequestResponse, ApiOkResponse } from '@nestjs/swagger';
 
 class DeviceDTO {
   feed_key: string;
@@ -30,26 +31,36 @@ export class SensorController {
   constructor(private readonly sensorService: SensorService) {}
 
   @Get()
+  @ApiOkResponse({ description: 'Get all sensors successfully' })
+  @ApiBadRequestResponse({ description: 'Get all sensors failed' })
   async index() {
     return await this.sensorService.findAll();
   }
-
+  
   @Get(':id')
+  @ApiOkResponse({ description: 'Get sensor successfully' })
+  @ApiBadRequestResponse({ description: 'Get sensor failed' })
   async show(@Param('id') id: string) {
     return await this.sensorService.findOne(id);
   }
 
   @Post()
+  @ApiOkResponse({ description: 'Create sensor successfully' })
+  @ApiBadRequestResponse({ description: 'Create sensor failed' })
   async create(@Body() createSensor: CreateSensor) {
     return await this.sensorService.create(createSensor);
   }
 
   @Put(':id')
+  @ApiOkResponse({ description: 'Update sensor successfully' })
+  @ApiBadRequestResponse({ description: 'Update sensor failed' })
   async update(@Param('id') id: string, @Body() updateSensor: UpdateSensor) {
     return await this.sensorService.update(id, updateSensor);
   }
 
   @Delete(':id')
+  @ApiOkResponse({ description: 'Delete sensor successfully' })
+  @ApiBadRequestResponse({ description: 'Delete sensor failed' })
   async delete(@Param('id') id: string) {
     return await this.sensorService.delete(id);
   }
