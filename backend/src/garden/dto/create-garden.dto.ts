@@ -1,5 +1,6 @@
 import { Garden } from "./garden.dto";
 
+
 export class CreateGardenDTO extends Garden {
     userId : string;
     adaUserName: string;
