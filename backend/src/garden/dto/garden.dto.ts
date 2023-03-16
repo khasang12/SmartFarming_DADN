@@ -17,4 +17,5 @@ export class Garden {
 
     @ApiProperty({description: 'A list of sensor ID that this garden has', example: ['64097719886f65c0228f214f']})
     sensors: string[];
+    
 }

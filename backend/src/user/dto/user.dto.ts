@@ -19,4 +19,5 @@ export class User{
 
     @ApiProperty({description: 'User gardens', example: ['64098068f5b17eca8a433b48']})
     gardens: ObjectId[];
+    x_aio_key: string;
 }

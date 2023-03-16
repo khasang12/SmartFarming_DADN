@@ -1,6 +1,5 @@
 import { User } from 'src/user/models/user.model';
 import { MqttManager, MQTTSubscriber } from './mqtt.service';
-
 interface Subject {
   subcribe(observer: Observer): void;
   unsubcribe(observer: Observer): void;
@@ -14,15 +13,15 @@ A Garden Contain:
 - An SSE to for notification
 */
 export class ConcreteGarden implements Subject {
-
   constructor(
     public gardenName: string,
     public gardenDesc: string,
-    public gardenId : number,
+    public gardenId: number,
+    private groupKey: string,
     private Owner: User,
     private observers: Observer[],
     private mqttManager: MqttManager,
-  ) {};
+  ) {}
   subcribe(observer: Observer): void {
     this.observers.push(observer);
   }
@@ -32,28 +31,31 @@ export class ConcreteGarden implements Subject {
 
   // Wrap this function as callback and pass to Subcribers --> becasue this context
   notify = ((payload) => {
-    if(this.observers)
+    if (this.observers)
       this.observers.forEach((observer) => observer.update(payload));
   }).bind(this);
 
-
   /* devices : [MQTTSubcriber] */
-  addDevice(topic: string[], type:string) {
+  addDevice(topic: string[], type: string) {
     return;
-  } 
+  }
+
+  getMqttManager() {
+    return this.mqttManager;
+  }
+
   launch() {
-    this.subcribe(new Observer(this.Owner))
+    this.subcribe(new Observer(this.Owner));
     this.mqttManager.setNotify(this.notify);
     this.mqttManager.launch();
   }
-
 }
 
 export class Observer extends User {
   public static count = 0;
   public id;
-  constructor(user:User) {
-    super()
+  constructor(user: User) {
+    super();
     super.name = user.name;
     super.password = user.password;
     //.......
