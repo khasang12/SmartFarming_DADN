@@ -46,13 +46,6 @@ export class GardenController {
   }
 
 
-  @Post()
-  @ApiCreatedResponse({ description: 'Create Garden Successfully' })
-  @ApiBadRequestResponse({ description: 'Create Garden Failed' })
-  async create(@Body() createGarden: CreateGarden) {
-    return await this.gardenService.create(createGarden);
-  }
-
   @ApiOkResponse({ description: 'Update garden successfully' })
   @ApiBadRequestResponse({ description: 'Update garden failed' })
   @Put(':id')
@@ -66,7 +59,9 @@ export class GardenController {
   async delete(@Param('id') id: string) {
     return await this.gardenService.delete(id);
   }
-
+  
+  @ApiCreatedResponse({ description: 'Create Garden Successfully' })
+  @ApiBadRequestResponse({ description: 'Create Garden Failed' })
   @Post('create')
   async create(@Body() payload: CreateGardenDTO) {
     // call DB to get user info
@@ -84,6 +79,17 @@ export class GardenController {
     const topic_list = payload.topic_list;
     const userList = [];
     const username = payload.adaUserName;
+    this.gardenService.create({
+      adaUserName:payload.adaUserName,
+      boundary: [{lng:0,lat:0}],
+      desc: payload.desc,
+      group_key: payload.group_key,
+      name: payload.name,
+      sensors: [],
+      topic_list: [],
+      userId: owner["_id"],
+      x_aio_key:payload.group_key
+    })
     const mqttManager = new MqttManager(username, owner_x_aio_key);
     for (let k in topic_list) {
       mqttManager.addSubcriber(k, topic_list[k]);
