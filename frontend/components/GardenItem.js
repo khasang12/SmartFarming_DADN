@@ -1,40 +1,71 @@
-import { View, Text, TouchableOpacity, ImageBackground } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, ImageBackground } from "react-native";
+import React, { useEffect, useState } from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import { BASE_URL } from "../config/config";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-const GardenItem = ({name,desc,lat,lon,humid,light,temp}) => {
+const GardenItem = ({ id }) => {
   const navigation = useNavigation();
-  
+  const [garden, setGarden] = useState({});
+  console.log("id", id);
+  const getItem = async () => {
+    axios
+      .get(`${BASE_URL}/garden/${id}`)
+      .then((res) => {
+        setGarden(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    //setGardens([...gardens]);
+  };
+  useEffect(() => {
+    getItem();
+  }, []);
+  const handleGardenNavigation = () => {
+    AsyncStorage.setItem("userGarden", id);
+    navigation.navigate("GardenDetail");
+  };
   return (
     <View className="bg-white p-3 mb-5 rounded-md">
       <View className="flex-row justify-between mb-5">
         <View>
-          <Text style={{ fontSize: 18, fontFamily: "HindBold" }}>{name}</Text>
-          <Text style={{ fontSize: 14, fontFamily: "HindLight" }}>
-            Latitude: {lat}, Longitude: {lon}
+          <Text style={{ fontSize: 18, fontFamily: "HindBold" }}>
+            {garden.name}
           </Text>
+          {/* <Text style={{ fontSize: 14, fontFamily: "HindLight" }}>
+            Latitude: {lat}, Longitude: {lon}
+          </Text> */}
         </View>
-        <TouchableOpacity onPress={() => {navigation.navigate("GardenDetail")}}>
+        <TouchableOpacity
+          onPress={() => {
+            handleGardenNavigation();
+          }}
+        >
           <MaterialIcons color="#0aada8" size={30} name="edit" />
         </TouchableOpacity>
+      </View>
+      <View className="ml-2 mb-3">
+        <Text>{garden.group_key}</Text>
+        <Text>{garden.desc}</Text>
       </View>
       <View className="flex-row justify-start mb-5 items-center">
         <ImageBackground
           source={require("../assets/hcmut.png")}
-          style={{ width: 50, height: 50, justifyItems: "center"}}
+          style={{ width: 50, height: 50, justifyItems: "center" }}
           className="items-center flex-row ml-2"
           imageStyle={{ borderRadius: 25 }}
         />
-        <View className="ml-10">
+        {/* <View className="ml-10">
           <Text>Humidity: {humid}%</Text>
           <Text>Temperature: {temp}oC</Text>
           <Text>Light: {light}lux</Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );
-}
+};
 
-export default GardenItem
+export default GardenItem;

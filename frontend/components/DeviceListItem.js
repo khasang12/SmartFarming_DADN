@@ -6,6 +6,7 @@ import { Dimensions, StyleSheet } from "react-native";
 export default function DeviceListItem({ otype, item, photo, name, disable }) {
   const { width: windowWidth } = Dimensions.get("window");
   const navigation = useNavigation();
+  const [showInfo, setShowInfo] = useState(false);
   return (
     <View>
       <View className="flex-row justify-between align-center mb-5">
@@ -27,10 +28,28 @@ export default function DeviceListItem({ otype, item, photo, name, disable }) {
             </Text>
           </View>
         </View>
-        {!disable && (
+        {!disable && otype !== "sensor" && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Device", {...item,otype});
+              navigation.navigate("Device", { ...item, otype });
+            }}
+            className="bg-[#6a8caf] p-3 w-25 rounded-md"
+          >
+            <Text
+              className="text-white align-center"
+              style={{
+                fontFamily: "HindRegular",
+                fontSize: 14,
+              }}
+            >
+              Detail
+            </Text>
+          </TouchableOpacity>
+        )}
+        {!disable && otype === "sensor" && (
+          <TouchableOpacity
+            onPress={() => {
+              setShowInfo(!showInfo);
             }}
             className="bg-[#6a8caf] p-3 w-25 rounded-md"
           >
@@ -46,6 +65,12 @@ export default function DeviceListItem({ otype, item, photo, name, disable }) {
           </TouchableOpacity>
         )}
       </View>
+      {showInfo && !disable && (
+        <View>
+          <Text>Type: Humidity</Text>
+          <Text>Value: 45%</Text>
+        </View>
+      )}
     </View>
   );
 }

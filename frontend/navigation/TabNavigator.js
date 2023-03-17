@@ -2,6 +2,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AddGardenScreen from "../screens/AddGardenScreen";
 import DeviceScreen from "../screens/DeviceScreen";
 import GardenDetailScreen from "../screens/GardenDetailScreen";
 import GardenScreen from "../screens/GardenScreen";
@@ -42,6 +43,11 @@ const GardenStack = () => {
       <Stack.Screen
         name="Garden"
         component={GardenScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddGarden"
+        component={AddGardenScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

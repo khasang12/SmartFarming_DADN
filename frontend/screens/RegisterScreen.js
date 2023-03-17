@@ -113,6 +113,19 @@ const RegisterScreen = () => {
           inputType="password"
         />
 
+        <InputField
+          label={"AdafruitIO X-AIO Key"}
+          icon={
+            <Ionicons
+              name="ios-home-outline"
+              size={20}
+              color="#666"
+              style={{ marginRight: 5 }}
+            />
+          }
+          keyboardType="default"
+        />
+
         <CustomButton
           label={"Register"}
           onPress={() => navigation.navigate("Login")}
