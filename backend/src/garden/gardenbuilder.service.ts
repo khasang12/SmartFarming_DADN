@@ -8,7 +8,7 @@ export class GardenBuilder {
   public gardenName: string;
   public gardenId: number;
   public gardenDesc: string;
-  public groupKey:string;
+  public groupKey: string;
   public Owner!: User;
   public subscribers!: Observer[];
   public mqttManager!: MqttManager;
@@ -43,11 +43,24 @@ export class GardenBuilder {
     this.gardenDesc = desc;
     return this;
   }
-  setGroupKey(gkey : string) {
+  setGroupKey(gkey: string) {
     this.groupKey = gkey;
     return this;
   }
   build(): ConcreteGarden {
+    
+    this.gardenService.create({
+      adaUserName: this.mqttManager.getInfo().username,
+      boundary: [{ lat: 0, lng: 0 }],
+      desc: this.gardenDesc,
+      group_key: this.groupKey,
+      name: this.gardenName,
+      sensors: [],
+      topic_list: [],
+      userId: this.Owner['_id'],
+      x_aio_key: this.mqttManager.getInfo().key
+    });
+
     return new ConcreteGarden(
       this.gardenName,
       this.gardenDesc,
