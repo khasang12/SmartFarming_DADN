@@ -3,7 +3,8 @@ import React from "react";
 import GardenNavigator from "../navigation/GardenNavigator";
 import CustomButton from "../components/CustomButton";
 
-const GardenDetailScreen = () => {
+const GardenDetailScreen = ({ route, navigation }) => {
+  const garden = route.params;
   return (
     <View className="pt-10 px-3 flex-1 justify-center bg-[#eef9bf]">
       {/* Header */}
@@ -25,7 +26,7 @@ const GardenDetailScreen = () => {
         </TouchableOpacity>
       </View>
       {/* Navigator */}
-      <GardenNavigator />
+      <GardenNavigator garden={garden} />
     </View>
   );
 };

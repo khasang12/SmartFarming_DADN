@@ -18,8 +18,66 @@ export const devices = [
     _id: {
       $oid: "640231f830c0bba85e608a88",
     },
-    feed_key: "feedkeytest1",
-    type: "curtain",
+    feed_key: "iot-cnpm.sensor2",
+    name: "Humidity 1",
+    type: "sensor",
+    status: true,
+    auto: true,
+    value: {
+      $numberDecimal: "12.8",
+    },
+    desc: "Desc 1",
+    last_update: {
+      $date: {
+        $numberLong: "1677690000000",
+      },
+    },
+  },
+  {
+    _id: {
+      $oid: "640231f830c0bba85e608a88",
+    },
+    feed_key: "iot-cnpm.sensor4",
+    name: "Light 1",
+    type: "sensor",
+    status: true,
+    auto: true,
+    value: {
+      $numberDecimal: "969",
+    },
+    desc: "Desc 1",
+    last_update: {
+      $date: {
+        $numberLong: "1677690000000",
+      },
+    },
+  },
+  {
+    _id: {
+      $oid: "640231f830c0bba85e608a88",
+    },
+    feed_key: "iot-cnpm.sensor1",
+    name: "Temperature 1",
+    type: "sensor",
+    status: true,
+    auto: true,
+    value: {
+      $numberDecimal: "969",
+    },
+    desc: "Desc 1",
+    last_update: {
+      $date: {
+        $numberLong: "1677690000000",
+      },
+    },
+  },
+  {
+    _id: {
+      $oid: "640231f830c0bba85e608a88",
+    },
+    feed_key: "iot-cnpm.button2",
+    type: "motor",
+    name: "Motor 1",
     status: true,
     auto: true,
     value: {
@@ -36,8 +94,9 @@ export const devices = [
     _id: {
       $oid: "6402327730c0bba85e608a89",
     },
-    feed_key: "feedkeytest2",
+    feed_key: "iot-cnpm.button3",
     type: "pump",
+    name: "Pump 1",
     status: false,
     auto: true,
     value: {
@@ -54,8 +113,9 @@ export const devices = [
     _id: {
       $oid: "6402329c30c0bba85e608a8a",
     },
-    feed_key: "feedkeytest3",
+    feed_key: "iot-cnpm.button1",
     type: "fan",
+    name: "Fan 1",
     status: true,
     auto: false,
     value: {
@@ -194,7 +254,7 @@ export const gardenHistory = [
     temp: "33.6",
     light: "75000",
     timestamp: "08/12/2022 15:00:00",
-    color: "red"
+    color: "red",
   },
   {
     name: "Garden 1",
@@ -203,7 +263,7 @@ export const gardenHistory = [
     temp: "33.6",
     light: "75000",
     timestamp: "08/12/2022 18:00:00",
-    color:"orange"
+    color: "orange",
   },
   {
     name: "Garden 1",
@@ -212,10 +272,9 @@ export const gardenHistory = [
     temp: "33.6",
     light: "75000",
     timestamp: "08/12/2022 21:00:00",
-    color: "green"
+    color: "green",
   },
 ];
-
 
 export const actionHistory = [
   {
@@ -228,7 +287,7 @@ export const actionHistory = [
   {
     name: "Garden 1",
     feed_key: "feedkey2",
-    desc: "Curtain",
+    desc: "motor",
     user: "IoT-Bot",
     timestamp: "16:46:53 09/12/2022",
   },

@@ -19,14 +19,12 @@ const GardenItem = ({ id }) => {
       .catch((err) => {
         console.log(err);
       });
-    //setGardens([...gardens]);
   };
   useEffect(() => {
     getItem();
   }, []);
   const handleGardenNavigation = () => {
-    AsyncStorage.setItem("userGarden", id);
-    navigation.navigate("GardenDetail");
+    navigation.navigate("GardenDetail", garden);
   };
   return (
     <View className="bg-white p-3 mb-5 rounded-md">

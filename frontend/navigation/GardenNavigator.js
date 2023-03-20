@@ -1,14 +1,15 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from "react-native";
+import React from "react";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import GardenActionPage from '../pages/GardenActionPage';
-import GardenHistoryPage from '../pages/GardenHistoryPage';
-import GardenInfoPage from '../pages/GardenInfoPage';
+import GardenActionPage from "../pages/GardenActionPage";
+import GardenHistoryPage from "../pages/GardenHistoryPage";
+import GardenInfoPage from "../pages/GardenInfoPage";
 
 const Tab = createMaterialTopTabNavigator();
 
-const GardenNavigator = () => {
+const GardenNavigator = ({ garden }) => {
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -17,11 +18,23 @@ const GardenNavigator = () => {
         tabBarStyle: { backgroundColor: "#eef9bf", fontFamily: "HindLight" },
       }}
     >
-      <Tab.Screen name="Action" component={GardenActionPage} />
-      <Tab.Screen name="History" component={GardenHistoryPage} />
-      <Tab.Screen name="Info" component={GardenInfoPage} />
+      <Tab.Screen
+        name="Action"
+        component={GardenActionPage}
+        initialParams={{ garden: garden }}
+      />
+      <Tab.Screen
+        name="History"
+        component={GardenHistoryPage}
+        initialParams={{ garden: garden }}
+      />
+      <Tab.Screen
+        name="Info"
+        component={GardenInfoPage}
+        initialParams={{ garden: garden }}
+      />
     </Tab.Navigator>
   );
-}
+};
 
-export default GardenNavigator
+export default GardenNavigator;
