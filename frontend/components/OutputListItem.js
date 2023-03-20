@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 
-export default function DeviceListItem({ otype, item, photo, name, disable }) {
+export default function OutputListItem({ otype, item, photo, name, disable }) {
   const { width: windowWidth } = Dimensions.get("window");
   const navigation = useNavigation();
   return (
@@ -27,15 +27,15 @@ export default function DeviceListItem({ otype, item, photo, name, disable }) {
             </Text>
           </View>
         </View>
-        {!disable && (
+        {!disable && otype !== "sensor" && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Device", {...item,otype});
+              navigation.navigate("Device", { ...item, otype });
             }}
-            className="bg-[#00D8FF] p-3 w-25 rounded-md"
+            className="bg-[#6a8caf] p-3 w-25 rounded-md"
           >
             <Text
-              className="text-black align-center"
+              className="text-white align-center"
               style={{
                 fontFamily: "HindRegular",
                 fontSize: 14,

@@ -3,17 +3,16 @@ import React from "react";
 import GardenNavigator from "../navigation/GardenNavigator";
 import CustomButton from "../components/CustomButton";
 
-const GardenDetailScreen = () => {
+const GardenDetailScreen = ({ route, navigation }) => {
+  const garden = route.params;
   return (
-    <View className="pt-10 px-3 flex-1 justify-center bg-[#9ff731]">
+    <View className="pt-10 px-3 flex-1 justify-center bg-[#eef9bf]">
       {/* Header */}
       <View className="flex-row justify-between">
-        <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>
-          Garden 1
-        </Text>
+        <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>Garden 1</Text>
         <TouchableOpacity
           onPress={() => {}}
-          className="bg-[#00D8FF] p-3 mb-7 rounded-md"
+          className="bg-[#6a8caf] p-3 mb-7 rounded-md"
         >
           <Text
             className="text-center text-[#000]"
@@ -27,7 +26,7 @@ const GardenDetailScreen = () => {
         </TouchableOpacity>
       </View>
       {/* Navigator */}
-      <GardenNavigator />
+      <GardenNavigator garden={garden} />
     </View>
   );
 };

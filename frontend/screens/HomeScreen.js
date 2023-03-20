@@ -31,13 +31,13 @@ const HomeScreen = () => {
     setFarmTab(value);
   };
   return (
-    <View className="pt-3 flex-1 justify-center bg-[#9ff731]">
+    <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
       <ScrollView className="p-5 mb-2">
         {/* Header */}
         <View className="flex-row justify-between mb-5">
           <Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
             Hello {", "}
-            <Text className="text-[#006500]">Sang Kha</Text>
+            <Text className="text-[#6a8caf]">Sang Kha</Text>
           </Text>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <ImageBackground

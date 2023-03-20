@@ -14,3 +14,8 @@ export default StyleSheet.create({
     fontFamily: "Hind"
   }
 });
+
+export const bgColor = "#eef9bf"
+export const fgColor = "#a7e9af"
+export const ctaColor1 = "#75b79e"
+export const ctaColor2 = "#6a8caf";

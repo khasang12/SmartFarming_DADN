@@ -1,19 +1,26 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalStyles from "../config/GlobalStyles";
 import CustomButton from "../components/CustomButton";
 import InputField from "../components/InputField";
+
 import Logo from "../assets/ArgiVision.png";
+import { AuthContext } from "../context/AuthContext";
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const { login } = useContext(AuthContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   return (
-    <View className="flex-1 justify-center bg-[#9ff731]">
+    <View className="flex-1 justify-center bg-[#eef9bf]">
       <View className="px-5">
         <View className="items-center">
           <Image
@@ -46,6 +53,8 @@ const LoginScreen = () => {
             />
           }
           keyboardType="ascii-capable"
+          value={username}
+          onChangeText={(t) => setUsername(t)}
         />
 
         <InputField
@@ -59,17 +68,21 @@ const LoginScreen = () => {
             />
           }
           inputType="password"
+          value={password}
+          onChangeText={(t) => setPassword(t)}
         />
 
         <CustomButton
           label={"Login"}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => {
+            login(username, password);
+          }}
         />
 
         <View className="flex-row justify-center, mb-5">
           <Text>No account yet?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ color: "#4285F4", fontWeight: "700" }}>
+            <Text style={{ color: "#6a8caf", fontWeight: "700" }}>
               {" "}
               Register
             </Text>

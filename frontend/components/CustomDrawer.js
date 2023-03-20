@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -12,13 +12,15 @@ import {
 } from "@react-navigation/drawer";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { AuthContext } from "../context/AuthContext";
 
 const CustomDrawer = (props) => {
+  const { logout } = useContext(AuthContext);
   return (
     <View className="flex-1">
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ backgroundColor: "#9ff731", flex: 1 }}
+        contentContainerStyle={{ backgroundColor: "#eef9bf", flex: 1 }}
       >
         <ImageBackground
           source={require("../assets/menu-bg.jpeg")}
@@ -42,12 +44,17 @@ const CustomDrawer = (props) => {
             Sang Kha
           </Text>
         </ImageBackground>
-        <View className="flex-grow bg-[#9ff731] pt-3">
+        <View className="flex-grow bg-[#eef9bf] pt-3">
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
-      <View className="p-5 border-t-2 border-[#006500] bg-[#9ff731]">
-        <TouchableOpacity onPress={() => {}} className="py-4">
+      <View className="p-5 border-t-2 border-[#75b79e] bg-[#eef9bf]">
+        <TouchableOpacity
+          onPress={() => {
+            logout();
+          }}
+          className="py-4"
+        >
           <View className="flex-row items-center">
             <MaterialCommunityIcons name="location-exit" size={22} />
             <Text

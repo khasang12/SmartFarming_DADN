@@ -4,6 +4,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AuthStack from "./navigation/AuthStack";
 import AppStack from "./navigation/AppStack";
+import { AuthContext, AuthProvider } from "./context/AuthContext";
+import AppNav from "./navigation/AppNav";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,9 +25,8 @@ export default function App() {
     return null;
   }
   return (
-    <NavigationContainer>
-      <AppStack />
-      {/* <AppStack /> */}
-    </NavigationContainer>
+    <AuthProvider>
+      <AppNav/>
+    </AuthProvider>
   );
 }

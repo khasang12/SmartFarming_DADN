@@ -17,18 +17,18 @@ export default function CustomSwitch({
   };
 
   return (
-    <View className="h-12 w-full bg-[#2cd368] rounded-md border-[#000] flex-row justify-center">
+    <View className="h-12 w-full bg-[#75b79e] rounded-md border-[#000] flex-row justify-center">
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => updateSwitchData(1)}
         className="flex-1 rounded-md justify-center items-center"
         style={{
-          backgroundColor: getSelectionMode == 1 ? "#2cd368" : "white",
+          backgroundColor: getSelectionMode == 1 ? "#75b79e" : "white",
         }}
       >
         <Text
           style={{
-            color: getSelectionMode == 1 ? "white" : "#2cd368",
+            color: getSelectionMode == 1 ? "white" : "#75b79e",
             fontSize: 18,
             fontFamily: "HindRegular",
           }}
@@ -41,12 +41,12 @@ export default function CustomSwitch({
         onPress={() => updateSwitchData(2)}
         className="flex-1 rounded-md justify-center items-center"
         style={{
-          backgroundColor: getSelectionMode == 2 ? "#2cd368" : "white",
+          backgroundColor: getSelectionMode == 2 ? "#75b79e" : "white",
         }}
       >
         <Text
           style={{
-            color: getSelectionMode == 2 ? "white" : "#2cd368",
+            color: getSelectionMode == 2 ? "white" : "#75b79e",
             fontSize: 18,
             fontFamily: "HindRegular",
           }}
@@ -59,12 +59,12 @@ export default function CustomSwitch({
         onPress={() => updateSwitchData(3)}
         className="flex-1 rounded-md justify-center items-center"
         style={{
-          backgroundColor: getSelectionMode == 3 ? "#2cd368" : "white",
+          backgroundColor: getSelectionMode == 3 ? "#75b79e" : "white",
         }}
       >
         <Text
           style={{
-            color: getSelectionMode == 3 ? "white" : "#2cd368",
+            color: getSelectionMode == 3 ? "white" : "#75b79e",
             fontSize: 18,
             fontFamily: "HindRegular",
           }}

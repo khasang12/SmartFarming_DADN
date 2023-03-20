@@ -1,20 +1,25 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 
-export default function FarmerListItem({
-  otype,
-  name,
-  photo,
-  onPress,
-  email,
-  phone,
-  disable,
-}) {
+export default function SensorListItem({ feed_key, otype, item, photo, name, disable }) {
   const { width: windowWidth } = Dimensions.get("window");
-  const [showInfo, setShowInfo] = useState(false);
   const navigation = useNavigation();
+  const [showInfo, setShowInfo] = useState(false);
+  const [value, setValue] = useState(undefined);
+  const getValue = async () => {
+    axios
+      .get("https://io.adafruit.com/api/v2/Potato_Stack/feeds/"+feed_key)
+      .then((res) => setValue(res.data.last_value))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    /* var timerID = setInterval(() => getValue(), 10000);
+    return () => clearInterval(timerID); */
+    getValue();
+  }, []);
   return (
     <View>
       <View className="flex-row justify-between align-center mb-5">
@@ -24,15 +29,6 @@ export default function FarmerListItem({
             style={{ width: 30, height: 30, borderRadius: 10, marginRight: 8 }}
           />
           <View style={{ width: windowWidth - 220 }}>
-            {/* <Text
-            style={{
-              color: "#333",
-              fontFamily: "HindRegular",
-              fontSize: 14,
-            }}
-          >
-            {subTitle}
-          </Text> */}
             <Text
               numberOfLines={1}
               className="text-[#000]"
@@ -45,8 +41,7 @@ export default function FarmerListItem({
             </Text>
           </View>
         </View>
-
-        {!disable && (
+        {!disable && otype === "sensor" && (
           <TouchableOpacity
             onPress={() => {
               setShowInfo(!showInfo);
@@ -67,8 +62,8 @@ export default function FarmerListItem({
       </View>
       {showInfo && !disable && (
         <View>
-          {email && <Text>Email: {email}</Text>}
-          {phone && <Text>Phone: {phone}</Text>}
+          <Text>Feed Key: {feed_key}</Text>
+          <Text>Value: {value}</Text>
         </View>
       )}
     </View>

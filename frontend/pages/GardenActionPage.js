@@ -5,7 +5,7 @@ import ActionHistory from '../components/ActionHistory';
 
 const GardenActionPage = () => {
   return (
-    <View className="pt-3 flex-1 bg-[#9ff731]">
+    <View className="pt-3 flex-1 bg-[#eef9bf]">
       {/* List of Gardens */}
       {actionHistory.map((item, index) => (
         <ActionHistory
