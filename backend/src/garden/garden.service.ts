@@ -17,7 +17,7 @@ export class GardenService {
   async findOne(id: string): Promise<Garden> {
     return await this.model.findById(id).exec();
   }
-  async create(createGarden: CreateGardenDTO): Promise<Garden> {
+  async create(createGarden: CreateGardenDTO): Promise<Garden> {    
     return await new this.model({
       ...createGarden,
       create_at: new Date(),

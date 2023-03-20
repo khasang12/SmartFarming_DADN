@@ -265,4 +265,11 @@ export class MqttManager {
   setNotify(cb:any) {
     MQTTSubscriber.cb =cb; 
   }
+
+  getInfo() {
+    return {
+      adaUser: this.username,
+      key: this.password
+    }
+  }
 }

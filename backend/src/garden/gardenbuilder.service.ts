@@ -2,7 +2,8 @@ import { Inject } from '@nestjs/common';
 import { User } from 'src/user/models/user.model';
 import { GardenService } from './garden.service';
 import { ConcreteGarden, Observer } from './gardenHelper.service';
-import { MqttManager, MQTTSubscriber } from './mqtt.service';
+import { MqttManager } from './mqtt.service';
+
 
 export class GardenBuilder {
   public gardenName: string;
@@ -12,7 +13,7 @@ export class GardenBuilder {
   public Owner!: User;
   public subscribers!: Observer[];
   public mqttManager!: MqttManager;
-  @Inject(GardenService.name) gardenService: GardenService;
+  @Inject(GardenService.name) private gardenService: GardenService
   constructor() {
     this.Owner = null;
     this.subscribers = [];
