@@ -49,11 +49,21 @@ export class SensorController {
   @ApiBadRequestResponse({ description: 'Get sensor failed' })
   async getLatest(@Body() payload: Latest) {
     const result = await this.sensorService.findByKey(payload)
-    console.log(payload.type);
+
+
+    const [newest,latest] = [result[0],result[result.length-1]]
+    console.log(newest);
+    console.log(latest);
     
     if(payload.type === 1) 
-      return result[result.length-1];
-    return result[0];  
+      return latest
+    return {
+      name: latest.name,
+      feed_key:newest.feed_key,
+      type:latest.type,
+      value: newest.value,
+      last_update: newest.last_update
+    }
   }
 
   @Post()
