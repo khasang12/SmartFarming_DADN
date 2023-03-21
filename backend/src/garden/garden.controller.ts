@@ -18,7 +18,7 @@ import { User } from 'src/user/models/user.model';
 import { ConcreteGarden } from './gardenHelper';
 import { GardenBuilder } from './gardenbuilder';
 import { GardenManagerService } from './gardenManager';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger/dist';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiResponse } from '@nestjs/swagger/dist';
 
 import { controlDTO } from './dto/control.dto';
 import { UserService } from 'src/user/user.service';
