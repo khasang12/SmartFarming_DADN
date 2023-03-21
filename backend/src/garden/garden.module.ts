@@ -5,7 +5,9 @@ import { Garden, GardenSchema } from './models/garden.model';
 import { GardenService } from './garden.service';
 import { UserModule } from 'src/user/user.module';
 import { SensorModule } from 'src/sensor/sensor.module';
-import { SensorService } from 'src/sensor/sensor.service';
+import { MqttModule } from 'src/mqtt/mqtt.module';
+
+
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { SensorService } from 'src/sensor/sensor.service';
     ]),
     UserModule,
     SensorModule,
+    MqttModule
   ],
   controllers: [GardenController],
   providers: [GardenService],

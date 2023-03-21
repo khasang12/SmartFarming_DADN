@@ -1,5 +1,5 @@
+import { MqttManager } from 'src/mqtt/mqtt.service';
 import { User } from 'src/user/models/user.model';
-import { MqttManager, MQTTSubscriber } from './mqtt.service';
 interface Subject {
   subcribe(observer: Observer): void;
   unsubcribe(observer: Observer): void;
