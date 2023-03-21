@@ -10,14 +10,15 @@ export class MqttService {
   getManager(username: string, password: string) {
     return new MqttManager(username, password, this.sensorService);
   }
-
-
 }
 
 export class MQTTSubscriber {
   public mqttClient;
   public static cb; // Call back notify function
-  /* @InjectModel(Sensor.name) protected readonly model: Model<SensorDocument>; */
+
+  // @Inject(SensorService)
+  // protected readonly sensorService: SensorService
+
   constructor(
     protected topic: string[],
     protected username: string,
@@ -108,6 +109,15 @@ export class PumpSubcriber extends MQTTSubscriber {
     this.mqttClient.on('message', (topic, payload) => {
       MQTTSubscriber.cb(topic, payload);
       console.log(`Received Message On Pump: ${payload}`);
+      this.sensorService.create({
+        desc: '',
+        feed_key: topic,
+        last_update: new Date(),
+        name: 'pump',
+        status: true,
+        type: 'pump',
+        value: payload,
+      });
     });
   }
 
@@ -135,6 +145,16 @@ export class FanSubcriber extends MQTTSubscriber {
     this.mqttClient.on('message', (topic, payload) => {
       MQTTSubscriber.cb(topic, payload);
       console.log(`Received Message On Fan: ${payload}`);
+      this.sensorService.create({
+        desc: '',
+        feed_key: topic,
+        last_update: new Date(),
+        name: 'fan',
+        status: true,
+        type: 'fan',
+        value: payload,
+      });
+      
     });
   }
   publish(feed_key: string, payload: string): any {
@@ -143,6 +163,10 @@ export class FanSubcriber extends MQTTSubscriber {
     }
     console.log(`Publishing to ${this.topic}`);
     this.mqttClient.publish(feed_key + '/json', payload);
+    return {
+      code: 200,
+      status: `Publishing to ${feed_key}`,
+    };
     return `Publishing to ${feed_key}`;
   }
 }
@@ -158,15 +182,27 @@ export class MotorSubcriber extends MQTTSubscriber {
     this.mqttClient.on('message', (topic, payload) => {
       MQTTSubscriber.cb(topic, payload);
       console.log('Received Message On Motor:');
+      this.sensorService.create({
+        desc: '',
+        feed_key: topic,
+        last_update: new Date(),
+        name: 'motor',
+        status: true,
+        type: 'motor',
+        value: payload,
+      });
     });
   }
-  publish(feed_key: string, payload: string): string {
+  publish(feed_key: string, payload: string): any {
     if (!(feed_key in this.topic)) {
       return null;
     }
     console.log(`Publishing to ${this.topic}`);
     this.mqttClient.publish(feed_key + '/json', payload);
-    return `Publishing to ${feed_key}`;
+    return {
+      code: 200,
+      status: `Publishing to ${feed_key}`,
+    };
   }
 }
 

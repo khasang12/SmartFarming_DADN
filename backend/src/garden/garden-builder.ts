@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { MqttManager } from 'src/mqtt/mqtt.service';
 import { User } from 'src/user/models/user.model';
 import { GardenService } from './garden.service';
-import { ConcreteGarden, Observer } from './gardenHelper';
+import { ConcreteGarden, Observer } from './garden-helper';
 
 
 

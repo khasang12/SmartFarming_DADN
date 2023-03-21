@@ -15,10 +15,10 @@ import { CreateGardenDTO } from './dto/create-garden.dto';
 import { UpdateGarden } from './dto/update-garden.dto';
 
 import { User } from 'src/user/models/user.model';
-import { ConcreteGarden } from './gardenHelper';
-import { GardenBuilder } from './gardenbuilder';
-import { GardenManagerService } from './gardenManager';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger/dist';
+import { ConcreteGarden } from './garden-helper';
+import { GardenBuilder } from './garden-builder';
+import { GardenManagerService } from './garden-manager';
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiResponse } from '@nestjs/swagger/dist';
 
 import { controlDTO } from './dto/control.dto';
 import { UserService } from 'src/user/user.service';
@@ -71,6 +71,12 @@ export class GardenController {
   async create(@Body() payload: CreateGardenDTO) {
     // call DB to get user info
     const gardenName = payload.name;
+
+    // check if garden is created
+    const exist = GardenManagerService.findGarden(gardenName)
+    
+    if(!exist.hasOwnProperty("error")) return exist
+
     const desc = payload.desc;
     let owner:User = await this.userService.findOne(payload.userId);
     const gkey = payload.group_key;
@@ -138,7 +144,9 @@ export class GardenController {
         error: "Missing gardenName"
       }
   }
-
+  
+  @ApiCreatedResponse({ description: 'Create Garden Successfully' })
+  @ApiBadRequestResponse({ description: 'Create Garden Failed' })
   @Post('/publish')
   control(@Body() payload: controlDTO) {
     let garden: ConcreteGarden = GardenManagerService.getGarden(
