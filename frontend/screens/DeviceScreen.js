@@ -13,7 +13,8 @@ const DeviceScreen = ({ route, navigation }) => {
     await setIsEnabled((previousState) => !previousState);
     await setValue();
   };
-  const getValue = async () => {
+  const getValue = () => {
+    console.log(1)
     axios
       .get("https://io.adafruit.com/api/v2/Potato_Stack/feeds/" + feed_key)
       .then((res) => console.log(res.data.last_value))
@@ -29,7 +30,7 @@ const DeviceScreen = ({ route, navigation }) => {
           feed_key +
           "/data",
         {
-          value: isEnabled?"0":"1",
+          value: isEnabled ? "0" : "1",
         },
         {
           headers: {
@@ -41,7 +42,7 @@ const DeviceScreen = ({ route, navigation }) => {
       .catch((err) => console.log(err));
   };
   useEffect(() => {
-    /* var timerID = setInterval(() => getValue(), 10000);
+    /* var timerID = setInterval(() => getValue(), 1000);
     return () => clearInterval(timerID); */
     getValue();
   }, []);

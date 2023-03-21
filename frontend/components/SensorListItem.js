@@ -16,9 +16,9 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
       .catch((err) => console.log(err));
   };
   useEffect(() => {
-    /* var timerID = setInterval(() => getValue(), 10000);
-    return () => clearInterval(timerID); */
-    getValue();
+    var timerID = setInterval(() => getValue(), 1000);
+    return () => clearInterval(timerID);
+    //getValue();
   }, []);
   return (
     <View>
