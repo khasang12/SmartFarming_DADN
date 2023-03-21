@@ -1,34 +1,52 @@
 import { View, ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import { AccordionList } from "react-native-accordion-list-view";
 import { farmers, devices } from "../data";
 import FarmerListItem from "../components/FarmerListItem";
-import DeviceListItem from "../components/OutputListItem";
-import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../config/config";
 import SensorListItem from "../components/SensorListItem";
 import OutputListItem from "../components/OutputListItem";
 
 const GardenInfoPage = ({ route, navigation }) => {
-  //const navigation = useNavigation();
-  const [gardenInfo, setGardenInfo] = useState();
   const [sensorsData, setSensorsData] = useState([]);
+  const [outputData, setOutputData] = useState([]);
 
   const garden = route.params.garden;
+  const outputDevices = [
+    ...garden.topic_list.fan,
+    garden.topic_list.pump,
+    garden.topic_list.motor,
+  ];
   const getSensorsInfo = async (sensors) => {
+    let promises = [];
+    let list = [];
     for (let sensorId of sensors) {
-      await axios
-        .get(`${BASE_URL}/sensor/${sensorId}`)
-        .then((res) => setSensorsData([...sensorsData, res.data.feed_key]))
-        .catch((err) => console.err(err));
+      promises.push(
+        axios
+          .get(`${BASE_URL}/sensor/${sensorId}`)
+          .then((res) => list.push(res.data))
+          .catch((err) => console.err(err))
+      );
     }
+    Promise.all(promises).then(() => setSensorsData(list));
   };
+  const getOutputInfo = async (outputs) => {
+    let promises = [];
+    let list = [];
+    for (let outputId of outputs) {
+      promises.push(
+        axios
+          .get(`${BASE_URL}/sensor/${outputId}`)
+          .then((res) => list.push(res.data))
+          .catch((err) => console.err(err))
+      );
+    }
+    Promise.all(promises).then(() => setOutputData(list));
+  };
+
   useEffect(() => {
-    //console.log("id info", garden);
-    getSensorsInfo(garden.sensors);
-    console.log("sensorsss: ", sensorsData);
+    getSensorsInfo(garden.topic_list.sensor);
+    getOutputInfo(outputDevices);
   }, []);
   // Define otype: Output/ Device/ Farmer
   return (
@@ -52,39 +70,36 @@ const GardenInfoPage = ({ route, navigation }) => {
 
         <View className="flex-col p-3 rounded-md bg-[#a7e9af] mb-5 mx-1">
           <Text className="text-lg mb-2 font-bold border-b-2">Sensors</Text>
-          {devices
-            .filter((item) => item.type === "sensor")
-            .map((item, index) => (
-              <SensorListItem
-                key={index}
-                otype="sensor"
-                name={item.name}
-                feed_key={item.feed_key}
-                item={item}
-                disable={false}
-                photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
-                onPress={() => navigation.navigate("Device", item)}
-              />
-            ))}
+          {sensorsData.map((item, index) => (
+            <SensorListItem
+              key={index}
+              otype="sensor"
+              name={item.name}
+              feed_key={item.feed_key}
+              item={item}
+              disable={false}
+              photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
+              onPress={() => navigation.navigate("Device", item)}
+            />
+          ))}
         </View>
 
         <View className="flex-col p-3 rounded-md bg-[#a7e9af] mb-5 mx-1">
           <Text className="text-lg mb-2 font-bold border-b-2">
             Output Devices
           </Text>
-          {devices
-            .filter((item) => item.type !== "sensor")
-            .map((item, index) => (
-              <OutputListItem
-                key={index}
-                otype="output"
-                name={item.name}
-                item={item}
-                disable={false}
-                photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
-                onPress={() => navigation.navigate("Device", item)}
-              />
-            ))}
+          {outputData.map((item, index) => (
+            <OutputListItem
+              key={index}
+              otype="output"
+              name={item.name}
+              feed_key={item.feed_key}
+              item={item}
+              disable={false}
+              photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
+              onPress={() => navigation.navigate("Device", item)}
+            />
+          ))}
         </View>
       </View>
     </ScrollView>

@@ -169,6 +169,25 @@ export const farmers = [
       },
     ],
   },
+  {
+    _id: {
+      $oid: "6402336630c0bba85r608a90",
+    },
+    name: "Hello Kitty",
+    password: "gauconngungoc",
+    email: "teddybeear@hcmut.edu.vn",
+    phone: "012012012012",
+    create_at: {
+      $date: {
+        $numberLong: "1680954800000",
+      },
+    },
+    garden: [
+      {
+        $oid: "640232e530c0bba85e608a8b",
+      },
+    ],
+  },
 ];
 
 export const gardens = [
@@ -254,7 +273,7 @@ export const gardenHistory = [
     temp: "33.6",
     light: "75000",
     timestamp: "08/12/2022 15:00:00",
-    color: "red",
+    status: "alert",
   },
   {
     name: "Garden 1",
@@ -263,7 +282,7 @@ export const gardenHistory = [
     temp: "33.6",
     light: "75000",
     timestamp: "08/12/2022 18:00:00",
-    color: "orange",
+    status: "warning",
   },
   {
     name: "Garden 1",
@@ -272,7 +291,7 @@ export const gardenHistory = [
     temp: "33.6",
     light: "75000",
     timestamp: "08/12/2022 21:00:00",
-    color: "green",
+    status: "normal",
   },
 ];
 
@@ -287,7 +306,7 @@ export const actionHistory = [
   {
     name: "Garden 1",
     feed_key: "feedkey2",
-    desc: "motor",
+    desc: "Motor",
     user: "IoT-Bot",
     timestamp: "16:46:53 09/12/2022",
   },

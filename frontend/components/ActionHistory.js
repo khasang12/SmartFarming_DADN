@@ -4,14 +4,15 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from "@react-navigation/native";
 
 function getMUICode(name) {
+  console.log(name)
   if (name === "Fan") {
     return "fan";
   }
   if (name === "Pump") {
     return "pump";
   }
-  if (name === "motor") {
-    return "motors";
+  if (name === "Motor") {
+    return "curtains";
   }
 }
 const ActionHistory = ({ name, feed, desc, user, timestamp }) => {

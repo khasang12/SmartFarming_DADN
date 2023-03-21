@@ -22,6 +22,7 @@ const GardenItem = ({ id }) => {
   };
   useEffect(() => {
     getItem();
+    console.log(garden)
   }, []);
   const handleGardenNavigation = () => {
     navigation.navigate("GardenDetail", garden);

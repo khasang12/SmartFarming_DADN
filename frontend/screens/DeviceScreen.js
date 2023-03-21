@@ -23,22 +23,21 @@ const DeviceScreen = ({ route, navigation }) => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
     const userToken = await AsyncStorage.getItem("userToken");
-    console.log(userInfo, userToken);
     axios
-      .put(
-        "https://io.adafruit.com/api/v2/khasang12/feeds/" + feed_key,
+      .post(
+        "https://io.adafruit.com/api/v2/Potato_Stack/feeds/" +
+          feed_key +
+          "/data",
         {
-          value: isEnabled,
+          value: isEnabled?"0":"1",
         },
         {
           headers: {
             "X-AIO-Key": userInfo.x_aio_key,
-            Authorization: `Bearer ${userToken}`,
-            "Content-Type": "application/json",
           },
         }
       )
-      .then((res) => console.log(res.data.last_value))
+      .then((res) => console.log(res.data.value))
       .catch((err) => console.log(err));
   };
   useEffect(() => {
@@ -60,9 +59,9 @@ const DeviceScreen = ({ route, navigation }) => {
         <Text className="text-lg">Device Type: {type}</Text>
         <Text className="text-lg">Status: {isEnabled ? "On" : "Off"}</Text>
         {/* <Text className="text-lg">Value: {value.$numberDecimal}</Text> */}
-        <Text className="text-lg">
+        {/* <Text className="text-lg">
           Last Update: {last_update.$date.$numberLong}
-        </Text>
+        </Text> */}
       </View>
       {/* <Slider
         value={curValue}
