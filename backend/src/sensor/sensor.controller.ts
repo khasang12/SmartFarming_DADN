@@ -20,6 +20,7 @@ import { User } from 'src/user/models/user.model';
 import { ConcreteGarden } from 'src/garden/garden-helper';
 import { GardenManagerService } from 'src/garden/garden-manager';
 import { ApiBadRequestResponse, ApiOkResponse } from '@nestjs/swagger';
+import { Latest } from './dto/value.dto';
 
 class DeviceDTO {
   feed_key: string;
@@ -35,7 +36,7 @@ export class SensorController {
   async index() {
     return await this.sensorService.findAll();
   }
-  
+
   @Get(':id')
   @ApiOkResponse({ description: 'Get sensor successfully' })
   @ApiBadRequestResponse({ description: 'Get sensor failed' })
@@ -43,9 +44,21 @@ export class SensorController {
     return await this.sensorService.findOne(id);
   }
 
+  @Post('device/latest')
+  @ApiOkResponse({ description: 'Get sensor successfully' })
+  @ApiBadRequestResponse({ description: 'Get sensor failed' })
+  async getLatest(@Body() payload: Latest) {
+    const result = await this.sensorService.findByKey(payload)
+    console.log(payload.type);
+    
+    if(payload.type === 1) 
+      return result[result.length-1];
+    return result[0];  
+  }
+
   @Post()
-  @ApiOkResponse({ description: 'Create sensor successfully' })
-  @ApiBadRequestResponse({ description: 'Create sensor failed' })
+  @ApiOkResponse({ description: 'Latest Record' })
+  @ApiBadRequestResponse({ description: 'Failed' })
   async create(@Body() createSensor: CreateSensor) {
     return await this.sensorService.create(createSensor);
   }
