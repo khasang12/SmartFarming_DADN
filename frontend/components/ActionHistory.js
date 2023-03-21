@@ -10,8 +10,8 @@ function getMUICode(name) {
   if (name === "Pump") {
     return "pump";
   }
-  if (name === "motor") {
-    return "motors";
+  if (name === "Curtain") {
+    return "curtain";
   }
 }
 const ActionHistory = ({ name, feed, desc, user, timestamp }) => {

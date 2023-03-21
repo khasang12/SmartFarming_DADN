@@ -60,9 +60,9 @@ const DeviceScreen = ({ route, navigation }) => {
         <Text className="text-lg">Device Type: {type}</Text>
         <Text className="text-lg">Status: {isEnabled ? "On" : "Off"}</Text>
         {/* <Text className="text-lg">Value: {value.$numberDecimal}</Text> */}
-        <Text className="text-lg">
+        {/* <Text className="text-lg">
           Last Update: {last_update.$date.$numberLong}
-        </Text>
+        </Text> */}
       </View>
       {/* <Slider
         value={curValue}

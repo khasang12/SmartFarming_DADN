@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 
-export default function SensorListItem({ feed_key, otype, item, photo, name, disable }) {
+export default function SensorListItem({ feed_key, otype, item, photo, name, disable, value }) {
   const { width: windowWidth } = Dimensions.get("window");
   const navigation = useNavigation();
   const [showInfo, setShowInfo] = useState(false);
-  const [value, setValue] = useState(undefined);
+  const [valueUpdated, setValueUpdated] = useState(undefined);
   const getValue = async () => {
     axios
       .get("https://io.adafruit.com/api/v2/Potato_Stack/feeds/"+feed_key)
-      .then((res) => setValue(res.data.last_value))
+      .then((res) => setValueUpdated(res.data.last_value))
       .catch((err) => console.log(err));
   };
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
       {showInfo && !disable && (
         <View>
           <Text>Feed Key: {feed_key}</Text>
-          <Text>Value: {value}</Text>
+          <Text>Value: {valueUpdated}</Text>
         </View>
       )}
     </View>
