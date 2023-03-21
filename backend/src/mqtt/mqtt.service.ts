@@ -1,20 +1,28 @@
-/* eslint-disable prefer-const */
 import { Inject, Injectable } from '@nestjs/common';
-import { error } from 'console';
 import { connect } from 'mqtt';
 import { SensorService } from 'src/sensor/sensor.service';
+
+
 @Injectable()
+export class MqttService {
+  @Inject(SensorService)
+  private readonly sensorService: SensorService
+  getManager(username: string, password: string) {
+    return new MqttManager(username, password, this.sensorService);
+  }
+
+
+}
+
 export class MQTTSubscriber {
   public mqttClient;
   public static cb; // Call back notify function
-
-  @Inject(SensorService.name) 
-  protected readonly sensorService: SensorService;
   /* @InjectModel(Sensor.name) protected readonly model: Model<SensorDocument>; */
   constructor(
     protected topic: string[],
     protected username: string,
-    protected password: string
+    protected password: string,
+    protected sensorService : any
   ) {
     const host = 'io.adafruit.com';
     const port = '1883';
@@ -61,31 +69,34 @@ export class MQTTSubscriber {
   }
 }
 
-@Injectable()
+
 export class SensorSubcriber extends MQTTSubscriber {
   launch() {
+    console.log(this.sensorService);
     this.mqttClient.on('connect', () => {
       console.log('Connected');
       this.mqttClient.subscribe(this.topic, () => {
         console.log(`Subscribe to topic '${this.topic}'`);
       });
     });
+
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic,payload);
+      MQTTSubscriber.cb(topic, payload);
       console.log(`Received Message On Sensor: ${payload}`);
       this.sensorService.create({
-        desc: "",
+        desc: '',
         feed_key: topic,
         last_update: new Date(),
-        name: "",
+        name: 'sensor',
         status: true,
-        type:"sensor",
-        value:payload
-      })
+        type: 'sensor',
+        value: payload,
+      });
     });
   }
 }
-@Injectable()
+
+
 export class PumpSubcriber extends MQTTSubscriber {
   launch() {
     this.mqttClient.on('connect', () => {
@@ -95,25 +106,24 @@ export class PumpSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic,payload);
+      MQTTSubscriber.cb(topic, payload);
       console.log(`Received Message On Pump: ${payload}`);
     });
   }
 
-  publish(feed_key:string,payload: string): any {
-    if(! (feed_key in this.topic)) {
+  publish(feed_key: string, payload: string): any {
+    if (!(feed_key in this.topic)) {
       return null;
     }
     console.log(`Publishing to ${this.topic}`);
     this.mqttClient.publish(feed_key + '/json', payload);
     return {
       code: 200,
-      status: `Publishing to ${feed_key}`
-    };  
+      status: `Publishing to ${feed_key}`,
+    };
   }
 }
 
-@Injectable()
 export class FanSubcriber extends MQTTSubscriber {
   launch() {
     this.mqttClient.on('connect', () => {
@@ -123,20 +133,20 @@ export class FanSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic,payload);
+      MQTTSubscriber.cb(topic, payload);
       console.log(`Received Message On Fan: ${payload}`);
     });
   }
-  publish(feed_key:string,payload: string): any {
-    if(!this.topic.includes(feed_key)) {
+  publish(feed_key: string, payload: string): any {
+    if (!this.topic.includes(feed_key)) {
       return null;
     }
     console.log(`Publishing to ${this.topic}`);
     this.mqttClient.publish(feed_key + '/json', payload);
-    return `Publishing to ${feed_key}`
+    return `Publishing to ${feed_key}`;
   }
 }
-@Injectable()
+
 export class MotorSubcriber extends MQTTSubscriber {
   launch() {
     this.mqttClient.on('connect', () => {
@@ -146,12 +156,12 @@ export class MotorSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic,payload);
+      MQTTSubscriber.cb(topic, payload);
       console.log('Received Message On Motor:');
     });
   }
-  publish(feed_key:string,payload: string): string {
-    if(! (feed_key in this.topic)) {
+  publish(feed_key: string, payload: string): string {
+    if (!(feed_key in this.topic)) {
       return null;
     }
     console.log(`Publishing to ${this.topic}`);
@@ -160,33 +170,33 @@ export class MotorSubcriber extends MQTTSubscriber {
   }
 }
 
-
 // Factory Pattern
+
 class SubcriberFactory {
   createSubcriber(
     type: string,
     topic: string[],
     username: string,
     password: string,
+    sensorService
   ): MQTTSubscriber {
     if (type === 'sensor') {
-      return new SensorSubcriber(topic, username, password);
+      return new SensorSubcriber(topic, username, password, sensorService);
     } else if (type === 'pump') {
-      return new PumpSubcriber(topic, username, password);
+      return new PumpSubcriber(topic, username, password, sensorService);
     } else if (type === 'motor') {
-      return new MotorSubcriber(topic, username, password);
+      return new MotorSubcriber(topic, username, password, sensorService);
     } else if (type === 'fan') {
-      return new FanSubcriber(topic, username, password);
+      return new FanSubcriber(topic, username, password,sensorService);
     }
     return null;
   }
 }
 
-@Injectable()
 export class MqttManager {
   private Subcribers;
   private notifyFunction;
-  constructor(private username: string, private password: string) {
+  constructor(private username: string, private password: string, private sensorService: any) {
     this.Subcribers = {};
   }
   launch(): void {
@@ -198,26 +208,26 @@ export class MqttManager {
   getCurrentDeviceType(): string[] {
     return Object.keys(this.Subcribers);
   }
-  publish(type:string, topic: string, payload) {
-    if(this.getCurrentDeviceType().includes(type)) {
+  publish(type: string, topic: string, payload) {
+    if (this.getCurrentDeviceType().includes(type)) {
       return this.Subcribers[type].publish(topic, payload);
     }
     return {
       code: 404,
-      status: "Device Type Not Found"
+      status: 'Device Type Not Found',
     };
   }
   addSubcriber(type: string, topic: string[] = []) {
-    let newSubscriber: MQTTSubscriber = new SubcriberFactory().createSubcriber(
+    const newSubscriber: MQTTSubscriber = new SubcriberFactory().createSubcriber(
       type,
       topic,
       this.username,
       this.password,
+      this.sensorService
     );
 
-    if(newSubscriber === null)
-      throw error("Device Type not Available");
-    
+    if (newSubscriber === null) throw Error('Device Type not Available');
+
     if (!this.Subcribers.hasOwnProperty(type))
       this.Subcribers[type] = newSubscriber;
 
@@ -262,14 +272,14 @@ export class MqttManager {
     return false;
   }
 
-  setNotify(cb:any) {
-    MQTTSubscriber.cb =cb; 
+  setNotify(cb: any) {
+    MQTTSubscriber.cb = cb;
   }
 
   getInfo() {
     return {
       adaUser: this.username,
-      key: this.password
-    }
+      key: this.password,
+    };
   }
 }

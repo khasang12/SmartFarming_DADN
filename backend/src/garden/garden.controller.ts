@@ -9,26 +9,31 @@ import {
   Post,
   Put,
   UseGuards,
+  Inject,
 } from '@nestjs/common';
 import { CreateGardenDTO } from './dto/create-garden.dto';
 import { UpdateGarden } from './dto/update-garden.dto';
-import { MqttManager } from './mqtt.service';
+
 import { User } from 'src/user/models/user.model';
-import { ConcreteGarden } from './gardenHelper.service';
-import { GardenBuilder } from './gardenbuilder.service';
-import { GardenManagerService } from './gardenManager.service';
+import { ConcreteGarden } from './gardenHelper';
+import { GardenBuilder } from './gardenbuilder';
+import { GardenManagerService } from './gardenManager';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger/dist';
 
 import { controlDTO } from './dto/control.dto';
 import { UserService } from 'src/user/user.service';
-import { resourceLimits } from 'worker_threads';
+import { SensorService } from 'src/sensor/sensor.service';
+import { MqttService } from 'src/mqtt/mqtt.service';
 
 
 @Controller('garden')
 export class GardenController {
+  @Inject(SensorService)
+  private sensorService: SensorService;
   constructor(
     private readonly gardenService: GardenService,
     private readonly userService: UserService,
+    private readonly mqttService: MqttService,
   ) {}
 
   @Get()
@@ -90,7 +95,7 @@ export class GardenController {
       userId: owner["_id"],
       x_aio_key:payload.group_key
     })
-    const mqttManager = new MqttManager(username, owner_x_aio_key);
+    const mqttManager = this.mqttService.getManager(username, owner_x_aio_key);
     for (let k in topic_list) {
       mqttManager.addSubcriber(k, topic_list[k]);
     }

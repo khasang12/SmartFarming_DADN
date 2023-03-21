@@ -15,11 +15,10 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { SensorService } from './sensor.service';
 import { CreateSensor } from './dto/create-sensor.dto';
 import { UpdateSensor } from './dto/update-sensor.dto';
-import { MqttManager } from 'src/garden/mqtt.service';
-import { GardenBuilder } from 'src/garden/gardenbuilder.service';
+import { GardenBuilder } from 'src/garden/gardenbuilder';
 import { User } from 'src/user/models/user.model';
-import { ConcreteGarden } from 'src/garden/gardenHelper.service';
-import { GardenManagerService } from 'src/garden/gardenManager.service';
+import { ConcreteGarden } from 'src/garden/gardenHelper';
+import { GardenManagerService } from 'src/garden/gardenManager';
 import { ApiBadRequestResponse, ApiOkResponse } from '@nestjs/swagger';
 
 class DeviceDTO {

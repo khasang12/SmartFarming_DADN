@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { ConcreteGarden } from './gardenHelper.service';
+import { ConcreteGarden } from './gardenHelper';
 
 // Singleton Pattern for Garden Manager
 @Injectable()
