@@ -74,8 +74,9 @@ const TabNavigator = () => {
     <Tab.Navigator
       activeColor="#6a8caf"
       inactiveColor="#75b79e"
-      tabBarColor="#a7e9af"
+      tabBarColor="#23c552"
       barStyle={{ backgroundColor: "#a7e9af" }}
+      shifting
       screenOptions={{
         tabBarStyle: { position: "absolute" },
         tabBarIconStyle: { backgroundColor: "#6a8caf" },

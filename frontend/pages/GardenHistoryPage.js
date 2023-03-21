@@ -1,7 +1,7 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { gardenHistory } from '../data';
-import GardenHistory from '../components/GardenHistory';
+import { View, Text } from "react-native";
+import React from "react";
+import { gardenHistory } from "../data";
+import GardenHistory from "../components/GardenHistory";
 
 const GardenHistoryPage = () => {
   return (
@@ -11,7 +11,7 @@ const GardenHistoryPage = () => {
         <GardenHistory
           key={index}
           name={item.name}
-          color={item.color}
+          status={item.status}
           timestamp={item.timestamp}
           humid={item.humid}
           temp={item.temp}
@@ -20,6 +20,6 @@ const GardenHistoryPage = () => {
       ))}
     </View>
   );
-}
+};
 
-export default GardenHistoryPage
+export default GardenHistoryPage;

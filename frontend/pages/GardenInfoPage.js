@@ -1,11 +1,7 @@
 import { View, ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import { AccordionList } from "react-native-accordion-list-view";
 import { farmers, devices } from "../data";
 import FarmerListItem from "../components/FarmerListItem";
-import DeviceListItem from "../components/OutputListItem";
-import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../config/config";
 import SensorListItem from "../components/SensorListItem";
@@ -49,13 +45,8 @@ const GardenInfoPage = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    //console.log("id info", garden);
     getSensorsInfo(garden.topic_list.sensor);
     getOutputInfo(outputDevices);
-
-    /* console.log("sensorsss: ", sensorsData);
-    console.log("sgen: ", sensorsData);
-    console.log("devicesss: ", outputData); */
   }, []);
   // Define otype: Output/ Device/ Farmer
   return (
