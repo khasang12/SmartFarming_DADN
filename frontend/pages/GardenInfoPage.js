@@ -45,6 +45,7 @@ const GardenInfoPage = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    
     getSensorsInfo(garden.topic_list.sensor);
     getOutputInfo(outputDevices);
   }, []);

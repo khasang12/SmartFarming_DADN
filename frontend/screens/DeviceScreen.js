@@ -3,33 +3,34 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-native-slider";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "../config/config";
 
 const DeviceScreen = ({ route, navigation }) => {
   const { name, feed_key, type, status, value, desc, last_update } =
     route.params;
-  const [isEnabled, setIsEnabled] = useState(status);
+  const [isEnabled, setIsEnabled] = useState();
   const [isAuto, setIsAuto] = useState(false);
   const toggleEnable = async () => {
     await setIsEnabled((previousState) => !previousState);
     await setValue();
   };
-  const getValue = async () => {
+  const getValue = () => {
     axios
-      .get("https://io.adafruit.com/api/v2/Potato_Stack/feeds/" + feed_key)
-      .then((res) => console.log(res.data.last_value))
+      .post(`${BASE_URL}/sensor/device/latest`, {
+        feed_key,
+        type: -1,
+      })
+      .then((res) => setIsEnabled(res.data.value))
       .catch((err) => console.log(err));
   };
   const setValue = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
-    const userToken = await AsyncStorage.getItem("userToken");
     axios
       .post(
-        "https://io.adafruit.com/api/v2/Potato_Stack/feeds/" +
-          feed_key +
-          "/data",
+        "https://io.adafruit.com/api/v2/" + feed_key + "/data",
         {
-          value: isEnabled?"0":"1",
+          value: isEnabled ? "0" : "1",
         },
         {
           headers: {
@@ -41,7 +42,7 @@ const DeviceScreen = ({ route, navigation }) => {
       .catch((err) => console.log(err));
   };
   useEffect(() => {
-    /* var timerID = setInterval(() => getValue(), 10000);
+    /* var timerID = setInterval(() => getValue(), 1000);
     return () => clearInterval(timerID); */
     getValue();
   }, []);
@@ -94,12 +95,14 @@ const DeviceScreen = ({ route, navigation }) => {
 
         <View className="flex-row justify-between w-3/4">
           <View className="flex-col items-center">
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-              onValueChange={toggleEnable}
-              value={isEnabled}
-            />
+            {isEnabled!=null && (
+              <Switch
+                trackColor={isEnabled ? "#767577" : "#81b0ff"}
+                thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                onValueChange={toggleEnable}
+                value={isEnabled}
+              />
+            )}
             <Text className="text-lg">ON/OFF</Text>
           </View>
           <View className="flex-col items-center">

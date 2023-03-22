@@ -50,7 +50,6 @@ export class SensorController {
   async getLatest(@Body() payload: Latest) {
     const result = await this.sensorService.findByKey(payload)
 
-
     const [newest,latest] = [result[0],result[result.length-1]]
     console.log(newest);
     console.log(latest);

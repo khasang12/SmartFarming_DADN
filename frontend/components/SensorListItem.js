@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
+import { BASE_URL } from "../config/config";
 
 export default function SensorListItem({ feed_key, otype, item, photo, name, disable, value }) {
   const { width: windowWidth } = Dimensions.get("window");
@@ -11,14 +12,17 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
   const [valueUpdated, setValueUpdated] = useState(undefined);
   const getValue = async () => {
     axios
-      .get("https://io.adafruit.com/api/v2/Potato_Stack/feeds/"+feed_key)
-      .then((res) => setValueUpdated(res.data.last_value))
+      .post(`${BASE_URL}/sensor/device/latest`, {
+        feed_key,
+        type:-1,
+      })
+      .then((res) => setValueUpdated(res.data.value))
       .catch((err) => console.log(err));
   };
   useEffect(() => {
-    /* var timerID = setInterval(() => getValue(), 10000);
-    return () => clearInterval(timerID); */
-    getValue();
+    var timerID = setInterval(() => getValue(), 1000);
+    return () => clearInterval(timerID);
+    //getValue();
   }, []);
   return (
     <View>
