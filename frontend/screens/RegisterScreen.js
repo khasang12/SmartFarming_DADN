@@ -51,7 +51,7 @@ const RegisterScreen = () => {
     }
 
     // sending data
-    const sendData = {name:fname, email: email, password: password, phone: phone, x_aio_key: aio}
+    const sendData = {name: username, email: email, password: password, phone: phone, x_aio_key: aio}
     await axios
       .post(`${BASE_URL}/user`, sendData)
       .then((res) => {
@@ -145,21 +145,6 @@ const RegisterScreen = () => {
           value={data.repassword}
           onChangeText={(t) => setData({ ...data, repassword: t })}
           inputType="password"
-        />
-
-        <InputField
-          label={"Full name"}
-          icon={
-            <MaterialIcons
-              name="drive-file-rename-outline"
-              size={20}
-              color="#666"
-              style={{ marginRight: 5 }}
-            />
-          }
-          value={data.fname}
-          onChangeText={(t) => setData({ ...data, fname: t })}
-          keyboardType="default"
         />
 
         <InputField
