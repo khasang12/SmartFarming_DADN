@@ -11,7 +11,7 @@ import { BASE_URL } from "../config/config";
 
 const AddGardenScreen = () => {
   const [data, setData] = useState({
-    adaUsername: "davidhuynh22",
+    adaUserName: "davidhuynh22",
     name: "Hello World",
     desc: "Init Garden",
     boundary: [],
@@ -20,7 +20,7 @@ const AddGardenScreen = () => {
   const [sensorList, setSensorList] = useState([
     "Potato_Stack/feeds/iot-cnpm.sensor1",
     "Potato_Stack/feeds/iot-cnpm.sensor2",
-    "Potato_Stack/feeds/iot-cnpm.sensor3",
+    "Potato_Stack/feeds/iot-cnpm.sensor4",
   ]);
   const [fanList, setFanList] = useState([
     "Potato_Stack/feeds/iot-cnpm.button1",
@@ -45,7 +45,7 @@ const AddGardenScreen = () => {
     axios
       .post(`${BASE_URL}/garden/create`, sendingData)
       .then((res) => {
-        console.log(res.status);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -89,8 +89,8 @@ const AddGardenScreen = () => {
               style={{ marginRight: 5 }}
             />
           }
-          value={data.adaUsername}
-          onChangeText={(t) => setData({ ...data, adaUsername: t })}
+          value={data.adaUserName}
+          onChangeText={(t) => setData({ ...data, adaUserName: t })}
           keyboardType="default"
         />
 
