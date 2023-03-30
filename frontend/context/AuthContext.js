@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../config/config";
+import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 
 export const AuthContext = createContext();
 
@@ -10,6 +11,14 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+
+  const showFailedToast = (text1, text2 = None) => {
+    Toast.show({
+      type: "error",
+      text1: text1,
+      text2: text2,
+    });
+  };
 
   const login = (username, password) => {
     setIsLoading(true);
@@ -25,7 +34,10 @@ export const AuthProvider = ({ children }) => {
         AsyncStorage.setItem("userToken", res.data.access_token);
         AsyncStorage.setItem("userInfo", JSON.stringify(res.data.user));
       })
-      .catch((err) => {console.log(err)});
+      .catch((err) => {
+        showFailedToast("Login failed", "Incorrect Email or Password");
+        console.log(err)
+      });
     setIsLoading(false);
   };
 
@@ -61,6 +73,44 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ login, logout, isLoading, userToken }}>
       {children}
+      <Toast config={toastConfig}/>
     </AuthContext.Provider>
   );
+};
+
+
+const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: "pink" }}
+      contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: "400",
+      }}
+    />
+  ),
+  /*
+    Overwrite 'error' type,
+    by modifying the existing `ErrorToast` component
+  */
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      height={70}
+      text1Style={{
+        fontSize: 20,
+        fontFamily: "MontserratSemiBold",
+      }}
+      text2Style={{
+        fontSize: 15,
+        fontFamily: "MontserratRegular",
+      }}
+    />
+  ),
 };
