@@ -5,16 +5,20 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import GardenItem from "../components/GardenItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { BASE_URL } from "../config/config";
 
 const GardenScreen = ({ navigation }) => {
   const [gardens, setGardens] = useState([]);
   const getList = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
-    await setGardens(JSON.parse(userInfo).gardens);
+    await axios
+      .get(`${BASE_URL}/garden?userId=${JSON.parse(userInfo)._id}`)
+      .then((res) => setGardens(res.data))
+      .catch((err) => console.log(err));
   };
   useEffect(() => {
     getList();
-  }, []);
+  });
 
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
@@ -26,7 +30,7 @@ const GardenScreen = ({ navigation }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("AddGarden");
+              navigation.navigate("AddGardenStack");
             }}
           >
             <MaterialIcons
@@ -39,7 +43,7 @@ const GardenScreen = ({ navigation }) => {
 
         {/* List of Gardens */}
         {gardens &&
-          gardens.map((item, index) => <GardenItem key={index} id={item} />)}
+          gardens.map((item, index) => <GardenItem key={index} garden={item} />)}
       </ScrollView>
     </View>
   );

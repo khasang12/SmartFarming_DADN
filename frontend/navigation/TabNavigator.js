@@ -11,6 +11,8 @@ import LoginScreen from "../screens/LoginScreen";
 import NotiScreen from "../screens/NotiScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import AddDeviceScreen from "../screens/AddDeviceScreen";
+import AddBoundaryScreen from "../screens/AddBoundaryScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -19,7 +21,7 @@ const HomeStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home2"
+        name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
       />
@@ -37,6 +39,28 @@ const HomeStack = () => {
   );
 };
 
+const AddGardenStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="AddGarden">
+      <Stack.Screen
+        name="AddGarden"
+        component={AddGardenScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddDevice"
+        component={AddDeviceScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddBoundary"
+        component={AddBoundaryScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 const GardenStack = () => {
   return (
     <Stack.Navigator initialRouteName="Garden">
@@ -46,8 +70,8 @@ const GardenStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="AddGarden"
-        component={AddGardenScreen}
+        name="AddGardenStack"
+        component={AddGardenStack}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -83,7 +107,7 @@ const TabNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="HomeStack"
         component={HomeStack}
         options={{
           tabBarLabel: "Home",
