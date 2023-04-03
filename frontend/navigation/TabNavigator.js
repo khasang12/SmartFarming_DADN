@@ -11,6 +11,8 @@ import LoginScreen from "../screens/LoginScreen";
 import NotiScreen from "../screens/NotiScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import StatisticScreen from "../screens/StatisticScreen";
+
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -63,6 +65,11 @@ const GardenStack = () => {
       <Stack.Screen
         name="Device"
         component={DeviceScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Statistic"
+        component={StatisticScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

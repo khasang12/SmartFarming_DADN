@@ -5,10 +5,10 @@ export default function CustomButton({ label, onPress }) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="bg-[#6a8caf] p-5 mb-7 rounded-md"
+      className="bg-[#2CD368] p-5 mb-7 rounded-xl"
     >
       <Text
-        className="text-center text-[#000]"
+        className="text-center text-[#fff]"
         style={{
           fontFamily: "MontserratRegular",
           fontSize: 24,

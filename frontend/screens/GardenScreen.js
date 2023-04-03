@@ -5,7 +5,6 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import GardenItem from "../components/GardenItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
 const GardenScreen = ({ navigation }) => {
   const [gardens, setGardens] = useState([]);
   const getList = async () => {
@@ -40,9 +39,11 @@ const GardenScreen = ({ navigation }) => {
         {/* List of Gardens */}
         {gardens &&
           gardens.map((item, index) => <GardenItem key={index} id={item} />)}
+      
       </ScrollView>
     </View>
   );
 };
+
 
 export default GardenScreen;
