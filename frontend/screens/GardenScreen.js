@@ -6,9 +6,11 @@ import GardenItem from "../components/GardenItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../config/config";
+import { useIsFocused } from "@react-navigation/native";
 
 const GardenScreen = ({ navigation }) => {
   const [gardens, setGardens] = useState([]);
+  const isFocused = useIsFocused();
   const getList = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     await axios
@@ -18,7 +20,7 @@ const GardenScreen = ({ navigation }) => {
   };
   useEffect(() => {
     getList();
-  });
+  }, [isFocused]);
 
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">

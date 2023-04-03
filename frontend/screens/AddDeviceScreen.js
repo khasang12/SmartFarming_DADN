@@ -42,7 +42,7 @@ const AddDeviceScreen = ({navigation, route}) => {
           text1: "Procedure Complete",
           text2: "New garden created",
         });
-        navigation.popToTop();
+        navigation.navigate("Garden");
       })
       .catch((err) => {
         console.log(err);
