@@ -7,24 +7,8 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet } from "react-native";
 
-const GardenItem = ({ id }) => {
+const GardenItem = ({ garden }) => {
   const navigation = useNavigation();
-  const [garden, setGarden] = useState({});
-  console.log("id", id);
-  const getItem = async () => {
-    axios
-      .get(`${BASE_URL}/garden/${id}`)
-      .then((res) => {
-        setGarden(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  useEffect(() => {
-    getItem();
-    console.log(garden)
-  }, []);
   const handleGardenNavigation = () => {
     navigation.navigate("GardenDetail", garden);
   };
@@ -59,8 +43,8 @@ const GardenItem = ({ id }) => {
         </TouchableOpacity>
       </View>
       <View className="ml-2 mb-3">
-        <Text>{garden.group_key}</Text>
-        <Text>{garden.desc}</Text>
+        <Text>Group key: {garden.group_key}</Text>
+        <Text>Description: {garden.desc}</Text>
       </View>
 
       <View className="flex-row justify-start mb-5 items-center">

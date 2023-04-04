@@ -37,12 +37,13 @@ export class SensorController {
     return await this.sensorService.findAll();
   }
 
-  @Get(':id')
+  /* @Get(':id')
   @ApiOkResponse({ description: 'Get sensor successfully' })
   @ApiBadRequestResponse({ description: 'Get sensor failed' })
   async show(@Param('id') id: string) {
+    console.log(id)
     return await this.sensorService.findOne(id);
-  }
+  } */
 
   @Post('device/latest')
   @ApiOkResponse({ description: 'Get sensor successfully' })
@@ -51,8 +52,6 @@ export class SensorController {
     const result = await this.sensorService.findByKey(payload)
 
     const [newest,latest] = [result[0],result[result.length-1]]
-    console.log(newest);
-    console.log(latest);
     
     if(payload.type === 1) 
       return latest

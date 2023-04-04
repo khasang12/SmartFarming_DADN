@@ -9,43 +9,23 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BASE_URL } from "../config/config";
 
-const AddGardenScreen = () => {
+const AddGardenScreen = ({navigation}) => {
   const [data, setData] = useState({
-    adaUsername: "davidhuynh22",
-    name: "Hello World",
+    garden_name: "Hello World",
     desc: "Init Garden",
-    boundary: [],
+    group_name: 'iot-cnpm',
     group_key: "Potato_Stack",
   });
-  const [sensorList, setSensorList] = useState([
-    "Potato_Stack/feeds/iot-cnpm.sensor1",
-    "Potato_Stack/feeds/iot-cnpm.sensor2",
-    "Potato_Stack/feeds/iot-cnpm.sensor3",
-  ]);
-  const [fanList, setFanList] = useState([
-    "Potato_Stack/feeds/iot-cnpm.button1",
-    "Potato_Stack/feeds/iot-cnpm.button2",
-  ]);
-  const [motorList, setMotorList] = useState([]);
-  const [pumpList, setPumpList] = useState([]);
-  const [boundaryList, setBoundaryList] = useState([]);
-  const handleCreateGarden = async (e) => {
+  const handleFindGarden = async (e) => {
     let userInfo = await AsyncStorage.getItem("userInfo");
-    const sendingData = {
-      ...data,
-      userId: await JSON.parse(userInfo)._id,
-      topic_list: {
-        sensor: sensorList,
-        fan: fanList,
-        pump: pumpList,
-        motor: motorList,
-      },
-      boundary: [],
+    const headers = {
+      "Content-Type": "application/json",
+      "X-AIO-Key": await JSON.parse(userInfo).x_aio_key,
     };
     axios
-      .post(`${BASE_URL}/garden/create`, sendingData)
+      .get(`https://io.adafruit.com/api/v2/${data.group_key}/groups/${data.group_name}`, {headers})
       .then((res) => {
-        console.log(res.status);
+        navigation.navigate("AddDevice",{garden_name: data.garden_name,desc: data.desc, group_name: data.group_name, group_key: data.group_key,feeds: res.data.feeds})
       })
       .catch((err) => {
         console.log(err);
@@ -65,7 +45,7 @@ const AddGardenScreen = () => {
     }
   };
   return (
-    <View className="flex-1 justify-center bg-[#eef9bf] pt-3">
+    <View className="flex-1 justify-center bg-[#eef9bf] pt-5">
       <ScrollView className="px-5 pt-5">
         <Text
           style={{
@@ -79,20 +59,17 @@ const AddGardenScreen = () => {
           New Garden
         </Text>
 
-        <InputField
-          label={"Adafruit Username"}
-          icon={
-            <MaterialIcons
-              name="person-outline"
-              size={20}
-              color="#666"
-              style={{ marginRight: 5 }}
-            />
-          }
-          value={data.adaUsername}
-          onChangeText={(t) => setData({ ...data, adaUsername: t })}
-          keyboardType="default"
-        />
+        <Text
+          style={{
+            fontFamily: "MontserratSemiBold",
+            fontSize: 20,
+            fontWeight: "500",
+            color: "#000",
+            marginBottom: 30,
+          }}
+        >
+          Basic information
+        </Text>
 
         <InputField
           label={"Garden Name"}
@@ -104,13 +81,28 @@ const AddGardenScreen = () => {
               style={{ marginRight: 5 }}
             />
           }
-          value={data.name}
-          onChangeText={(t) => setData({ ...data, name: t })}
+          value={data.garden_name}
+          onChangeText={(t) => setData({ ...data, garden_name: t })}
           keyboardType="default"
         />
 
         <InputField
-          label={"Garden Group Key"}
+          label={"AdafruitIO Group Name"}
+          icon={
+            <MaterialIcons
+              name="drive-file-rename-outline"
+              size={20}
+              color="#666"
+              style={{ marginRight: 5 }}
+            />
+          }
+          value={data.group_name}
+          onChangeText={(t) => setData({ ...data, group_name: t })}
+          keyboardType="default"
+        />
+
+        <InputField
+          label={"AdafruitIO Group Key"}
           icon={
             <MaterialIcons
               name="drive-file-rename-outline"
@@ -139,7 +131,7 @@ const AddGardenScreen = () => {
           keyboardType="default"
         />
 
-        <View>
+        {/* <View>
           <View className="my-4 flex-row justify-between">
             <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>
               Boundary
@@ -294,9 +286,10 @@ const AddGardenScreen = () => {
                 keyboardType="default"
               />
             ))}
+        </View> */}
+        <View className="justify-center flex-row">
+          <CustomButton label={"Next"} onPress={() => handleFindGarden()} />
         </View>
-
-        <CustomButton label={"Create"} onPress={() => handleCreateGarden()} />
       </ScrollView>
     </View>
   );

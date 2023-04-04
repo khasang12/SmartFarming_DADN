@@ -66,8 +66,10 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
       </View>
       {showInfo && !disable && (
         <View>
-          <Text>Feed Key: {feed_key}</Text>
-          <Text>Value: {valueUpdated}</Text>
+          <Text className="text-lg">Feed Key: {feed_key}</Text>
+          <Text className="text-lg">
+            Value: <Text className="text-red">{valueUpdated}</Text>
+          </Text>
         </View>
       )}
     </View>

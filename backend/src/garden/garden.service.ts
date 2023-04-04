@@ -11,8 +11,10 @@ export class GardenService {
   constructor(@InjectModel(Garden.name) private readonly model: Model<GardenDocument>) {
 
   }
-  async findAll(): Promise<Garden[]> {
-    return await this.model.find().exec();
+  async findAllByUserId(query:any): Promise<Garden[]> {
+    return await this.model.find({
+        userId: { $in: [query.userId]}
+    }).exec();
   }
   async findOne(id: string): Promise<Garden> {
     return await this.model.findById(id).exec();
