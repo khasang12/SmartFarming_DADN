@@ -55,7 +55,6 @@ const RegisterScreen = () => {
     await axios
       .post(`${BASE_URL}/user`, sendData)
       .then((res) => {
-        console.log(res.data);
         showSuccessToast("Registration successful", "Account Created");
         navigation.navigate('Login');
       })

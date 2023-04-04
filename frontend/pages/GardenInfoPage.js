@@ -17,7 +17,7 @@ const GardenInfoPage = ({ route, navigation }) => {
     ...topic_list.pump,
     ...topic_list.motor,
   ];
-  console.log(topic_list,group_key);
+
   const getSensorsInfo = async (sensors) => {
     let promises = [];
     let list = [];
@@ -25,7 +25,7 @@ const GardenInfoPage = ({ route, navigation }) => {
       promises.push(
         axios
           .post(`${BASE_URL}/sensor/device/latest`, {
-            feed_key: "Potato_Stack/feeds/" + sensorId,
+            feed_key: `${group_key}/feeds/${sensorId}`,
             type: "sensor",
           })
           .then((res) => list.push(res.data))
@@ -38,11 +38,10 @@ const GardenInfoPage = ({ route, navigation }) => {
     let promises = [];
     let list = [];
     for (let outputId of outputs) {
-      console.log(outputId);
       promises.push(
         axios
           .post(`${BASE_URL}/sensor/device/latest`, {
-            feed_key: "Potato_Stack/feeds/" + outputId,
+            feed_key: `${group_key}/feeds/${outputId}`,
             type: "device",
           })
           .then((res) => list.push(res.data))

@@ -11,7 +11,11 @@ const GardenDetailScreen = ({ route, navigation }) => {
       <View className="flex-row justify-between">
         <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>Garden 1</Text>
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={() => {navigation.navigate("ViewMap", {
+            boundary: garden.boundary,
+            name: garden.name,
+            desc: garden.desc,
+          });}}
           className="bg-[#6a8caf] p-3 mb-7 rounded-md"
         >
           <Text
