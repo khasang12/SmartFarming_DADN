@@ -14,6 +14,7 @@ const DeviceScreen = ({ route, navigation }) => {
     await setIsEnabled((previousState) => !previousState);
     await setValue();
   };
+  
   const getValue = () => {
     axios
       .post(`${BASE_URL}/sensor/device/latest`, {
@@ -23,6 +24,7 @@ const DeviceScreen = ({ route, navigation }) => {
       .then((res) => setIsEnabled(res.data.value))
       .catch((err) => console.log(err));
   };
+
   const setValue = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
