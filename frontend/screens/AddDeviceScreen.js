@@ -32,11 +32,9 @@ const AddDeviceScreen = ({navigation, route}) => {
       },
       boundary: boundary || [],
     };
-    console.log(sendingData);
     axios
       .post(`${BASE_URL}/garden/create`, sendingData)
       .then((res) => {
-        console.log(res.data);
         Toast.show({
           type: "success",
           text1: "Procedure Complete",

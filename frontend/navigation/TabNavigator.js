@@ -14,6 +14,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import StatisticScreen from "../screens/StatisticScreen";
 import AddDeviceScreen from "../screens/AddDeviceScreen";
 import AddBoundaryScreen from "../screens/AddBoundaryScreen";
+import ViewMapScreen from "../screens/ViewMapScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -88,6 +89,11 @@ const GardenStack = () => {
       <Stack.Screen
         name="Device"
         component={DeviceScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ViewMap"
+        component={ViewMapScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

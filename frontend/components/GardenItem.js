@@ -25,14 +25,6 @@ const GardenItem = ({ garden }) => {
           {/* <Text style={{ fontSize: 14, fontFamily: "HindLight" }}>
             Latitude: {lat}, Longitude: {lon}
           </Text> */}
-          <TouchableOpacity style={styles.button}
-            onPress={() => {
-              handleStatisticNavigation();
-            }}
-          >
-            <Text style={styles.buttonText}>Statistics</Text>
-          </TouchableOpacity>
-
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -47,20 +39,22 @@ const GardenItem = ({ garden }) => {
         <Text>Description: {garden.desc}</Text>
       </View>
 
-      <View className="flex-row justify-start mb-5 items-center">
+      {/* <View className="flex-row justify-start mb-5 items-center">
         <ImageBackground
           source={require("../assets/hcmut.png")}
           style={{ width: 50, height: 50, justifyItems: "center" }}
           className="items-center flex-row ml-2"
           imageStyle={{ borderRadius: 25 }}
         />
-        {/* <View className="ml-10">
-          <Text>Humidity: {humid}%</Text>
-          <Text>Temperature: {temp}oC</Text>
-          <Text>Light: {light}lux</Text>
-        </View> */}
-
-      </View>
+      </View> */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          handleStatisticNavigation();
+        }}
+      >
+        <Text style={styles.buttonText}>Statistics</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -71,6 +65,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '50%'
   },
   buttonText: {
     color: '#FFFFFF',

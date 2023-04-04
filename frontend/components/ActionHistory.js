@@ -4,7 +4,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from "@react-navigation/native";
 
 function getMUICode(name) {
-  console.log(name)
   if (name === "Fan") {
     return "fan";
   }
