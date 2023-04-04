@@ -6,6 +6,7 @@ import AuthStack from "./navigation/AuthStack";
 import AppStack from "./navigation/AppStack";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import AppNav from "./navigation/AppNav";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +27,7 @@ export default function App() {
   }
   return (
     <AuthProvider>
-      <AppNav/>
+      <AppNav />
     </AuthProvider>
   );
 }
