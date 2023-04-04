@@ -10,6 +10,7 @@ import {
   Put,
   UseGuards,
   Inject,
+  Query
 } from '@nestjs/common';
 import { CreateGardenDTO } from './dto/create-garden.dto';
 import { UpdateGarden } from './dto/update-garden.dto';
@@ -39,8 +40,8 @@ export class GardenController {
   @Get()
   @ApiOkResponse({ description: 'Get all gardens successfully' })
   @ApiBadRequestResponse({ description: 'Get all gardens failed' })
-  async index() {
-    return await this.gardenService.findAll();
+  async index(@Query() query: {userId:string}){
+    return await this.gardenService.findAllByUserId(query);
   }
 
   @ApiOkResponse({ description: 'Get garden successfully' })
@@ -76,8 +77,8 @@ export class GardenController {
     const exist = GardenManagerService.findGarden(gardenName)
     
     if(!exist.hasOwnProperty("error")) return exist
+    console.log(payload)
 
-    const desc = payload.desc;
     let owner:User = await this.userService.findOne(payload.userId);
     const gkey = payload.group_key;
     const owner_x_aio_key = owner.x_aio_key;
@@ -92,12 +93,11 @@ export class GardenController {
     const username = payload.adaUserName;
     this.gardenService.create({
       adaUserName:payload.adaUserName,
-      boundary: [{lng:0,lat:0}],
+      boundary: payload.boundary,
       desc: payload.desc,
       group_key: payload.group_key,
       name: payload.name,
-      sensors: [],
-      topic_list: [],
+      topic_list: {sensor:payload.topic_list.sensor,fan:payload.topic_list.fan,motor:payload.topic_list.motor,pump:payload.topic_list.pump},
       userId: owner["_id"],
       x_aio_key:payload.group_key
     })
