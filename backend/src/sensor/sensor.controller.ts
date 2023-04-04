@@ -51,8 +51,6 @@ export class SensorController {
     const result = await this.sensorService.findByKey(payload)
 
     const [newest,latest] = [result[0],result[result.length-1]]
-    console.log(newest);
-    console.log(latest);
     
     if(payload.type === 1) 
       return latest
