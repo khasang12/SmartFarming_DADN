@@ -20,7 +20,7 @@ const LoginScreen = () => {
     navigation.setOptions({ headerShown: false });
   }, []);
   return (
-    <View className="flex-1 justify-center bg-[#eef9bf]">
+    <View className="flex-1 justify-center bg-[#ffffff]">
       <View className="px-5">
         <View className="items-center">
           <Image
@@ -30,47 +30,56 @@ const LoginScreen = () => {
           />
         </View>
 
-        <Text
-          style={{
-            fontFamily: "MontserratSemiBold",
-            fontSize: 38,
-            fontWeight: "500",
-            color: "#000",
-            marginBottom: 30,
-          }}
-        >
-          Login
-        </Text>
+        <View className="items-center" style={{
+          marginBottom: 50
+        }}>
+          <Text
+            style={{
+              fontFamily: "MontserratSemiBold",
+              fontSize: 30,
+              fontWeight: "500",
+              color: "#000",
+              marginBottom: 10,
+            }}
+          >
+            Login
+          </Text>
+          <Text>
+            Welcome back!
+          </Text>
+        </View>
 
-        <InputField
-          label={"Username"}
-          icon={
-            <MaterialIcons
-              name="person-outline"
-              size={20}
-              color="#666"
-              style={{ marginRight: 5 }}
-            />
-          }
-          keyboardType="ascii-capable"
-          value={username}
-          onChangeText={(t) => setUsername(t)}
-        />
+        <View style={{ marginBottom: 30 }}>
+          <InputField
+            label={"Username"}
+            icon={
+              <MaterialIcons
+                name="person-outline"
+                size={20}
+                color="#666"
+                style={{ marginRight: 5 }}
+              />
+            }
+            keyboardType="ascii-capable"
+            value={username}
+            onChangeText={(t) => setUsername(t)}
+          />
 
-        <InputField
-          label={"Password"}
-          icon={
-            <Ionicons
-              name="ios-lock-closed-outline"
-              size={20}
-              color="#666"
-              style={{ marginRight: 5 }}
-            />
-          }
-          inputType="password"
-          value={password}
-          onChangeText={(t) => setPassword(t)}
-        />
+          <InputField
+            label={"Password"}
+            icon={
+              <Ionicons
+                name="ios-lock-closed-outline"
+                size={20}
+                color="#666"
+                style={{ marginRight: 5 }}
+              />
+            }
+            inputType="password"
+            value={password}
+            onChangeText={(t) => setPassword(t)}
+          />
+        </View>
 
         <CustomButton
           label={"Login"}
@@ -80,11 +89,12 @@ const LoginScreen = () => {
         />
 
         <View className="flex-row justify-center, mb-5">
-          <Text>No account yet?</Text>
+          <Text>Don't have an account yet?</Text>
+          
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={{ color: "#6a8caf", fontWeight: "700" }}>
               {" "}
-              Register
+              Sign up
             </Text>
           </TouchableOpacity>
         </View>

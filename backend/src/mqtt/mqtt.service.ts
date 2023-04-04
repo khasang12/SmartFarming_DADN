@@ -73,7 +73,6 @@ export class MQTTSubscriber {
 
 export class SensorSubcriber extends MQTTSubscriber {
   launch() {
-    console.log(this.sensorService);
     this.mqttClient.on('connect', () => {
       console.log('Connected');
       this.mqttClient.subscribe(this.topic, () => {

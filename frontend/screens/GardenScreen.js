@@ -8,7 +8,8 @@ import axios from "axios";
 import init, { Client } from 'react_native_mqtt';
 import Paho from "paho-mqtt";
 import { log } from "react-native-reanimated";
-
+import { BASE_URL } from "../config/config";
+import { useIsFocused } from "@react-navigation/native";
 
 class MQTTConnection {
   topics = []
@@ -19,7 +20,7 @@ class MQTTConnection {
   _userName = null
   _password = null
   connected = false
-  constructor(topics,userName, password) {
+  constructor(topics, userName, password) {
     this.topics = topics
     this._userName = userName
     this._password = password
@@ -27,7 +28,7 @@ class MQTTConnection {
     this.client.onMessageArrived = this.onMessageArrived;
   }
   connect() {
-    if(!this.connected) {
+    if (!this.connected) {
       this.client.connect({
         onSuccess: this.onConnect,
         onFailure: this.onFailure,
@@ -57,7 +58,7 @@ class MQTTConnection {
     console.log(err);
     this.connect()
   }
-  subcribeTopic (topic)  {
+  subcribeTopic(topic) {
     console.log("Subscribe to topic:", topic);
     this.client.subscribe(topic, { qos: 0 });
   }
@@ -65,19 +66,24 @@ class MQTTConnection {
 
 const GardenScreen = ({ navigation }) => {
   const [gardens, setGardens] = useState([]);
+  const isFocused = useIsFocused();
   const getList = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
-    await setGardens(JSON.parse(userInfo).gardens);
+    await axios
+      .get(`${BASE_URL}/garden?userId=${JSON.parse(userInfo)._id}`)
+      .then((res) => setGardens(res.data))
+      .catch((err) => console.log(err));
   };
-  userName =  "davidhuynh22"
-  password =  "aio_bycn1154ctLCUtXTwnacwJafCeWm"
+  userName = "davidhuynh22"
+  password = "aio_bycn1154ctLCUtXTwnacwJafCeWm"
   const [conn, setConn] = useState()
   useEffect(() => {
     getList();
     const client = new MQTTConnection([], userName, password)
-    client.connect() 
+    client.connect()
     setConn(client)
-  }, []);
+  }, [isFocused]);
+
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
       <ScrollView className="p-5">
@@ -88,7 +94,7 @@ const GardenScreen = ({ navigation }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("AddGarden");
+              navigation.navigate("AddGardenStack");
             }}
           >
             <MaterialIcons
@@ -101,8 +107,8 @@ const GardenScreen = ({ navigation }) => {
 
         {/* List of Gardens */}
         {gardens &&
-          gardens.map((item, index) => <GardenItem key={index} id={item} />)}
-        
+          gardens.map((item, index) => <GardenItem key={index} garden={item} />)}
+
         <TouchableOpacity
           onPress={() => conn.subcribeTopic("Potato_Stack/feeds/iot-cnpm.button1")}
         >
@@ -113,5 +119,6 @@ const GardenScreen = ({ navigation }) => {
 
   );
 };
+
 
 export default GardenScreen;

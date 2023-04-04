@@ -13,7 +13,7 @@ const GardenHistory = ({ name, status, timestamp, humid, light, temp }) => {
   return (
     <View
       className="bg-white p-3 mb-5 rounded-md flex-col text-yellow-200"
-      style={{ backgroundColor: getColorCode(status) }}
+      style={{ backgroundColor: getColorCode(status), shadowOffset: { width: 0, height: 0 }, shadowColor: 'black', shadowOpacity: 0.2, shadowRadius: 5, elevation: 5, }}
     >
       <Text style={{ fontSize: 16, fontFamily: "HindLight", color: "#eee" }}>
         {timestamp}
@@ -23,6 +23,7 @@ const GardenHistory = ({ name, status, timestamp, humid, light, temp }) => {
           fontSize: 17,
           fontFamily: "MontserratRegular",
           color: "black",
+          fontWeight: "bold",
         }}
       >
         Humidity: {humid}%
@@ -34,7 +35,7 @@ const GardenHistory = ({ name, status, timestamp, humid, light, temp }) => {
           color: "black",
         }}
       >
-        Temperature: {temp}oC
+        Temperature: {temp}°C
       </Text>
       <Text
         style={{

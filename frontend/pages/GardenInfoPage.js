@@ -11,19 +11,23 @@ const GardenInfoPage = ({ route, navigation }) => {
   const [sensorsData, setSensorsData] = useState([]);
   const [outputData, setOutputData] = useState([]);
 
-  const garden = route.params.garden;
+  const {topic_list, group_key} = route.params?.garden;
   const outputDevices = [
-    ...garden.topic_list.fan,
-    garden.topic_list.pump,
-    garden.topic_list.motor,
+    ...topic_list.fan,
+    ...topic_list.pump,
+    ...topic_list.motor,
   ];
+
   const getSensorsInfo = async (sensors) => {
     let promises = [];
     let list = [];
     for (let sensorId of sensors) {
       promises.push(
         axios
-          .get(`${BASE_URL}/sensor/${sensorId}`)
+          .post(`${BASE_URL}/sensor/device/latest`, {
+            feed_key: `${group_key}/feeds/${sensorId}`,
+            type: "sensor",
+          })
           .then((res) => list.push(res.data))
           .catch((err) => console.err(err))
       );
@@ -36,7 +40,10 @@ const GardenInfoPage = ({ route, navigation }) => {
     for (let outputId of outputs) {
       promises.push(
         axios
-          .get(`${BASE_URL}/sensor/${outputId}`)
+          .post(`${BASE_URL}/sensor/device/latest`, {
+            feed_key: `${group_key}/feeds/${outputId}`,
+            type: "device",
+          })
           .then((res) => list.push(res.data))
           .catch((err) => console.err(err))
       );
@@ -45,8 +52,7 @@ const GardenInfoPage = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    
-    getSensorsInfo(garden.topic_list.sensor);
+    getSensorsInfo(topic_list.sensor);
     getOutputInfo(outputDevices);
   }, []);
   // Define otype: Output/ Device/ Farmer
