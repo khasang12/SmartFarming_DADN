@@ -38,6 +38,7 @@ const GardenInfoPage = ({ route, navigation }) => {
     let promises = [];
     let list = [];
     for (let outputId of outputs) {
+      console.log(outputId,group_key);
       promises.push(
         axios
           .post(`${BASE_URL}/sensor/device/latest`, {
