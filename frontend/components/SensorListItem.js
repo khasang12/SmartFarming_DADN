@@ -4,26 +4,52 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 import { BASE_URL } from "../config/config";
+import { MQTTContext } from "../screens/GardenDetailScreen";
+import { useContext } from "react";
+
 
 export default function SensorListItem({ feed_key, otype, item, photo, name, disable, value }) {
+
+  const conn = useContext(MQTTContext);
+  const [connect, setConnect] = useState(true);
+  if(conn.connected == true)
+  {
+    try 
+    {
+      
+      conn.subcribeTopic(feed_key);
+    }
+    catch(err) 
+    {
+      console.log(err);
+    }
+  }
+  else 
+  {
+    setValueUpdated('chưa kết nối')
+  }
+
+
   const { width: windowWidth } = Dimensions.get("window");
   const navigation = useNavigation();
   const [showInfo, setShowInfo] = useState(false);
   const [valueUpdated, setValueUpdated] = useState(undefined);
-  const getValue = async () => {
-    axios
-      .post(`${BASE_URL}/sensor/device/latest`, {
-        feed_key,
-        type:-1,
-      })
-      .then((res) => setValueUpdated(res.data.value))
-      .catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    var timerID = setInterval(() => getValue(), 1000);
-    return () => clearInterval(timerID);
-    //getValue();
-  }, []);
+  
+  conn.client.onMessageArrived = getValue;
+  
+  
+  function getValue({topic, payloadString})
+  {
+    setValueUpdated(payloadString);
+  }
+
+  // useEffect(() => {
+  //   var timerID = setInterval(() => getValue(), 1000);
+  //   return () => clearInterval(timerID);
+  //   //getValue();
+  // }, []);
+
+
   return (
     <View>
       <View className="flex-row justify-between align-center mb-5">
