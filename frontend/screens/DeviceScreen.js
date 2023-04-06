@@ -1,20 +1,25 @@
 import { View, Text, Image, Switch } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Slider from "react-native-slider";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../config/config";
+import { MQTTContext } from "./GardenDetailScreen";
+
+
 
 const DeviceScreen = ({ route, navigation }) => {
-  const { name, feed_key, type, status, value, desc, last_update } =
+
+  const { name, feed_key, type, status, value, desc, last_update, conn } =
     route.params;
   const [isEnabled, setIsEnabled] = useState();
   const [isAuto, setIsAuto] = useState(false);
   const toggleEnable = async () => {
-    await setIsEnabled((previousState) => !previousState);
-    await setValue();
+    curState = isEnabled
+    await setIsEnabled(!curState);
+    await setValue(!curState);
   };
-  
+
   const getValue = () => {
     axios
       .post(`${BASE_URL}/sensor/device/latest`, {
@@ -25,27 +30,31 @@ const DeviceScreen = ({ route, navigation }) => {
       .catch((err) => console.log(err));
   };
 
-  const setValue = async () => {
-    let userInfo = await AsyncStorage.getItem("userInfo");
-    userInfo = JSON.parse(userInfo);
-    axios
-      .post(
-        "https://io.adafruit.com/api/v2/" + feed_key + "/data",
-        {
-          value: isEnabled ? "0" : "1",
-        },
-        {
-          headers: {
-            "X-AIO-Key": userInfo.x_aio_key,
-          },
-        }
-      )
-      .then((res) => console.log(res.data.value))
-      .catch((err) => console.log(err));
+  // conn.client.onMessageArrived = getValue;  
+
+  // function getValue({topic, payloadString})
+  // {
+  //   if(payloadString == '1')
+  //   setIsEnabled(true);
+  //   else setIsEnabled(false);
+  // }
+
+  const setValue = async (state) => {
+    await conn.publish(feed_key, state ? "1" : "0");
   };
+
   useEffect(() => {
-    /* var timerID = setInterval(() => getValue(), 1000);
-    return () => clearInterval(timerID); */
+    if (conn.connected == true) {
+      try {
+        conn.subcribeTopic(feed_key);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    else {
+      console.log('chưa kết nối')
+    }
     getValue();
   }, []);
   const toggleAuto = () => setIsAuto((previousState) => !previousState);
@@ -57,6 +66,7 @@ const DeviceScreen = ({ route, navigation }) => {
       >
         {name}
       </Text>
+
       <View className="p-4 bg-white w-full rounded-xl mb-6">
         <Text className="text-lg">Feed Key: {feed_key}</Text>
         <Text className="text-lg">Device Type: {type}</Text>
@@ -66,15 +76,7 @@ const DeviceScreen = ({ route, navigation }) => {
           Last Update: {last_update.$date.$numberLong}
         </Text> */}
       </View>
-      {/* <Slider
-        value={curValue}
-        maximumValue={100}
-        minimumTrackTintColor="#2cd368"
-        maximumTrackTintColor="#fff"
-        step={20}
-        onValueChange={(value) => setCurValue(value)}
-      /> */}
-      {/* <Text className="text-lg">Value: {curValue}</Text> */}
+
       <View className="flex-col items-center">
         {type == "fan" && (
           <Image
@@ -97,7 +99,7 @@ const DeviceScreen = ({ route, navigation }) => {
 
         <View className="flex-row justify-between w-3/4">
           <View className="flex-col items-center">
-            {isEnabled!=null && (
+            {isEnabled != null && (
               <Switch
                 trackColor={isEnabled ? "#767577" : "#81b0ff"}
                 thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}

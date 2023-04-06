@@ -15,8 +15,7 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
   if(conn.connected == true)
   {
     try 
-    {
-      
+    {      
       conn.subcribeTopic(feed_key);
     }
     catch(err) 
@@ -42,13 +41,6 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
   {
     setValueUpdated(payloadString);
   }
-
-  // useEffect(() => {
-  //   var timerID = setInterval(() => getValue(), 1000);
-  //   return () => clearInterval(timerID);
-  //   //getValue();
-  // }, []);
-
 
   return (
     <View>

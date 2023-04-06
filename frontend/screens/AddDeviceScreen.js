@@ -10,6 +10,7 @@ import { BASE_URL } from "../config/config";
 
 
 const AddDeviceScreen = ({navigation, route}) => {
+ 
   const {garden_name,desc,group_name,group_key,feeds,boundary} = route.params
   const data = feeds.map((item)=>({label: item.name, value: item.key}))
   const [selectedSensors, setSelectedSensors] = useState([]);

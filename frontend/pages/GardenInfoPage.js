@@ -1,15 +1,19 @@
 import { View, ScrollView, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { farmers, devices } from "../data";
 import FarmerListItem from "../components/FarmerListItem";
 import axios from "axios";
 import { BASE_URL } from "../config/config";
 import SensorListItem from "../components/SensorListItem";
 import OutputListItem from "../components/OutputListItem";
+import { MQTTContext } from "../screens/GardenDetailScreen";
+
+
 
 
 const GardenInfoPage = ({ route, navigation }) => {
- 
+  
+  const conn = useContext(MQTTContext);
   const [sensorsData, setSensorsData] = useState([]);
   const [outputData, setOutputData] = useState([]);
 
@@ -88,7 +92,6 @@ const GardenInfoPage = ({ route, navigation }) => {
               item={item}
               disable={false}
               photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
-              onPress={() => navigation.navigate("Device", item)}
             />
           ))}
         </View>
@@ -106,7 +109,6 @@ const GardenInfoPage = ({ route, navigation }) => {
               item={item}
               disable={false}
               photo="https://icon2.cleanpng.com/20180717/kvf/kisspng-computer-icons-share-icon-iot-icon-5b4e0ea4b7cbf7.5834559515318422127528.jpg"
-              onPress={() => navigation.navigate("Device", item)}
             />
           ))}
         </View>
