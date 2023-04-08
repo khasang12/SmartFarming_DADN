@@ -1,11 +1,14 @@
 import { View, Text, Image, Switch } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Slider from "react-native-slider";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../config/config";
+import moment from "moment"; 
+import LottieView from 'lottie-react-native'
 
 const DeviceScreen = ({ route, navigation }) => {
+  const animation = useRef(null);
   const { name, feed_key, type, status, value, desc, last_update } =
     route.params;
   const [isEnabled, setIsEnabled] = useState();
@@ -13,6 +16,8 @@ const DeviceScreen = ({ route, navigation }) => {
   const toggleEnable = async () => {
     await setIsEnabled((previousState) => !previousState);
     await setValue();
+    animation.current.reset();
+    if (!isEnabled) {animation.current.play()}
   };
   
   const getValue = () => {
@@ -43,11 +48,15 @@ const DeviceScreen = ({ route, navigation }) => {
       .then((res) => console.log(res.data.value))
       .catch((err) => console.log(err));
   };
+
   useEffect(() => {
     /* var timerID = setInterval(() => getValue(), 1000);
     return () => clearInterval(timerID); */
     getValue();
   }, []);
+
+
+
   const toggleAuto = () => setIsAuto((previousState) => !previousState);
   return (
     <View className="flex-col justify-items-start pt-5 px-3 bg-[#eef9bf] flex-1">
@@ -62,52 +71,59 @@ const DeviceScreen = ({ route, navigation }) => {
         <Text className="text-lg">Device Type: {type}</Text>
         <Text className="text-lg">Status: {isEnabled ? "On" : "Off"}</Text>
         {/* <Text className="text-lg">Value: {value.$numberDecimal}</Text> */}
-        {/* <Text className="text-lg">
-          Last Update: {last_update.$date.$numberLong}
-        </Text> */}
+        <Text className="text-lg">
+          Last Update: {moment().format("DD/MM/YYYY HH:mm:ss")}
+        </Text>
       </View>
-      {/* <Slider
-        value={curValue}
-        maximumValue={100}
-        minimumTrackTintColor="#2cd368"
-        maximumTrackTintColor="#fff"
-        step={20}
-        onValueChange={(value) => setCurValue(value)}
-      /> */}
-      {/* <Text className="text-lg">Value: {curValue}</Text> */}
       <View className="flex-col items-center">
         {type == "fan" && (
-          <Image
-            source={require("../assets/fan.png")}
-            style={{ width: 166, height: 230 }}
+          <LottieView
+            ref={animation}
+            style={{
+              width: 166,
+              height: 230,
+            }}
+            source={require("../assets/images/fan.json")}
           />
         )}
         {type == "motor" && (
-          <Image
-            source={require("../assets/motor.png")}
-            style={{ width: 266, height: 230 }}
+          <LottieView
+            autoPlay
+            ref={animation}
+            style={{
+              width: 266,
+              height: 230,
+            }}
+            source={require("../assets/images/motor.json")}
           />
         )}
         {type == "pump" && (
-          <Image
-            source={require("../assets/pump.png")}
-            style={{ width: 166, height: 230 }}
+          <LottieView
+            autoPlay
+            ref={animation}
+            style={{
+              width: 266,
+              height: 230,
+            }}
+            source={require("../assets/images/pump.json")}
           />
         )}
 
-        <View className="flex-row justify-between w-3/4">
-          <View className="flex-col items-center">
-            {isEnabled!=null && (
+        <View className="flex-row justify-between">
+          <View className="flex-col items-center justify-center mt-4">
+
+
+            {isEnabled != null && (
               <Switch
+                style={{ transform: [{ scaleX: 1.8 }, { scaleY: 1.8 }] }}
                 trackColor={isEnabled ? "#767577" : "#81b0ff"}
                 thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
                 onValueChange={toggleEnable}
                 value={isEnabled}
               />
             )}
-            <Text className="text-lg">ON/OFF</Text>
           </View>
-          <View className="flex-col items-center">
+          {/* <View className="flex-col items-center">
             <Switch
               trackColor={{ false: "#767577", true: "#81b0ff" }}
               thumbColor={isAuto ? "#f5dd4b" : "#f4f3f4"}
@@ -115,7 +131,7 @@ const DeviceScreen = ({ route, navigation }) => {
               value={isAuto}
             />
             <Text className="text-lg">AUTO</Text>
-          </View>
+          </View> */}
         </View>
       </View>
     </View>
