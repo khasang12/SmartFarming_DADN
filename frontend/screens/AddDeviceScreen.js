@@ -10,12 +10,12 @@ import { BASE_URL } from "../config/config";
 
 
 const AddDeviceScreen = ({navigation, route}) => {
-  const {garden_name,desc,group_name,group_key,feeds,boundary} = route.params
+  const {garden_name,desc,group_name,group_key,feeds,boundary,garden_data} = route.params
   const data = feeds.map((item)=>({label: item.name, value: item.key}))
-  const [selectedSensors, setSelectedSensors] = useState([]);
-  const [selectedFans, setSelectedFans] = useState([]);
-  const [selectedMotors, setSelectedMotors] = useState([]);
-  const [selectedPumps, setSelectedPumps] = useState([]);
+  const [selectedSensors, setSelectedSensors] = useState(garden_data?garden_data.topic_list.sensor:[]);
+  const [selectedFans, setSelectedFans] = useState(garden_data?garden_data.topic_list.fan:[]);
+  const [selectedMotors, setSelectedMotors] = useState(garden_data?garden_data.topic_list.motor:[]);
+  const [selectedPumps, setSelectedPumps] = useState(garden_data?garden_data.topic_list.pump:[]);
   const handleAddGarden = async (e) => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     const sendingData = {
@@ -30,26 +30,48 @@ const AddDeviceScreen = ({navigation, route}) => {
         pump: selectedMotors,
         motor: selectedPumps,
       },
-      boundary: boundary || [],
+      boundary: boundary ? boundary : [],
     };
-    axios
-      .post(`${BASE_URL}/garden/create`, sendingData)
-      .then((res) => {
-        Toast.show({
-          type: "success",
-          text1: "Procedure Complete",
-          text2: "New garden created",
+    if(!garden_data){
+      axios
+        .post(`${BASE_URL}/garden/create`, sendingData)
+        .then((res) => {
+          Toast.show({
+            type: "success",
+            text1: "Procedure Complete",
+            text2: "New garden created",
+          });
+          navigation.navigate("Garden");
+        })
+        .catch((err) => {
+          console.log(err);
+          Toast.show({
+            type: "error",
+            text1: "Procedure Incomplete",
+            text2: "Something went wrong",
+          });
         });
-        navigation.navigate("Garden");
-      })
-      .catch((err) => {
-        console.log(err);
-        Toast.show({
-          type: "error",
-          text1: "Procedure Incomplete",
-          text2: "Something went wrong",
+    }
+    else{
+      axios
+        .put(`${BASE_URL}/garden/${garden_data._id}`, sendingData)
+        .then((res) => {
+          Toast.show({
+            type: "success",
+            text1: "Procedure Complete",
+            text2: garden_name + " edited successfully",
+          });
+          navigation.navigate("Garden");
+        })
+        .catch((err) => {
+          console.log(err);
+          Toast.show({
+            type: "error",
+            text1: "Procedure Incomplete",
+            text2: "Something went wrong",
+          });
         });
-      });
+    }
 
   };
   return (
@@ -58,13 +80,13 @@ const AddDeviceScreen = ({navigation, route}) => {
         <Text
           style={{
             fontFamily: "MontserratSemiBold",
-            fontSize: 38,
+            fontSize: 30,
             fontWeight: "500",
             color: "#000",
             marginBottom: 30,
           }}
         >
-          New Garden
+          {garden_data ? "Edit " + garden_name : "Create " + garden_name}
         </Text>
 
         <Text
@@ -229,10 +251,10 @@ const AddDeviceScreen = ({navigation, route}) => {
         </View>
 
         <View className="justify-center flex-row mt-4">
-          <CustomButton label={"Add"} onPress={() => handleAddGarden()} />
+          <CustomButton label={garden_data?"Edit":"Add"} onPress={() => handleAddGarden()} />
         </View>
       </ScrollView>
-        <Toast config={toastConfig} />
+      <Toast config={toastConfig} />
     </View>
   );
 }

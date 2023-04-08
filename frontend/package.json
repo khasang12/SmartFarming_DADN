@@ -23,6 +23,8 @@
     "expo": "~48.0.4",
     "expo-status-bar": "~1.4.4",
     "expo-updates": "~0.16.3",
+    "lottie-react-native": "5.1.4",
+    "moment": "^2.29.4",
     "nativewind": "^2.0.11",
     "paho-mqtt": "^1.1.0",
     "react": "18.2.0",

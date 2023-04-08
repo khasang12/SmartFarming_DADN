@@ -94,7 +94,7 @@ const GardenScreen = ({ navigation }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("AddGardenStack");
+              navigation.navigate("AddGarden");
             }}
           >
             <MaterialIcons
@@ -107,13 +107,13 @@ const GardenScreen = ({ navigation }) => {
 
         {/* List of Gardens */}
         {gardens &&
-          gardens.map((item, index) => <GardenItem key={index} garden={item} />)}
+          gardens.map((item, index) => <GardenItem navigation={navigation} key={index} garden={item}/>)}
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => conn.subcribeTopic("Potato_Stack/feeds/iot-cnpm.button1")}
         >
           <Text>Test Subscribe</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     </View>
 

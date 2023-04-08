@@ -9,13 +9,17 @@ const GardenDetailScreen = ({ route, navigation }) => {
     <View className="pt-10 px-3 flex-1 justify-center bg-[#eef9bf]">
       {/* Header */}
       <View className="flex-row justify-between">
-        <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>Garden 1</Text>
+        <Text style={{ fontSize: 28, fontFamily: "HindBold" }}>
+          {garden.name}
+        </Text>
         <TouchableOpacity
-          onPress={() => {navigation.navigate("ViewMap", {
-            boundary: garden.boundary,
-            name: garden.name,
-            desc: garden.desc,
-          });}}
+          onPress={() => {
+            navigation.navigate("ViewMap", {
+              boundary: garden.boundary,
+              name: garden.name,
+              desc: garden.desc,
+            });
+          }}
           className="bg-[#6a8caf] p-3 mb-7 rounded-md"
         >
           <Text
