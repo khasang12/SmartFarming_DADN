@@ -23,6 +23,7 @@
     "expo": "~48.0.4",
     "expo-status-bar": "~1.4.4",
     "expo-updates": "~0.16.3",
+    "fbemitter": "^3.0.0",
     "lottie-react-native": "5.1.4",
     "moment": "^2.29.4",
     "nativewind": "^2.0.11",

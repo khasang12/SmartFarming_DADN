@@ -12,12 +12,21 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
 
   const conn = useContext(MQTTContext);
   const [connect, setConnect] = useState(true);
+  
+  const { width: windowWidth } = Dimensions.get("window");
+  const [showInfo, setShowInfo] = useState(false);
+  const [valueUpdated, setValueUpdated] = useState(undefined);
+
+  handleUpdate = (string) => {
+    console.log(string);
+    setValueUpdated(string);
+  }
+  
   if(conn.connected == true)
   {
     try 
     {
-      
-      conn.subcribeTopic(feed_key);
+      conn.subcribeTopic(feed_key,handleUpdate);
     }
     catch(err) 
     {
@@ -28,26 +37,14 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
   {
     setValueUpdated('chưa kết nối')
   }
-
-
-  const { width: windowWidth } = Dimensions.get("window");
-  const navigation = useNavigation();
-  const [showInfo, setShowInfo] = useState(false);
-  const [valueUpdated, setValueUpdated] = useState(undefined);
   
-  conn.client.onMessageArrived = getValue;
   
   
   function getValue({topic, payloadString})
   {
-    setValueUpdated(payloadString);
+    if (topic == feed_key) 
+      setValueUpdated(payloadString);
   }
-
-  // useEffect(() => {
-  //   var timerID = setInterval(() => getValue(), 1000);
-  //   return () => clearInterval(timerID);
-  //   //getValue();
-  // }, []);
 
 
   return (

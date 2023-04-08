@@ -5,12 +5,9 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import GardenItem from "../components/GardenItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import init, { Client } from 'react_native_mqtt';
-import Paho from "paho-mqtt";
-import { log } from "react-native-reanimated";
 import { BASE_URL } from "../config/config";
 import { useIsFocused } from "@react-navigation/native";
-
+import MQTTConnection from "../services/mqttService.service";
 const GardenScreen = ({ navigation }) => {
   const [gardens, setGardens] = useState([]);
   const isFocused = useIsFocused();
@@ -21,12 +18,17 @@ const GardenScreen = ({ navigation }) => {
       .then((res) => setGardens(res.data))
       .catch((err) => console.log(err));
   };
-  userName = "davidhuynh22"
-  password = "aio_bycn1154ctLCUtXTwnacwJafCeWm"
+  // userName = "davidhuynh22"
+  // password = "aio_bycn1154ctLCUtXTwnacwJafCeWm"
   
+  // const newClient = new MQTTConnection([], userName, password);
+  // newClient.connect();    
+
   useEffect(() => {
     getList();
   }, [isFocused]);
+
+
 
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
@@ -53,11 +55,7 @@ const GardenScreen = ({ navigation }) => {
         {gardens &&
           gardens.map((item, index) => <GardenItem navigation={navigation} key={index} garden={item}/>)}
 
-        {/* <TouchableOpacity
-          onPress={() => conn.subcribeTopic("Potato_Stack/feeds/iot-cnpm.button1")}
-        >
-          <Text>Test Subscribe</Text>
-        </TouchableOpacity> */}
+        
       </ScrollView>
     </View>
 

@@ -3,14 +3,13 @@ import React from "react";
 import GardenNavigator from "../navigation/GardenNavigator";
 import CustomButton from "../components/CustomButton";
 import { useState, useEffect } from "react";
-import MQTTConnection from "../components/mqttService";
+import MQTTConnection from "../services/mqttService.service";
 import { useIsFocused } from "@react-navigation/native";
 import { Context } from "react";
 
 export const MQTTContext = React.createContext(null);
 const GardenDetailScreen = ({ route, navigation }) => {
   const garden = route.params;
-  console.log('here');
   userName = "Potato_Stack"
   password = "aio_JZvY63VOPyGgS4WZFaZ6Z5ueDEc2"
   const isFocused = useIsFocused();
@@ -19,17 +18,16 @@ const GardenDetailScreen = ({ route, navigation }) => {
  
   useEffect(() => {   
     async function init() {
-      console.log('start to connect');
-      if (isFocused && conn == undefined) {        
+      if (isFocused && conn == undefined) {    
+        console.log("New");    
         const newClient = new MQTTConnection([], userName, password);
-        await newClient.connect();
+        await newClient.connect();        
         setConn(newClient);
      } 
     }  
     init();
   }, [isFocused]);
-  
-  console.log(conn);
+
   return (
     <View className="pt-10 px-3 flex-1 justify-center bg-[#eef9bf]">
       {/* Header */}
