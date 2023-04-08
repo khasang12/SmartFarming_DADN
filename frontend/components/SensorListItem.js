@@ -2,45 +2,49 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, Alert } from "react-native";
 import { BASE_URL } from "../config/config";
 import { MQTTContext } from "../screens/GardenDetailScreen";
 import { useContext } from "react";
+import { useRef } from "react";
 
 
 export default function SensorListItem({ feed_key, otype, item, photo, name, disable, value }) {
 
+
   const conn = useContext(MQTTContext);
-  const [connect, setConnect] = useState(true);
-  if(conn.connected == true)
-  {
-    try 
-    {      
-      conn.subcribeTopic(feed_key);
-    }
-    catch(err) 
-    {
-      console.log(err);
-    }
-  }
-  else 
-  {
-    setValueUpdated('chưa kết nối')
-  }
-
-
   const { width: windowWidth } = Dimensions.get("window");
   const navigation = useNavigation();
   const [showInfo, setShowInfo] = useState(false);
+
+  const [connect, setConnect] = useState(false);
   const [valueUpdated, setValueUpdated] = useState(undefined);
-  
-  conn.client.onMessageArrived = getValue;
-  
-  
-  function getValue({topic, payloadString})
-  {
-    setValueUpdated(payloadString);
-  }
+
+  //const currentClient = useRef(null);
+  useEffect(() => {
+    if (conn && conn.connected == true && connect == false) {
+
+      conn.subcribeTopic(feed_key, () => {
+               conn.client.onMessageArrived = ({ topic, payloadString }) => {
+          return function ({ topic, payloadString }) {
+            console.log('received message:', feed_key, topic, payloadString);
+            if (messageTopic === topic) {
+              setValueUpdated(messagePayload);
+            }
+          };
+        }},
+        () => {
+            console.log('fail to subcribe');
+        });      
+      setConnect(() => true);
+    }
+    else if (connect == true) {
+      console.log('đã kết nối');
+    }
+  }, []);
+
+
+
 
   return (
     <View>

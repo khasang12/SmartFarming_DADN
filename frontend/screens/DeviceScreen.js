@@ -20,43 +20,48 @@ const DeviceScreen = ({ route, navigation }) => {
     await setValue(!curState);
   };
 
-  const getValue = () => {
-    axios
-      .post(`${BASE_URL}/sensor/device/latest`, {
-        feed_key,
-        type: -1,
-      })
-      .then((res) => setIsEnabled(res.data.value))
-      .catch((err) => console.log(err));
-  };
-
-  // conn.client.onMessageArrived = getValue;  
-
-  // function getValue({topic, payloadString})
-  // {
-  //   if(payloadString == '1')
-  //   setIsEnabled(true);
-  //   else setIsEnabled(false);
-  // }
+  // const getValue = () => {
+  //   axios
+  //     .post(`${BASE_URL}/sensor/device/latest`, {
+  //       feed_key,
+  //       type: -1,
+  //     })
+  //     .then((res) => setIsEnabled(res.data.value))
+  //     .catch((err) => console.log(err));
+  // };
+  function getValue({topic, payloadString})
+  {
+    if(payloadString == '1')
+    setIsEnabled(true);
+    else setIsEnabled(false);
+  }
 
   const setValue = async (state) => {
     await conn.publish(feed_key, state ? "1" : "0");
   };
 
   useEffect(() => {
-    if (conn.connected == true) {
+    if (conn && conn.connected == true) {
       try {
         conn.subcribeTopic(feed_key);
+        setConnect(true);
+        conn.client.onMessageArrived = getValue;
       }
       catch (err) {
         console.log(err);
       }
     }
     else {
-      console.log('chưa kết nối')
+      setValueUpdated('chưa kết nối')
     }
-    getValue();
-  }, []);
+  
+  return () => {
+    conn.unsubscribeTopic(feed_key);
+    conn.client.onMessageArrived = null;
+   };
+
+  },[]);
+
   const toggleAuto = () => setIsAuto((previousState) => !previousState);
   return (
     <View className="flex-col justify-items-start pt-5 px-3 bg-[#eef9bf] flex-1">

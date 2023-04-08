@@ -13,7 +13,7 @@ import { MQTTContext } from "../screens/GardenDetailScreen";
 
 const GardenInfoPage = ({ route, navigation }) => {
   
-  const conn = useContext(MQTTContext);
+  
   const [sensorsData, setSensorsData] = useState([]);
   const [outputData, setOutputData] = useState([]);
 
@@ -24,6 +24,7 @@ const GardenInfoPage = ({ route, navigation }) => {
     ...topic_list.motor,
   ];
 
+  
   const getSensorsInfo = async (sensors) => {
     let promises = [];
     let list = [];
@@ -38,8 +39,9 @@ const GardenInfoPage = ({ route, navigation }) => {
           .catch((err) => console.err(err))
       );
     }
-    Promise.all(promises).then(() => setSensorsData(list));
+    Promise.all(promises).then(() => {setSensorsData(list);});
   };
+
   const getOutputInfo = async (outputs) => {
     let promises = [];
     let list = [];
@@ -57,10 +59,12 @@ const GardenInfoPage = ({ route, navigation }) => {
     Promise.all(promises).then(() => setOutputData(list));
   };
 
-  useEffect(() => {
+  useEffect(() => {       
     getSensorsInfo(topic_list.sensor);
     getOutputInfo(outputDevices);
   }, []);
+  
+  
   // Define otype: Output/ Device/ Farmer
   return (
     <ScrollView className="pt-3 flex-1 bg-[#eef9bf]" nestedScrollEnabled={true}>
@@ -86,6 +90,7 @@ const GardenInfoPage = ({ route, navigation }) => {
           {sensorsData.map((item, index) => (
             <SensorListItem
               key={index}
+              index={index}
               otype="sensor"
               name={item.name}
               feed_key={item.feed_key}
