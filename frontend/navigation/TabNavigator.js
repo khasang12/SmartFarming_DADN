@@ -41,9 +41,14 @@ const HomeStack = () => {
   );
 };
 
-const AddGardenStack = () => {
+const GardenStack = () => {
   return (
-    <Stack.Navigator initialRouteName="AddGarden">
+    <Stack.Navigator initialRouteName="Garden">
+      <Stack.Screen
+        name="Garden"
+        component={GardenScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="AddGarden"
         component={AddGardenScreen}
@@ -57,23 +62,6 @@ const AddGardenStack = () => {
       <Stack.Screen
         name="AddBoundary"
         component={AddBoundaryScreen}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-const GardenStack = () => {
-  return (
-    <Stack.Navigator initialRouteName="Garden">
-      <Stack.Screen
-        name="Garden"
-        component={GardenScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="AddGardenStack"
-        component={AddGardenStack}
         options={{ headerShown: false }}
       />
       <Stack.Screen
