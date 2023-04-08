@@ -7,7 +7,9 @@ import { BASE_URL } from "../config/config";
 import SensorListItem from "../components/SensorListItem";
 import OutputListItem from "../components/OutputListItem";
 
+
 const GardenInfoPage = ({ route, navigation }) => {
+ 
   const [sensorsData, setSensorsData] = useState([]);
   const [outputData, setOutputData] = useState([]);
 

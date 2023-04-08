@@ -11,59 +11,6 @@ import { log } from "react-native-reanimated";
 import { BASE_URL } from "../config/config";
 import { useIsFocused } from "@react-navigation/native";
 
-class MQTTConnection {
-  topics = []
-  client = null
-  _host = 'io.adafruit.com'
-  _port = 80
-  _id = 'mqtt_' + parseInt(Math.random() * 100000)
-  _userName = null
-  _password = null
-  connected = false
-  constructor(topics, userName, password) {
-    this.topics = topics
-    this._userName = userName
-    this._password = password
-    this.client = new Paho.Client(this._host, this._port, this._id);
-    this.client.onMessageArrived = this.onMessageArrived;
-  }
-  connect() {
-    if (!this.connected) {
-      this.client.connect({
-        onSuccess: this.onConnect,
-        onFailure: this.onFailure,
-        cleanSession: true,
-        timeout: 4,
-        userName: this._userName,
-        password: this._password,
-        keepAliveInterval: 5
-      })
-      this.connected = true
-    }
-    return this.client
-  }
-  onMessageArrived({ topic, payloadString }) {
-    console.log("onMessageArrived:", topic, payloadString);
-  }
-  onConnect() {
-    console.log("Connect successfully");
-  }
-  onConnectionLost(responseObject) {
-    if (responseObject.errorCode !== 0) {
-      console.log("onConnectionLost:" + responseObject.errorMessage);
-    }
-  }
-  onFailure(err) {
-    console.log('Connect failed!');
-    console.log(err);
-    this.connect()
-  }
-  subcribeTopic(topic) {
-    console.log("Subscribe to topic:", topic);
-    this.client.subscribe(topic, { qos: 0 });
-  }
-}
-
 const GardenScreen = ({ navigation }) => {
   const [gardens, setGardens] = useState([]);
   const isFocused = useIsFocused();
@@ -76,12 +23,9 @@ const GardenScreen = ({ navigation }) => {
   };
   userName = "davidhuynh22"
   password = "aio_bycn1154ctLCUtXTwnacwJafCeWm"
-  const [conn, setConn] = useState()
+  
   useEffect(() => {
     getList();
-    const client = new MQTTConnection([], userName, password)
-    client.connect()
-    setConn(client)
   }, [isFocused]);
 
   return (
