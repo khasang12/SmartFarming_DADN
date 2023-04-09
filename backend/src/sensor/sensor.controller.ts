@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Req
 } from '@nestjs/common';
 import axios from 'axios';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -21,6 +22,8 @@ import { ConcreteGarden } from 'src/garden/garden-helper';
 import { GardenManagerService } from 'src/garden/garden-manager';
 import { ApiBadRequestResponse, ApiOkResponse } from '@nestjs/swagger';
 import { Latest } from './dto/value.dto';
+import { Query } from 'mongoose';
+import { Request } from 'express';
 
 class DeviceDTO {
   feed_key: string;
@@ -48,19 +51,30 @@ export class SensorController {
   @Post('device/latest')
   @ApiOkResponse({ description: 'Get sensor successfully' })
   @ApiBadRequestResponse({ description: 'Get sensor failed' })
-  async getLatest(@Body() payload: Latest) {
-    const result = await this.sensorService.findByKey(payload)
-    const [newest,latest] = [result[0],result[result.length-1]]
-
-    if(payload.type === 1) 
-      return latest
-    return {
-      name: latest.name,
-      feed_key:newest.feed_key,
-      type:latest.type,
-      value: newest.value,
-      last_update: newest.last_update
+  async getLatest(@Body() payload: Latest, @Req() req: Request) {
+    const limit: number = parseInt(req.query.limit as string);
+    const result = await this.sensorService.findByKey(payload);
+    const [newest, first] = [
+      limit ? result.slice(0,limit) : result[0],
+      result[result.length - 1],
+    ];
+    if (!Array.isArray(newest)){
+      if (payload.type === 1) return first;
+      return {
+        name: first.name,
+        feed_key: newest.feed_key,
+        type: first.type,
+        value: newest.value,
+        last_update: newest.last_update,
+      };
     }
+    return newest.map((item) => ({
+      name: first.name,
+      feed_key: item.feed_key,
+      type: first.type,
+      value: item.value,
+      last_update: item.last_update,
+    }));
   }
 
   @Post()
