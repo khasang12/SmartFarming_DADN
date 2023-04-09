@@ -1,4 +1,4 @@
-import { EventEmitter } from "fbemitter";
+import { EventEmitter } from "./EventEmitter";
 import Paho from "paho-mqtt";
 
 class MQTTConnection {
@@ -24,7 +24,7 @@ class MQTTConnection {
       if (!this.connected) {
         this.client.connect({
           onSuccess: (this.onConnect).bind(this),
-          onFailure: this.onFailure,
+          onFailure: (this.onFailure).bind(this),
           cleanSession: true,
           timeout: 4,
           userName: this._userName,
@@ -56,10 +56,13 @@ class MQTTConnection {
     onFailure(err) {
       console.log('Connect failed!');
       console.log(err);
-      this.connect()
+      console.log("Reconnecting...");
+      this.connect();
     }
 
     subcribeTopic(topic,callback) {
+      if (!this.connected)
+        this.connect()
       if (!this.topics.includes(topic)) {
         this.emitter.addListener(topic,callback)
         this.topics.push(topic)
@@ -67,6 +70,7 @@ class MQTTConnection {
         this.client.subscribe(topic, { qos: 0 });
       }
     }  
+
     publish(topic, payload) {
       console.log(topic, payload
         );
