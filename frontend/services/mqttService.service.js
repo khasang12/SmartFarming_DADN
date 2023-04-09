@@ -66,7 +66,12 @@ class MQTTConnection {
         console.log("Subscribe Topic:", topic);
         this.client.subscribe(topic, { qos: 0 });
       }
-    }    
+    }  
+    publish(topic, payload) {
+      console.log(topic, payload
+        );
+      this.client.send(topic,payload);
+    }  
 }
 
 export default MQTTConnection ;
