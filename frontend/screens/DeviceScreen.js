@@ -11,7 +11,7 @@ const DeviceScreen = ({ route, navigation }) => {
   const animation = useRef(null);
   const { name, feed_key, type, status, value, desc, last_update } =
     route.params;
-  const [isEnabled, setIsEnabled] = useState();
+  const [isEnabled, setIsEnabled] = useState(false);
   const [isAuto, setIsAuto] = useState(false);
   const toggleEnable = async () => {
     await setIsEnabled((previousState) => !previousState);
@@ -88,7 +88,6 @@ const DeviceScreen = ({ route, navigation }) => {
         )}
         {type == "motor" && (
           <LottieView
-            autoPlay
             ref={animation}
             style={{
               width: 266,
@@ -99,7 +98,6 @@ const DeviceScreen = ({ route, navigation }) => {
         )}
         {type == "pump" && (
           <LottieView
-            autoPlay
             ref={animation}
             style={{
               width: 266,
