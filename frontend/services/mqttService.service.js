@@ -1,5 +1,5 @@
+import { EventEmitter } from "fbemitter";
 import Paho from "paho-mqtt";
-import React, { useState } from "react";
 
 class MQTTConnection {
     topics = []
@@ -9,20 +9,21 @@ class MQTTConnection {
     _id = 'mqtt_' + parseInt(Math.random() * 100000)
     _userName = null
     _password = null   
+    emitter = null
+    connected = false
 
     constructor(topics, userName, password) {
       this.topics = topics
       this._userName = userName
       this._password = password
       this.client = new Paho.Client(this._host, this._port, this._id);
-      // this.client.onMessageArrived = this.onMessageArrived;
-      // this.client.onConnect = this.onConnect;
-      this.connected = false;
+      this.emitter = new EventEmitter()
+      this.client.onMessageArrived = (this.onMessageArrived).bind(this);
     }
-   async connect() {
+    connect() {
       if (!this.connected) {
         this.client.connect({
-          onSuccess: this.onConnect,
+          onSuccess: (this.onConnect).bind(this),
           onFailure: this.onFailure,
           cleanSession: true,
           timeout: 4,
@@ -35,11 +36,16 @@ class MQTTConnection {
       return this.client
     }
     onMessageArrived({topic, payloadString}) {
-      console.log("onMessageArrived:", topic, payloadString);
-      return JSON.parse({topic, payloadString});            
+      console.log("onMessageArrived:", topic, payloadString);  
+      this.emitter.emit(topic,payloadString)       
     }
+
     onConnect() {        
-      console.log("Connect successfully");      
+      console.log("Connect successfully"); 
+      for (let topic of this.topics) {
+        console.log("Subcribe Topic:", topic);
+        this.client.subscribe(topic, { qos: 0 })
+      }
     }
     onConnectionLost(responseObject) {
       if (responseObject.errorCode !== 0) {
@@ -52,10 +58,20 @@ class MQTTConnection {
       console.log(err);
       this.connect()
     }
-    subcribeTopic(topic) {
-      console.log("Subscribe to topic:", topic);
-      this.client.subscribe(topic, { qos: 0 });
-    }    
-  }
+
+    subcribeTopic(topic,callback) {
+      if (!this.topics.includes(topic)) {
+        this.emitter.addListener(topic,callback)
+        this.topics.push(topic)
+        console.log("Subscribe Topic:", topic);
+        this.client.subscribe(topic, { qos: 0 });
+      }
+    }  
+    publish(topic, payload) {
+      console.log(topic, payload
+        );
+      this.client.send(topic,payload);
+    }  
+}
 
 export default MQTTConnection ;
