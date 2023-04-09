@@ -1,29 +1,29 @@
-import { View, Text, TouchableOpacity, ImageBackground } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, ImageBackground } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 
 function getMUICode(name) {
-  if (name === "Fan") {
+  if (name.includes("Fan")) {
     return "fan";
   }
-  if (name === "Pump") {
+  if (name.includes("Pump")) {
     return "pump";
   }
-  if (name === "Motor") {
+  if (name.includes("Motor")) {
     return "curtains";
   }
 }
-const ActionHistory = ({ name, feed, desc, user, timestamp }) => {
-  return (
+const ActionHistory = ({ name, feed, value, user, timestamp }) => {
+  return ( timestamp &&
     <View className="bg-[#a7e9af] p-3 mb-5 rounded-md flex-row text-yellow-200 justify-between items-center">
       <View className="flex-row items-center justify-start">
-        <MaterialCommunityIcons name={getMUICode(desc)} size={30} />
+        <MaterialCommunityIcons name={getMUICode(name)} size={30} />
         <View className="flex-col ml-3">
           <Text
             style={{ fontSize: 16, fontFamily: "HindLight", color: "gray" }}
           >
-            {timestamp}
+            {new Date(timestamp).toLocaleString()}
           </Text>
           <Text
             style={{
@@ -32,7 +32,7 @@ const ActionHistory = ({ name, feed, desc, user, timestamp }) => {
               color: "black",
             }}
           >
-            {desc}
+            {name}
           </Text>
           <Text
             style={{
@@ -41,7 +41,16 @@ const ActionHistory = ({ name, feed, desc, user, timestamp }) => {
               color: "black",
             }}
           >
-            Device: {feed}
+            Feed: {feed.slice(-16)}
+          </Text>
+          <Text
+            style={{
+              fontSize: 13,
+              fontFamily: "MontserratRegular",
+              color: "black",
+            }}
+          >
+            Value: {value}
           </Text>
           <Text
             style={{
