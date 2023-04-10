@@ -2,7 +2,7 @@ import { ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { gardenHistory } from "../data";
 import GardenHistory from "../components/GardenHistory";
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -16,26 +16,26 @@ const GardenHistoryPage = ({ route, navigation }) => {
     let promises = [];
     let list = [];
     for (let sensorId of sensors) {
-      promises.push(
+      await promises.push(
         axios
-          .post(`${BASE_URL}/sensor/device/latest?limit=30`, {
+          .post(`${BASE_URL}/sensor/device/latest?limit=10`, {
             feed_key: `${group_key}/feeds/${sensorId}`,
             type: "sensor",
           })
-          .then((res) => (list = list.concat(res.data)))
+          .then((res) => {list = list.concat(res.data);console.log(res.data)})
           .catch((err) => console.err(err))
       );
     }
-   Promise.all(promises).then(() =>
-     setSensorsData(
-       list.sort(function (a, b) {
-         return (
-           new Date(b?.last_update).getTime() -
-           new Date(a?.last_update).getTime()
-         );
-       })
-     )
-   );
+    Promise.all(promises).then(() =>
+      setSensorsData(
+        list.sort(function (a, b) {
+          return (
+            new Date(b?.last_update).getTime() -
+            new Date(a?.last_update).getTime()
+          );
+        })
+      )
+    );
   };
   useEffect(() => {
     getSensorsInfo(topic_list.sensor);
@@ -58,7 +58,5 @@ const GardenHistoryPage = ({ route, navigation }) => {
     </ScrollView>
   );
 };
-
-
 
 export default GardenHistoryPage;

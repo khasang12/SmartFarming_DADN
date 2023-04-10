@@ -1,8 +1,8 @@
-import { ScrollView, Text } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import ActionHistory from '../components/ActionHistory';
-import axios from 'axios';
-import { BASE_URL } from '../config/config';
+import { ScrollView, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import ActionHistory from "../components/ActionHistory";
+import axios from "axios";
+import { BASE_URL } from "../config/config";
 
 const GardenActionPage = ({ route, navigation }) => {
   const [outputData, setOutputData] = useState([]);
@@ -19,19 +19,24 @@ const GardenActionPage = ({ route, navigation }) => {
       console.log(outputId, group_key);
       promises.push(
         axios
-          .post(`${BASE_URL}/sensor/device/latest?limit=30`, {
+          .post(`${BASE_URL}/sensor/device/latest?limit=10`, {
             feed_key: `${group_key}/feeds/${outputId}`,
             type: "device",
           })
-          .then((res) => list = list.concat(res.data))
+          .then((res) => {list = list.concat(res.data);console.log(res.data)})
           .catch((err) => console.err(err))
       );
     }
-    Promise.all(promises).then(() => 
-        setOutputData(list.sort(function(a, b) {
-          return new Date(b?.last_update).getTime() - new Date(a?.last_update).getTime();
+    Promise.all(promises).then(() =>
+      setOutputData(
+        list.sort(function (a, b) {
+          return (
+            new Date(b?.last_update).getTime() -
+            new Date(a?.last_update).getTime()
+          );
         })
-      ));
+      )
+    );
   };
 
   useEffect(() => {
@@ -56,4 +61,4 @@ const GardenActionPage = ({ route, navigation }) => {
   );
 };
 
-export default GardenActionPage
+export default GardenActionPage;

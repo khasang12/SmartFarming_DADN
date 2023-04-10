@@ -9,21 +9,24 @@ const getColorCode = (typ,val) => {
     else if (val < 20 || val > 35) return ["#ffcc00", "°C"];
     else return ["#99cc33", "°C"];
   }
-  if (typ.includes("Humid")) {
+  else if (typ.includes("Humid")) {
     if (val < 10 || val > 90) return ["#F84F31", "%"];
     else if (val < 20 || val > 80) return ["#ffcc00", "%"];
     else return ["#99cc33", "%"];
   }
-  if (typ.includes("Light")) {
+  else if (typ.includes("Light")) {
     if (val < 100 || val > 20000) return ["#F84F31", "lux"];
     else if (val < 3000 || val > 10000) return ["#ffcc00", "lux"];
     else return ["#99cc33","lux"];
   }
-  
+  else{
+    return ["#ccc", "??"];
+  }
 };
 
 const GardenHistory = ({ name, feed, timestamp, value }) => {
   const status = getColorCode(name,parseFloat(value))
+  console.log(name);
   return (
     <View
       className="bg-[#a7e9af] p-3 mb-5 rounded-md flex-col text-yellow-200"
@@ -37,7 +40,7 @@ const GardenHistory = ({ name, feed, timestamp, value }) => {
       }}
     >
       <Text style={{ fontSize: 16, fontFamily: "HindLight", color: "#000" }}>
-        {new Date(timestamp).toLocaleString()}
+        {timestamp && new Date(timestamp)?.toLocaleString()}
       </Text>
       <Text
         style={{

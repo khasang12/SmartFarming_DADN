@@ -92,15 +92,21 @@ export class GardenController {
     const userList = [];
     const username = payload.adaUserName;
     this.gardenService.create({
-      adaUserName:payload.adaUserName,
+      adaUserName: payload.adaUserName,
       boundary: payload.boundary,
       desc: payload.desc,
       group_key: payload.group_key,
+      group_name: payload.group_name,
       name: payload.name,
-      topic_list: {sensor:payload.topic_list.sensor,fan:payload.topic_list.fan,motor:payload.topic_list.motor,pump:payload.topic_list.pump},
-      userId: owner["_id"],
-      x_aio_key:payload.group_key
-    })
+      topic_list: {
+        sensor: payload.topic_list.sensor,
+        fan: payload.topic_list.fan,
+        motor: payload.topic_list.motor,
+        pump: payload.topic_list.pump,
+      },
+      userId: owner['_id'],
+      x_aio_key: payload.group_key,
+    });
     const mqttManager = this.mqttService.getManager(username, owner_x_aio_key);
     for (let k in topic_list) {
       mqttManager.addSubcriber(k, topic_list[k]);
