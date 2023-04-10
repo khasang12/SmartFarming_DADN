@@ -11,14 +11,29 @@ import OutputListItem from "../components/OutputListItem";
 const GardenInfoPage = ({ route, navigation }) => {
  
   const [sensorsData, setSensorsData] = useState([]);
+  const [farmersData, setFarmersData] = useState([]);
   const [outputData, setOutputData] = useState([]);
 
-  const {topic_list, group_key} = route.params?.garden;
+  const {topic_list, group_key, userId} = route.params?.garden;
   const outputDevices = [
     ...topic_list.fan,
     ...topic_list.pump,
     ...topic_list.motor,
   ];
+
+  const getFarmersInfo = async (farmers) => {
+    let promises = [];
+    let list = [];
+    for (let farmerId of farmers) {
+      promises.push(
+        axios
+          .get(`${BASE_URL}/user/${farmerId}`)
+          .then((res) => list.push(res.data))
+          .catch((err) => console.err(err))
+      );
+    }
+    Promise.all(promises).then(() => setFarmersData(list));
+  };
 
   const getSensorsInfo = async (sensors) => {
     let promises = [];
@@ -55,6 +70,7 @@ const GardenInfoPage = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    getFarmersInfo(userId);
     getSensorsInfo(topic_list.sensor);
     getOutputInfo(outputDevices);
   }, []);
@@ -65,7 +81,7 @@ const GardenInfoPage = ({ route, navigation }) => {
         <View className="flex-col p-3 rounded-md bg-[#a7e9af] mb-5 mx-1 flex-1">
           <Text className="text-lg mb-2 font-bold border-b-2">Members</Text>
 
-          {farmers.map((item, index) => (
+          {farmersData && farmersData.map((item, index) => (
             <FarmerListItem
               key={index}
               otype="farmer"
