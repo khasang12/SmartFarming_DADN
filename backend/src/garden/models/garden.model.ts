@@ -13,6 +13,12 @@ export class Garden {
   @Prop({ required: true })
   name: string;
 
+  @Prop({ required: true })
+  adaUserName: string;
+
+  @Prop({ required: true })
+  x_aio_key: string;
+
   @Prop()
   desc: string;
 

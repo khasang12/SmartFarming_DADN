@@ -26,7 +26,6 @@ const getColorCode = (typ,val) => {
 
 const GardenHistory = ({ name, feed, timestamp, value }) => {
   const status = getColorCode(name,parseFloat(value))
-  console.log(name);
   return (
     <View
       className="bg-[#a7e9af] p-3 mb-5 rounded-md flex-col text-yellow-200"

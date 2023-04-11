@@ -10,7 +10,8 @@ import {
   Put,
   UseGuards,
   Inject,
-  Query
+  Query,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateGardenDTO } from './dto/create-garden.dto';
 import { UpdateGarden } from './dto/update-garden.dto';
@@ -19,13 +20,23 @@ import { User } from 'src/user/models/user.model';
 import { ConcreteGarden } from './garden-helper';
 import { GardenBuilder } from './garden-builder';
 import { GardenManagerService } from './garden-manager';
-import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiResponse } from '@nestjs/swagger/dist';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiResponse,
+} from '@nestjs/swagger/dist';
 
 import { controlDTO } from './dto/control.dto';
 import { UserService } from 'src/user/user.service';
 import { SensorService } from 'src/sensor/sensor.service';
 import { MqttService } from 'src/mqtt/mqtt.service';
-
+import { ActivateDTO } from './dto/actviate.dto';
+import { Garden } from './models/garden.model';
+import { GardenBusinessErrors } from './error/GardenBusinessError';
+import { log } from 'console';
+import { type } from 'os';
 
 @Controller('garden')
 export class GardenController {
@@ -40,7 +51,7 @@ export class GardenController {
   @Get()
   @ApiOkResponse({ description: 'Get all gardens successfully' })
   @ApiBadRequestResponse({ description: 'Get all gardens failed' })
-  async index(@Query() query: {userId:string}){
+  async index(@Query() query: { userId: string }) {
     return await this.gardenService.findAllByUserId(query);
   }
 
@@ -50,7 +61,6 @@ export class GardenController {
   async show(@Param('id') id: string) {
     return await this.gardenService.findOne(id);
   }
-
 
   @ApiOkResponse({ description: 'Update garden successfully' })
   @ApiBadRequestResponse({ description: 'Update garden failed' })
@@ -65,32 +75,33 @@ export class GardenController {
   async delete(@Param('id') id: string) {
     return await this.gardenService.delete(id);
   }
-  
+
   @ApiCreatedResponse({ description: 'Create Garden Successfully' })
   @ApiBadRequestResponse({ description: 'Create Garden Failed' })
   @Post('create')
   async create(@Body() payload: CreateGardenDTO) {
     // call DB to get user info
     const gardenName = payload.name;
-
+    let owner: User = await this.userService.findOne(payload.userId);
     // check if garden is created
-    const exist = GardenManagerService.findGarden(gardenName)
-    
-    if(!exist.hasOwnProperty("error")) return exist
-    console.log(payload)
+    let exist:any
+    try {
+      exist = GardenManagerService.findGarden(gardenName, owner);   
+    }
+    catch(e) {
 
-    let owner:User = await this.userService.findOne(payload.userId);
+    }
+    console.log(exist);
+    
+    if (exist && exist.hasOwnProperty("gardenId")) {
+      throw new InternalServerErrorException(GardenBusinessErrors.ExistedGarden(exist.gardenId))  
+    }
+
     const gkey = payload.group_key;
-    const owner_x_aio_key = owner.x_aio_key;
-    if(!owner_x_aio_key) {
-      return {
-        code: 403,
-        message: "Missing x_aio_key"
-      }
-    }  
     const topic_list = payload.topic_list;
     const userList = [];
     const username = payload.adaUserName;
+    const x_aio_key = payload.x_aio_key; 
     this.gardenService.create({
       adaUserName: payload.adaUserName,
       boundary: payload.boundary,
@@ -105,9 +116,9 @@ export class GardenController {
         pump: payload.topic_list.pump,
       },
       userId: owner['_id'],
-      x_aio_key: payload.group_key,
+      x_aio_key: payload.x_aio_key,
     });
-    const mqttManager = this.mqttService.getManager(username, owner_x_aio_key);
+    const mqttManager = this.mqttService.getManager(username, x_aio_key);
     for (let k in topic_list) {
       mqttManager.addSubcriber(k, topic_list[k]);
     }
@@ -141,16 +152,6 @@ export class GardenController {
     };
   }
 
-  @Post('/find')
-  findGarden(@Body() payload : any) {
-      if(payload.gardenName){
-        return GardenManagerService.findGarden(payload.gardenName)
-      }
-      return {
-        error: "Missing gardenName"
-      }
-  }
-  
   @ApiCreatedResponse({ description: 'Create Garden Successfully' })
   @ApiBadRequestResponse({ description: 'Create Garden Failed' })
   @Post('/publish')
@@ -161,5 +162,34 @@ export class GardenController {
     return garden
       .getMqttManager()
       .publish(payload.type, payload.feeds_key, payload.value);
+  }
+
+  @Post('activate')
+  async activate(@Body('gardenId') gardenId: string) {
+    const garden:Garden = await this.gardenService.findOne(gardenId)
+    try {
+      GardenManagerService.findGarden(garden.name, garden.userId[0]);
+    } catch (e) {
+      // Not find garden in garden manager
+
+      // const mqttManager = this.mqttService.getManager(
+      //   username,
+      //   owner_x_aio_key,
+      // );
+      // for (let k in topic_list) {
+      //   mqttManager.addSubcriber(k, topic_list[k]);
+      // }
+      // // Build Garden
+      // const garden: ConcreteGarden = new GardenBuilder()
+      //   .setGroupKey(gkey)
+      //   .setGardenName(gardenName)
+      //   .setId(GardenManagerService.getCurrentNumber())
+      //   .setOwner(owner)
+      //   .setMQTTDevices(mqttManager)
+      //   .setObserverList(userList)
+      //   .build();
+      // garden.launch();
+      // GardenManagerService.addGarden(garden);
+    }
   }
 }

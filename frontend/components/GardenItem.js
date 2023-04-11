@@ -13,6 +13,7 @@ const GardenItem = ({ navigation, garden }) => {
   const [isDelete, setIsDelete] = useState(false);
 
   const handleGardenNavigation = () => {
+    axios.post(`${BASE_URL}/garden/activate`, {gardenId: garden._id})
     navigation.navigate("GardenDetail", garden);
   };
   const handleStatisticNavigation = () => {
