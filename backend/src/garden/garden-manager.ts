@@ -1,5 +1,7 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy, InternalServerErrorException } from '@nestjs/common';
 import { ConcreteGarden } from './garden-helper';
+import { GardenBusinessErrors } from './error/GardenBusinessError';
+import { User } from 'src/user/models/user.model';
 
 // Singleton Pattern for Garden Manager
 @Injectable()
@@ -23,17 +25,15 @@ export class GardenManagerService implements OnModuleInit {
   static getGarden(id: number) {
     return this.gardenList[id];
   }
-  static findGarden(name: string) { 
+  static findGarden(name: string, owner: User) { 
     for (const key in this.gardenList) {
-        if(this.gardenList[key].gardenName == name) {
-            return {
+        if(this.gardenList[key].gardenName == name && JSON.stringify(this.gardenList[key].Owner) === JSON.stringify(owner)) {  
+          return {
               gardenId: this.gardenList[key].gardenId
             }
         }
     }
-    return {
-      error : "Garden Not Exist"
-    }
+    throw new InternalServerErrorException(GardenBusinessErrors.NotFound)
   }
 }
 

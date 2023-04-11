@@ -8,9 +8,7 @@ import { CreateGardenDTO } from './dto/create-garden.dto';
 
 @Injectable()
 export class GardenService {
-  constructor(@InjectModel(Garden.name) private readonly model: Model<GardenDocument>) {
-
-  }
+  constructor(@InjectModel(Garden.name) private readonly model: Model<GardenDocument>) {}
   async findAllByUserId(query:any): Promise<Garden[]> {
     return await this.model.find({
         userId: { $in: [query.userId]}
@@ -29,8 +27,9 @@ export class GardenService {
     return await this.model.findByIdAndUpdate(id, updateGarden).exec();
   }
   async delete(id: string): Promise<Garden> {
-    return await this.model.findByIdAndDelete(id).exec();
+    return  this.model.findByIdAndDelete(id).exec();
   }
+
 }
 
 

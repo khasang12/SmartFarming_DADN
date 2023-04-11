@@ -28,8 +28,6 @@ const GardenScreen = ({ navigation }) => {
     getList();
   }, [isFocused]);
 
-
-
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
       <ScrollView className="p-5">

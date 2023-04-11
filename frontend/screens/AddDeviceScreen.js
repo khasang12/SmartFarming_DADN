@@ -10,7 +10,7 @@ import { BASE_URL } from "../config/config";
 
 
 const AddDeviceScreen = ({navigation, route}) => {
-  const {garden_name,desc,group_name,group_key,feeds,boundary,garden_data} = route.params
+  const {garden_name,desc,group_name,group_key,feeds,boundary,garden_data, adaUserName, x_aio_key} = route.params
   const data = feeds.map((item)=>({label: item.name, value: item.key}))
   const [selectedSensors, setSelectedSensors] = useState(garden_data?garden_data.topic_list.sensor:[]);
   const [selectedFans, setSelectedFans] = useState(garden_data?garden_data.topic_list.fan:[]);
@@ -19,6 +19,8 @@ const AddDeviceScreen = ({navigation, route}) => {
   const handleAddGarden = async (e) => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     const sendingData = {
+      adaUserName: adaUserName,
+      x_aio_key:x_aio_key,
       name: garden_name,
       desc: desc,
       group_key: group_key,
@@ -32,6 +34,7 @@ const AddDeviceScreen = ({navigation, route}) => {
       },
       boundary: boundary ? boundary : [],
     };
+    console.log(sendingData);
     if(!garden_data){
       axios
         .post(`${BASE_URL}/garden/create`, sendingData)
@@ -44,15 +47,15 @@ const AddDeviceScreen = ({navigation, route}) => {
           navigation.navigate("Garden");
         })
         .catch((err) => {
-          console.log(err);
           Toast.show({
             type: "error",
             text1: "Procedure Incomplete",
-            text2: "Something went wrong",
+            text2: err.response.data.reason,
           });
         });
     }
     else{
+      console.log(sendingData);
       axios
         .put(`${BASE_URL}/garden/${garden_data._id}`, sendingData)
         .then((res) => {
@@ -121,6 +124,7 @@ const AddDeviceScreen = ({navigation, route}) => {
             Open map
           </Text>
         </TouchableOpacity>
+
 
         <Text
           style={{
