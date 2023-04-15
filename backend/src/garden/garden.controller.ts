@@ -101,7 +101,8 @@ export class GardenController {
     const topic_list = payload.topic_list;
     const userList = [];
     const username = payload.adaUserName;
-    const x_aio_key = payload.x_aio_key; 
+    const x_aio_key = payload.x_aio_key;
+    console.log(x_aio_key);
     this.gardenService.create({
       adaUserName: payload.adaUserName,
       boundary: payload.boundary,

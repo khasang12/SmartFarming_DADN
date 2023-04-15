@@ -1,15 +1,8 @@
 import "react-native-gesture-handler";
 import "./config/ignoreWarnings";
 import { useFonts } from "expo-font";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AuthStack from "./navigation/AuthStack";
-import AppStack from "./navigation/AppStack";
-import { AuthContext, AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import AppNav from "./navigation/AppNav";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [loaded] = useFonts({
