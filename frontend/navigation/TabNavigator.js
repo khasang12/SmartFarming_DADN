@@ -1,97 +1,16 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import AddGardenScreen from "../screens/AddGardenScreen";
-import DeviceScreen from "../screens/DeviceScreen";
-import GardenDetailScreen from "../screens/GardenDetailScreen";
-import GardenScreen from "../screens/GardenScreen";
-import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/LoginScreen";
-import NotiScreen from "../screens/NotiScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import RegisterScreen from "../screens/RegisterScreen";
-import StatisticScreen from "../screens/StatisticScreen";
-import AddDeviceScreen from "../screens/AddDeviceScreen";
-import AddBoundaryScreen from "../screens/AddBoundaryScreen";
-import ViewMapScreen from "../screens/ViewMapScreen";
+
+import NotiScreen from "../screens/Noti/NotiScreen";
+import ProfileScreen from "../screens/Profile/ProfileScreen";
+
+
+
+import { GardenStack } from "./CRUDGardenStack";
+import { HomeStack } from "./HomeStack";
 
 const Tab = createMaterialBottomTabNavigator();
-const Stack = createNativeStackNavigator();
-
-const HomeStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
-};
-
-const GardenStack = () => {
-  return (
-    <Stack.Navigator initialRouteName="Garden">
-      <Stack.Screen
-        name="Garden"
-        component={GardenScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="AddGarden"
-        component={AddGardenScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="AddDevice"
-        component={AddDeviceScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="AddBoundary"
-        component={AddBoundaryScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="GardenDetail"
-        component={GardenDetailScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="GardenProfile"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Device"
-        component={DeviceScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ViewMap"
-        component={ViewMapScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Statistic"
-        component={StatisticScreen}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
-};
 
 const TabNavigator = () => {
   return (

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,9 +13,20 @@ import {
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CustomDrawer = (props) => {
   const { logout } = useContext(AuthContext);
+  const [name, setName] = useState("Üser");
+
+  useEffect(()=>{
+    const getName = async () => {
+      const userInfo = await AsyncStorage.getItem("userInfo");
+      setName(JSON.parse(userInfo).name);
+    }
+    getName()
+  },[])
+  
   return (
     <View className="flex-1">
       <DrawerContentScrollView
@@ -41,7 +52,7 @@ const CustomDrawer = (props) => {
               fontFamily: "MontserratBold",
             }}
           >
-            Sang Kha
+            {name}
           </Text>
         </ImageBackground>
         <View className="flex-grow bg-[#eef9bf] pt-3">

@@ -23,6 +23,9 @@ export class Garden {
   @ApiProperty({ description: 'Group key', example: 'group1' })
   group_key: string;
 
+  @ApiProperty({ description: 'Adafruit X-AIO-Key', example: 'group1' })
+  x_aio_key: string;
+
   @ApiProperty({ description: 'Group name', example: 'group1' })
   group_name: string;
 

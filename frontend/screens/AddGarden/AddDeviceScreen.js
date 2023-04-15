@@ -2,11 +2,11 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-nati
 import React, { useState } from 'react'
 import { MultiSelect } from "react-native-element-dropdown";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../../components/CustomButton";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
-import { BASE_URL } from "../config/config";
+import { BASE_URL } from "../../config/config";
 
 
 const AddDeviceScreen = ({navigation, route}) => {

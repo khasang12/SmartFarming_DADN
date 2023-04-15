@@ -8,23 +8,44 @@ import {
   TextInput,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { sliderData, farmers, devices } from "../data";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { sliderData, farmers, devices } from "../../data";
 import Carousel from "react-native-snap-carousel";
-import BannerSlider from "../components/BannerSlider";
+import BannerSlider from "../../components/BannerSlider";
 import { Dimensions, StyleSheet } from "react-native";
-import CustomSwitch from "../components/CustomSwitch";
-import FarmerListItem from "../components/FarmerListItem";
-import SensorListItem from "../components/SensorListItem";
-import OutputListItem from "../components/OutputListItem";
+import CustomSwitch from "../../components/CustomSwitch";
+import FarmerListItem from "../../components/FarmerListItem";
+import SensorListItem from "../../components/SensorListItem";
+import OutputListItem from "../../components/OutputListItem";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "../../config/config";
+import axios from "axios";
+import HomeGardenItem from "../../components/HomeGardenItem";
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const [farmTab, setFarmTab] = useState(1);
-  const navigation = useNavigation();
+  const [gardens, setGardens] = useState([]);
+  const [name, setName] = useState("User")
+  const isFocused = useIsFocused()
+
+  console.log(navigation);
   const { width: screenWidth } = Dimensions.get("window");
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
+  let userInfo;
+  const getList = async () => {
+    const userInfo = await AsyncStorage.getItem("userInfo");
+    setName(JSON.parse(userInfo).name);
+    await axios
+      .get(`${BASE_URL}/garden?userId=${JSON.parse(userInfo)._id}`)
+      .then((res) => setGardens(res.data))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getList();
+  }, [isFocused]);
+
   const renderBanner = ({ item, index }, parallaxProps) => {
     return <BannerSlider data={item} parallax={parallaxProps} />;
   };
@@ -37,12 +58,14 @@ const HomeScreen = () => {
         {/* Header */}
         <View className="flex-row justify-between mb-5">
           <Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
-            Hello {", "}
-            <Text className="text-[#6a8caf]">Sang Kha</Text>
+            Welcome{", "}
+            <Text className="text-[#6a8caf]">
+              {name}
+            </Text>
           </Text>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <ImageBackground
-              source={require("../assets/hcmut.png")}
+              source={require("../../assets/hcmut.png")}
               style={{ width: 35, height: 35 }}
               imageStyle={{ borderRadius: 25 }}
             />
@@ -50,15 +73,26 @@ const HomeScreen = () => {
         </View>
 
         {/* Gardens */}
-        <View className="my-4 flex-row justify-between">
+        <View className="my-4 flex-row justify-between items-center">
           <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>
             Recently visited
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("GardenStack");
+            }}
+          >
             <Text style={{ color: "#0aada8" }}>See all</Text>
           </TouchableOpacity>
         </View>
-        <Carousel
+        <ScrollView horizontal>
+          {gardens &&
+            gardens.map((item, index) => (
+              <HomeGardenItem key={index} garden={item} />
+            ))}
+        </ScrollView>
+
+        {/* <Carousel
           data={sliderData}
           sliderWidth={screenWidth}
           sliderHeight={screenWidth}
@@ -66,7 +100,7 @@ const HomeScreen = () => {
           renderItem={renderBanner}
           loop={true}
           hasParallaxImages={true}
-        />
+        /> */}
 
         {/* Devices & Farmers */}
         <View className="mt-8 flex-row justify-between">

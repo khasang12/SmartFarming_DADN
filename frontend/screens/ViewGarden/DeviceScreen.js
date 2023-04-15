@@ -11,7 +11,7 @@ const DeviceScreen = ({ route, navigation }) => {
   const { name, feed_key, type, status, value, desc, last_update, conn } =
     route.params;
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isAuto, setIsAuto] = useState(false);
+  
 
   const toggleEnable = async () => {
     curValue = !isEnabled
@@ -62,7 +62,7 @@ const DeviceScreen = ({ route, navigation }) => {
   }
   
 
-  const toggleAuto = () => setIsAuto((previousState) => !previousState);
+  
   return (
     <View className="flex-col justify-items-start pt-5 px-3 bg-[#eef9bf] flex-1">
       <Text
@@ -88,7 +88,7 @@ const DeviceScreen = ({ route, navigation }) => {
               width: 166,
               height: 230,
             }}
-            source={require("../assets/images/fan.json")}
+            source={require("../../assets/images/fan.json")}
           />
         )}
         {type == "motor" && (
@@ -98,7 +98,7 @@ const DeviceScreen = ({ route, navigation }) => {
               width: 266,
               height: 230,
             }}
-            source={require("../assets/images/motor.json")}
+            source={require("../../assets/images/motor.json")}
           />
         )}
         {type == "pump" && (
@@ -108,7 +108,7 @@ const DeviceScreen = ({ route, navigation }) => {
               width: 266,
               height: 230,
             }}
-            source={require("../assets/images/pump.json")}
+            source={require("../../assets/images/pump.json")}
           />
         )}
 

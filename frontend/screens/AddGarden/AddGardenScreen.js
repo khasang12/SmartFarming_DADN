@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import CustomButton from "../components/CustomButton";
-import InputField from "../components/InputField";
+import CustomButton from "../../components/CustomButton";
+import InputField from "../../components/InputField";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { BASE_URL } from "../config/config";
+import { BASE_URL } from "../../config/config";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const AddGardenScreen = ({ navigation, route }) => {
@@ -69,7 +69,7 @@ const AddGardenScreen = ({ navigation, route }) => {
   };
   return (
     <View className="flex-1 justify-center bg-[#eef9bf] pt-5">
-      <ScrollView className="px-5 pt-5">
+      <ScrollView className="px-5 pt-3">
         <Text
           style={{
             fontFamily: "MontserratSemiBold",
@@ -79,9 +79,7 @@ const AddGardenScreen = ({ navigation, route }) => {
             marginBottom: 30,
           }}
         >
-          {route.params
-            ? route.params?.garden.name
-            : "Create Garden"}
+          {route.params ? route.params?.garden.name : "Create Garden"}
         </Text>
 
         <Text
@@ -90,7 +88,7 @@ const AddGardenScreen = ({ navigation, route }) => {
             fontSize: 20,
             fontWeight: "500",
             color: "#000",
-            marginBottom: 30,
+            marginBottom: 20,
           }}
         >
           Basic information
@@ -126,8 +124,20 @@ const AddGardenScreen = ({ navigation, route }) => {
           keyboardType="default"
         />
 
+        <Text
+          style={{
+            fontFamily: "MontserratSemiBold",
+            fontSize: 20,
+            fontWeight: "500",
+            color: "#000",
+            marginBottom: 20,
+          }}
+        >
+          Adafruit information
+        </Text>
+
         <InputField
-          label={"Adafruit username"}
+          label={"Adafruit Username"}
           icon={
             <MaterialIcons
               name="drive-file-rename-outline"
@@ -182,7 +192,6 @@ const AddGardenScreen = ({ navigation, route }) => {
               style={{ marginRight: 5 }}
             />
           }
-
           disabled={route.params ? true : false}
           value={data.group_key}
           onChangeText={(t) => setData({ ...data, group_key: t })}

@@ -1,14 +1,14 @@
 export const sliderData = [
   {
-    title: "First Map",
+    title: "Garden 1",
     image: require("./assets/images/map1.jpg"),
   },
   {
-    title: "Second Map",
+    title: "Garden 2",
     image: require("./assets/images/map2.jpg"),
   },
   {
-    title: "Third Map",
+    title: "Garden 3",
     image: require("./assets/images/map3.jpg"),
   },
 ];

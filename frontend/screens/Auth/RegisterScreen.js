@@ -3,13 +3,13 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import GlobalStyles from "../config/GlobalStyles";
-import CustomButton from "../components/CustomButton";
-import InputField from "../components/InputField";
-import Logo from "../assets/ArgiVision.png";
+import GlobalStyles from "../../config/GlobalStyles";
+import CustomButton from "../../components/CustomButton";
+import InputField from "../../components/InputField";
+import Logo from "../../assets/ArgiVision.png";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import axios from "axios";
-import { BASE_URL } from "../config/config";
+import { BASE_URL } from "../../config/config";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();

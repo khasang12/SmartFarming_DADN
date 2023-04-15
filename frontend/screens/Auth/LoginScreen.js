@@ -4,12 +4,12 @@ import { useNavigation } from "@react-navigation/native";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import GlobalStyles from "../config/GlobalStyles";
-import CustomButton from "../components/CustomButton";
-import InputField from "../components/InputField";
+import GlobalStyles from "../../config/GlobalStyles";
+import CustomButton from "../../components/CustomButton";
+import InputField from "../../components/InputField";
 
-import Logo from "../assets/ArgiVision.png";
-import { AuthContext } from "../context/AuthContext";
+import Logo from "../../assets/ArgiVision.png";
+import { AuthContext } from "../../context/AuthContext";
 const LoginScreen = () => {
   const navigation = useNavigation();
   const { login } = useContext(AuthContext);

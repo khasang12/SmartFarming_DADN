@@ -2,12 +2,12 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import GardenItem from "../components/GardenItem";
+import GardenItem from "../../components/GardenItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { BASE_URL } from "../config/config";
+import { BASE_URL } from "../../config/config";
 import { useIsFocused } from "@react-navigation/native";
-import MQTTConnection from "../services/mqttService.service";
+import MQTTConnection from "../../services/mqttService.service";
 const GardenScreen = ({ navigation }) => {
   const [gardens, setGardens] = useState([]);
   const isFocused = useIsFocused();

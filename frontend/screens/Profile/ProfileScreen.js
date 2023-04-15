@@ -29,7 +29,7 @@ const ProfileScreen = ({ route, navigation }) => {
       <View className="flex-1 mt-5 justify-center items-center flex-col w-full">
         <View className="pt-6">
           <ImageBackground
-            source={require("../assets/hcmut.png")}
+            source={require("../../assets/hcmut.png")}
             style={{ width: 80, height: 80 }}
             imageStyle={{ borderRadius: 25 }}
           />

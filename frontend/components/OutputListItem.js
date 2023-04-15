@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
-import { MQTTContext } from "../screens/GardenDetailScreen";
+import { MQTTContext } from "../screens/ViewGarden/GardenDetailScreen";
 
 export default function OutputListItem({ otype, item, photo, name, disable }) {
   const { width: windowWidth } = Dimensions.get("window");
