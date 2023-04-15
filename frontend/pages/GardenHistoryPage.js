@@ -15,16 +15,16 @@ const GardenHistoryPage = ({ route, navigation }) => {
   const getSensorsInfo = async (sensors) => {
     let promises = [];
     let list = [];
-    for (let sensorId of sensors) {
-      await promises.push(
-        axios
-          .post(`${BASE_URL}/sensor/device/latest?limit=10`, {
-            feed_key: `${group_key}/feeds/${sensorId}`,
-            type: "sensor",
-          })
-          .then((res) => {list = list.concat(res.data);console.log(res.data)})
-          .catch((err) => console.err(err))
-      );
+      for (let sensorId of sensors) {
+        await promises.push(
+          axios
+            .post(`${BASE_URL}/sensor/device/latest?limit=10`, {
+              feed_key: `${group_key}/feeds/${sensorId}`,
+              type: "sensor",
+            })
+            .then((res) => {list = list.concat(res.data)})
+            .catch((err) => console.err("1"+err))
+        );
     }
     Promise.all(promises).then(() =>
       setSensorsData(
@@ -45,7 +45,7 @@ const GardenHistoryPage = ({ route, navigation }) => {
       {/* Button to navigate Statistics */}
 
       {/* List of Gardens */}
-      {sensorsData &&
+      {sensorsData && sensorsData.length >0 ? (
         sensorsData.map((item, index) => (
           <GardenHistory
             key={index}
@@ -54,7 +54,10 @@ const GardenHistoryPage = ({ route, navigation }) => {
             timestamp={item.last_update}
             value={item.value}
           />
-        ))}
+        ))
+      ) : (
+        <Text>No Data</Text>
+      )}
     </ScrollView>
   );
 };

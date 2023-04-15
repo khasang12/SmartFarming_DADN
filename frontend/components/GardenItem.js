@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Modal, Pressable, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Modal, Pressable, Alert, Switch } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -6,10 +6,11 @@ import { BASE_URL } from "../config/config";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet } from "react-native";
+import { set } from "react-native-reanimated";
 
 const GardenItem = ({ navigation, garden }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  
+  const [isAuto, setIsAuto] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
   const handleGardenNavigation = () => {
@@ -24,9 +25,31 @@ const GardenItem = ({ navigation, garden }) => {
       await axios.delete(`${BASE_URL}/garden/${id}`)
                   .then((res)=>{setIsDelete(true)})
   };
-  if(isDelete) return null;
+  if (isDelete) return null;
+  const autoGarden = async () => {
+    console.log(garden.x_aio_key);
+    const headers = {
+      "X-AIO-Key": await garden.x_aio_key,
+    };
+    await setIsAuto(!isAuto);
+    await axios
+        .post(
+          "https://io.adafruit.com/api/v2/Potato_Stack/feeds/auto/data",
+          { datum: { value: isAuto ? "0" : "1" } },
+          {headers}
+        )
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+  };
+  console.log(isAuto);
   return (
-    <View className={`bg-white p-3 mb-5 rounded-xl flex flex-row justify-between ${modalVisible?"opacity-20":""}`}>
+    <View
+      className={`bg-white p-3 mb-5 rounded-xl flex flex-row justify-between ${
+        modalVisible ? "opacity-20" : ""
+      }`}
+    >
       <View>
         <View className="flex-row justify-between mb-5">
           <View>
@@ -38,9 +61,19 @@ const GardenItem = ({ navigation, garden }) => {
             </Text> */}
           </View>
         </View>
-        <View className="mb-3">
+        <View className="mb-3 flex-col gap-y-2">
           <Text>Group key: {garden.group_key}</Text>
           <Text>Description: {garden.desc}</Text>
+          <View className="flex-row items-center">
+            <Text className="text-md">Auto</Text>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={isAuto ? "#f5dd4b" : "#f4f3f4"}
+              onValueChange={autoGarden}
+              disabled={garden.x_aio_key ? false : true}
+              value={isAuto}
+            />
+          </View>
         </View>
         <TouchableOpacity
           style={styles.button}
@@ -67,7 +100,7 @@ const GardenItem = ({ navigation, garden }) => {
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("AddGarden",{garden:garden})
+            navigation.navigate("AddGarden", { garden: garden });
           }}
         >
           <MaterialIcons color="#ffcc00" size={30} name="edit" opacity={0.7} />
@@ -85,7 +118,12 @@ const GardenItem = ({ navigation, garden }) => {
             opacity={0.7}
           />
         </TouchableOpacity>
-      <DeleteModal modalVisible={modalVisible} setModalVisible={setModalVisible} garden={garden} deleteGarden={deleteGarden}/>
+        <DeleteModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          garden={garden}
+          deleteGarden={deleteGarden}
+        />
       </View>
     </View>
   );

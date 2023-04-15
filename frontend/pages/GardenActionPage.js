@@ -12,9 +12,11 @@ const GardenActionPage = ({ route, navigation }) => {
     ...topic_list.pump,
     ...topic_list.motor,
   ];
+
   const getOutputInfo = async (outputs) => {
     let promises = [];
     let list = [];
+    if (outputs == []) return null;
     for (let outputId of outputs) {
       console.log(outputId, group_key);
       promises.push(
@@ -46,7 +48,7 @@ const GardenActionPage = ({ route, navigation }) => {
   return (
     <ScrollView className="pt-3 flex-1 bg-[#eef9bf]">
       {/* List of Gardens */}
-      {outputData &&
+      {outputData && outputData.length > 0 ?
         outputData.map((item, index) => (
           <ActionHistory
             key={index}
@@ -56,7 +58,7 @@ const GardenActionPage = ({ route, navigation }) => {
             user="Sang Kha"
             timestamp={item.last_update}
           />
-        ))}
+        )):<Text className="justify-center items-center flex-row flex-1">No Data</Text>}
     </ScrollView>
   );
 };
