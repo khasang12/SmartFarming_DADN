@@ -5,6 +5,7 @@ const Stack = createNativeStackNavigator();
 import HomeScreen from "../screens/Home/HomeScreen"
 import LoginScreen from "../screens/Auth/LoginScreen";
 import RegisterScreen from "../screens/Auth/RegisterScreen";
+import { GardenStack } from "./CRUDGardenStack";
 
 export const HomeStack = () => {
   return (
@@ -12,6 +13,11 @@ export const HomeStack = () => {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GardenStack"
+        component={GardenStack}
         options={{ headerShown: false }}
       />
       <Stack.Screen
