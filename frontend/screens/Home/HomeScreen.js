@@ -25,6 +25,7 @@ import HomeGardenItem from "../../components/HomeGardenItem";
 const HomeScreen = ({navigation}) => {
   const [farmTab, setFarmTab] = useState(1);
   const [gardens, setGardens] = useState([]);
+  const [name, setName] = useState("User")
   const isFocused = useIsFocused()
 
   console.log(navigation);
@@ -32,9 +33,10 @@ const HomeScreen = ({navigation}) => {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-
+  let userInfo;
   const getList = async () => {
-    let userInfo = await AsyncStorage.getItem("userInfo");
+    const userInfo = await AsyncStorage.getItem("userInfo");
+    setName(JSON.parse(userInfo).name);
     await axios
       .get(`${BASE_URL}/garden?userId=${JSON.parse(userInfo)._id}`)
       .then((res) => setGardens(res.data))
@@ -56,8 +58,10 @@ const HomeScreen = ({navigation}) => {
         {/* Header */}
         <View className="flex-row justify-between mb-5">
           <Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
-            Hello {", "}
-            <Text className="text-[#6a8caf]">Sang Kha</Text>
+            Welcome{", "}
+            <Text className="text-[#6a8caf]">
+              {name}
+            </Text>
           </Text>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <ImageBackground
@@ -81,7 +85,7 @@ const HomeScreen = ({navigation}) => {
             <Text style={{ color: "#0aada8" }}>See all</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView horizontal >
+        <ScrollView horizontal>
           {gardens &&
             gardens.map((item, index) => (
               <HomeGardenItem key={index} garden={item} />

@@ -18,14 +18,13 @@ const GardenActionPage = ({ route, navigation }) => {
     let list = [];
     if (outputs == []) return null;
     for (let outputId of outputs) {
-      console.log(outputId, group_key);
       promises.push(
         axios
           .post(`${BASE_URL}/sensor/device/latest?limit=10`, {
             feed_key: `${group_key}/feeds/${outputId}`,
             type: "device",
           })
-          .then((res) => {list = list.concat(res.data);console.log(res.data)})
+          .then((res) => {list = list.concat(res.data)})
           .catch((err) => console.err(err))
       );
     }

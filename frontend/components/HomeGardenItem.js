@@ -16,7 +16,6 @@ const HomeGardenItem = ({ garden }) => {
     let promises = [];
     let list = [];
     for (let sensorId of sensors) {
-      console.log(sensorId);
       promises.push(
         axios
           .post(`${BASE_URL}/sensor/device/latest`, {
@@ -29,7 +28,6 @@ const HomeGardenItem = ({ garden }) => {
     }
     Promise.all(promises).then(() => setSensorsData(list));
   };
-  console.log(sensorsData);
   return (
     <View className="bg-[#b4f5bc] rounded-lg p-5 mr-5 items-center">
       <Text className="font-bold text-xl mb-3">{garden.name}</Text>
