@@ -9,14 +9,14 @@ import {
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { sliderData, farmers, devices } from "../data";
+import { sliderData, farmers, devices } from "../../data";
 import Carousel from "react-native-snap-carousel";
-import BannerSlider from "../components/BannerSlider";
+import BannerSlider from "../../components/BannerSlider";
 import { Dimensions, StyleSheet } from "react-native";
-import CustomSwitch from "../components/CustomSwitch";
-import FarmerListItem from "../components/FarmerListItem";
-import SensorListItem from "../components/SensorListItem";
-import OutputListItem from "../components/OutputListItem";
+import CustomSwitch from "../../components/CustomSwitch";
+import FarmerListItem from "../../components/FarmerListItem";
+import SensorListItem from "../../components/SensorListItem";
+import OutputListItem from "../../components/OutputListItem";
 
 const HomeScreen = () => {
   const [farmTab, setFarmTab] = useState(1);
@@ -42,7 +42,7 @@ const HomeScreen = () => {
           </Text>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <ImageBackground
-              source={require("../assets/hcmut.png")}
+              source={require("../../assets/hcmut.png")}
               style={{ width: 35, height: 35 }}
               imageStyle={{ borderRadius: 25 }}
             />

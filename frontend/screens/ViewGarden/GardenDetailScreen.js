@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import GardenNavigator from "../navigation/GardenNavigator";
-import CustomButton from "../components/CustomButton";
+import GardenNavigator from "../../navigation/GardenNavigator";
+import CustomButton from "../../components/CustomButton";
 import { useState, useEffect } from "react";
-import MQTTConnection from "../services/mqttService.service";
+import MQTTConnection from "../../services/mqttService.service";
 import { useIsFocused } from "@react-navigation/native";
 import { Context } from "react";
 

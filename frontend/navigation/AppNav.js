@@ -11,7 +11,7 @@ const AppNav = () => {
   const { isLoading, userToken } = useContext(AuthContext);
   if (isLoading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center flex-col">
         <ActivityIndicator size={"large"} />
       </View>
     );

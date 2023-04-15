@@ -88,7 +88,7 @@ const DeviceScreen = ({ route, navigation }) => {
               width: 166,
               height: 230,
             }}
-            source={require("../assets/images/fan.json")}
+            source={require("../../assets/images/fan.json")}
           />
         )}
         {type == "motor" && (
@@ -98,7 +98,7 @@ const DeviceScreen = ({ route, navigation }) => {
               width: 266,
               height: 230,
             }}
-            source={require("../assets/images/motor.json")}
+            source={require("../../assets/images/motor.json")}
           />
         )}
         {type == "pump" && (
@@ -108,7 +108,7 @@ const DeviceScreen = ({ route, navigation }) => {
               width: 266,
               height: 230,
             }}
-            source={require("../assets/images/pump.json")}
+            source={require("../../assets/images/pump.json")}
           />
         )}
 

@@ -4,18 +4,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import HomeScreen from "../screens/HomeScreen";
-import NotiScreen from "../screens/NotiScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import SettingScreen from "../screens/GardenScreen";
+import NotiScreen from "../screens/Noti/NotiScreen";
+import ProfileScreen from "../screens/Profile/ProfileScreen";
 
 import CustomDrawer from "../components/CustomDrawer";
 import TabNavigator from "./TabNavigator";
-import GardenScreen from "../screens/GardenScreen";
+import GardenScreen from "../screens/ViewGarden/GardenScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
+// Sidebar Navigator
 const AppStack = () => {
   return (
     <Drawer.Navigator

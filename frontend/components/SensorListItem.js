@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 import { BASE_URL } from "../config/config";
-import { MQTTContext } from "../screens/GardenDetailScreen";
+import { MQTTContext } from "../screens/ViewGarden/GardenDetailScreen";
 import { useContext } from "react";
 
 

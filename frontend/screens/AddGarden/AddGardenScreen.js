@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import CustomButton from "../components/CustomButton";
-import InputField from "../components/InputField";
+import CustomButton from "../../components/CustomButton";
+import InputField from "../../components/InputField";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { BASE_URL } from "../config/config";
+import { BASE_URL } from "../../config/config";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const AddGardenScreen = ({ navigation, route }) => {
