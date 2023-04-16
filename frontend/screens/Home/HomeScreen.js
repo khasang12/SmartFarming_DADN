@@ -28,7 +28,6 @@ const HomeScreen = ({navigation}) => {
   const [name, setName] = useState("User")
   const isFocused = useIsFocused()
 
-  console.log(navigation);
   const { width: screenWidth } = Dimensions.get("window");
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });

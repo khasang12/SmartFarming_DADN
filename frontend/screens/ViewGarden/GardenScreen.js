@@ -8,7 +8,10 @@ import axios from "axios";
 import { BASE_URL } from "../../config/config";
 import { useIsFocused } from "@react-navigation/native";
 import MQTTConnection from "../../services/mqttService.service";
+import { createPushNotificationFactory } from "../../services/NotificationFactory";
 const GardenScreen = ({ navigation }) => {
+  const pushNotificationFactory = createPushNotificationFactory();
+  const [token, setToken] = useState();
   const [gardens, setGardens] = useState([]);
   const isFocused = useIsFocused();
   const getList = async () => {
@@ -18,16 +21,23 @@ const GardenScreen = ({ navigation }) => {
       .then((res) => setGardens(res.data))
       .catch((err) => console.log(err));
   };
-  // userName = "davidhuynh22"
-  // password = "aio_bycn1154ctLCUtXTwnacwJafCeWm"
-  
-  // const newClient = new MQTTConnection([], userName, password);
-  // newClient.connect();    
-
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem("expoPushToken");
+    setToken(token);
+  };
+  useEffect(() => {
+    const pushNotification = pushNotificationFactory.createPushNotification();
+    getToken();
+    pushNotification.createPushMsg(
+      token,
+      "You've got mail! 📬",
+      "Welcome to Garden Screen"
+    );
+  }, []);
   useEffect(() => {
     getList();
   }, [isFocused]);
-
+  
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
       <ScrollView className="p-5">
