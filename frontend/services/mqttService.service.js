@@ -40,7 +40,7 @@ class MQTTConnection {
       this.emitter.emit(topic,payloadString)       
     }
 
-    onConnect() {        
+    onConnect() {     
       console.log("Connect successfully"); 
       for (let topic of this.topics) {
         console.log("Subcribe Topic:", topic);
@@ -56,8 +56,6 @@ class MQTTConnection {
     onFailure(err) {
       console.log('Connect failed!');
       console.log(err);
-      console.log("Reconnecting...");
-      this.connect();
     }
 
     subcribeTopic(topic,callback) {

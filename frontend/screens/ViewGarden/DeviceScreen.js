@@ -4,15 +4,15 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment"; 
 import LottieView from 'lottie-react-native'
+import { MQTTContext } from "../../context/MQTTContext";
 
 
 const DeviceScreen = ({ route, navigation }) => {
   const animation = useRef(null);
-  const { name, feed_key, type, status, value, desc, last_update, conn } =
+  const { name, feed_key, type, status, value, desc, last_update,conn} =
     route.params;
   const [isEnabled, setIsEnabled] = useState(false);
   
-
   const toggleEnable = async () => {
     curValue = !isEnabled
     setIsEnabled(curValue)
@@ -39,28 +39,25 @@ const DeviceScreen = ({ route, navigation }) => {
         .catch((err) => console.log(err));
     }
     fetchData();
+    if(conn.connected == true)
+    {
+      try 
+      {
+        conn.subcribeTopic(feed_key,handleUpdate);
+      }
+      catch(err) 
+      {
+        console.log(err);
+      }
+    }
+
   },[])
   
   handleUpdate = (string) => {
     setIsEnabled(string == "1" ? true : false)
   }
 
-  if(conn.connected == true)
-  {
-    try 
-    {
-      conn.subcribeTopic(feed_key,handleUpdate);
-    }
-    catch(err) 
-    {
-      console.log(err);
-    }
-  }
-  else 
-  {
-    setValueUpdated(0)
-  }
-  
+
 
   
   return (

@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 import { BASE_URL } from "../config/config";
-import { MQTTContext } from "../screens/ViewGarden/GardenDetailScreen";
 import { useContext } from "react";
+import { MQTTContext } from "../context/MQTTContext";
+
 
 
 export default function SensorListItem({ feed_key, otype, item, photo, name, disable, value }) {
 
-  const conn = useContext(MQTTContext);
+  const {conn} = useContext(MQTTContext);
   const [connect, setConnect] = useState(true);
-  
   const { width: windowWidth } = Dimensions.get("window");
   const [showInfo, setShowInfo] = useState(false);
   const [valueUpdated, setValueUpdated] = useState(undefined);
@@ -22,30 +22,30 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
     setValueUpdated(string);
   }
   
-  if(conn.connected == true)
-  {
-    try 
+  useEffect(() => {
+    if(conn.connected == true)
     {
-      conn.subcribeTopic(feed_key,handleUpdate);
+      try 
+      {
+        conn.subcribeTopic(feed_key,handleUpdate);
+      }
+      catch(err) 
+      {
+        console.log(err);
+      }
     }
-    catch(err) 
+    else 
     {
-      console.log(err);
+      setValueUpdated('chưa kết nối')
     }
-  }
-  else 
-  {
-    setValueUpdated('chưa kết nối')
-  }
-  
-  
+  },[])
+
   
   function getValue({topic, payloadString})
   {
     if (topic == feed_key) 
       setValueUpdated(payloadString);
   }
-
 
   return (
     <View>
