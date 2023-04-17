@@ -14,10 +14,12 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 
 const CustomDrawer = (props) => {
   const { logout } = useContext(AuthContext);
   const [name, setName] = useState("Üser");
+  const isFocused = useIsFocused();
 
   useEffect(()=>{
     const getName = async () => {
@@ -25,7 +27,7 @@ const CustomDrawer = (props) => {
       setName(JSON.parse(userInfo).name);
     }
     getName()
-  },[])
+  },[isFocused])
   
   return (
     <View className="flex-1">

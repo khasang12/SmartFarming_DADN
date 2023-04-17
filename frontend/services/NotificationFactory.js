@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { UNUserNotificationCenter } from "expo";
 // Abstract Factory Pattern
 
 class NotificationServiceFactory {
@@ -40,6 +40,12 @@ class PushNotification {
   async createPushMsg(token, title, msg) {
     throw new Error(
       "createPushMsg(token, title, msg) method must be implemented"
+    );
+  }
+
+  async handleNotificationResponseListener() {
+    throw new Error(
+      "handleNotificationResponseListener() method must be implemented"
     );
   }
 }
@@ -81,6 +87,14 @@ class AndroidPushNotification extends PushNotification {
       title: title,
       body: msg,
       channelId: "my-notification-channel",
+      android: {
+        sound: true,
+        priority: "high",
+        /* data: {
+          key1: "value1",
+          key2: "value2",
+        }, */
+      },
     };
 
     await fetch("https://exp.host/--/api/v2/push/send", {
@@ -95,58 +109,86 @@ class AndroidPushNotification extends PushNotification {
 
     console.log("Notification sent");
   }
+
+  async handleNotificationResponseListener() {
+    const handleNotificationResponse = (response) => {
+      console.log(response);
+      // handle the click action here
+      if (response.notification.request.content.data) {
+        const data = response.notification.request.content.data;
+        console.log("Data:", data);
+      }
+    };
+    Notifications.addNotificationResponseReceivedListener(handleNotificationResponse)
+  }
 }
 
 // Concrete class for iOS push notifications
 class IOSPushNotification extends PushNotification {
   async registerForPushNotifications() {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
-  
-    if (existingStatus !== 'granted') {
+
+    if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
-  
-    if (finalStatus !== 'granted') {
-      console.log('Failed to get push token for iOS', finalStatus);
+
+    if (finalStatus !== "granted") {
+      console.log("Failed to get push token for iOS", finalStatus);
       return null;
     }
-  
-    const pushToken = (await Notifications.getExpoPushTokenAsync({
-      ios: {
-        allowAlert: true,
-        allowBadge: true,
-        allowSound: true,
-      },
-    })).data;
-    console.log('Expo push token:', pushToken);
-    
+
+    const pushToken = (
+      await Notifications.getExpoPushTokenAsync({
+        ios: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+        },
+      })
+    ).data;
+    console.log("Expo push token:", pushToken);
+
     // TODO: Save the push token to your server
     await AsyncStorage.setItem("expoPushToken", pushToken);
   }
 
-  async createPushMsg(token,title,msg) {
+  async createPushMsg(token, title, msg) {
     const message = {
       to: token,
       ios: {
-        sound: 'default',
+        sound: "default",
         title: title,
         body: msg,
-        categoryId: 'my-notification-category',
+        categoryId: "my-notification-category",
       },
-    }
+    };
 
-    await fetch('https://exp.host/--/api/v2/push/send', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Accept-encoding': 'gzip, deflate',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(message),
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  }
+
+  async handleNotificationResponseListener() {
+    const handleNotificationResponse = (response) => {
+      console.log(response);
+      // handle the click action here
+      if (response.notification.request.content.data) {
+        const data = response.notification.request.content.data;
+        console.log("Data:", data);
       }
-    )
+    };
+    UNUserNotificationCenter.setDelegate({
+      handleNotificationResponse: handleNotificationResponse,
+    });
   }
 }
 

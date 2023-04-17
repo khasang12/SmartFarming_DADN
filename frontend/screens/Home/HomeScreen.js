@@ -27,12 +27,9 @@ const HomeScreen = ({navigation}) => {
   const [gardens, setGardens] = useState([]);
   const [name, setName] = useState("User")
   const isFocused = useIsFocused()
-
-  const { width: screenWidth } = Dimensions.get("window");
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-  let userInfo;
   const getList = async () => {
     const userInfo = await AsyncStorage.getItem("userInfo");
     setName(JSON.parse(userInfo).name);

@@ -1,5 +1,5 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../config/config";
@@ -29,7 +29,7 @@ const HomeGardenItem = ({ garden }) => {
     Promise.all(promises).then(() => setSensorsData(list));
   };
   return (
-    <View className="bg-[#b4f5bc] rounded-lg p-5 mr-5 items-center">
+    <TouchableOpacity className="bg-[#b4f5bc] rounded-lg p-5 mr-5 items-center">
       <Text className="font-bold text-xl mb-3">{garden.name}</Text>
       <View className="flex-row justify-between">
         {sensorsData &&
@@ -37,7 +37,7 @@ const HomeGardenItem = ({ garden }) => {
             <ItemValue key={index} name={item.name} value={item.value} />
           ))}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

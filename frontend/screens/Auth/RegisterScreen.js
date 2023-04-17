@@ -74,17 +74,24 @@ const RegisterScreen = () => {
           />
         </View>
 
-        <Text
+        <View
+          className="items-center"
           style={{
-            fontFamily: "MontserratSemiBold",
-            fontSize: 38,
-            fontWeight: "500",
-            color: "#000",
-            marginBottom: 30,
+            marginBottom: 20,
           }}
         >
-          Register
-        </Text>
+          <Text
+            style={{
+              fontFamily: "MontserratSemiBold",
+              fontSize: 38,
+              fontWeight: "500",
+              color: "#000",
+              marginBottom: 10,
+            }}
+          >
+            Register
+          </Text>
+        </View>
 
         <InputField
           label={"Email (*)"}

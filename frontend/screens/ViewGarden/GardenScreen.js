@@ -11,7 +11,6 @@ import MQTTConnection from "../../services/mqttService.service";
 import { createPushNotificationFactory } from "../../services/NotificationFactory";
 const GardenScreen = ({ navigation }) => {
   const pushNotificationFactory = createPushNotificationFactory();
-  const [token, setToken] = useState();
   const [gardens, setGardens] = useState([]);
   const isFocused = useIsFocused();
   const getList = async () => {
@@ -22,17 +21,15 @@ const GardenScreen = ({ navigation }) => {
       .catch((err) => console.log(err));
   };
   const getToken = async () => {
-    const token = await AsyncStorage.getItem("expoPushToken");
-    setToken(token);
-  };
-  useEffect(() => {
     const pushNotification = pushNotificationFactory.createPushNotification();
-    getToken();
     pushNotification.createPushMsg(
-      token,
+      await AsyncStorage.getItem("expoPushToken"),
       "You've got mail! 📬",
       "Welcome to Garden Screen"
     );
+  };
+  useEffect(() => {
+    getToken();
   }, []);
   useEffect(() => {
     getList();

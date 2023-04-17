@@ -22,6 +22,7 @@ const AppStack = () => {
   useEffect(()=>{
     const pushNotification = pushNotificationFactory.createPushNotification();
     pushNotification.registerForPushNotifications();
+    pushNotification.handleNotificationResponseListener();
   },[])
   return (
     <Drawer.Navigator
