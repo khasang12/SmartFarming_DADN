@@ -25,26 +25,33 @@ import HomeGardenItem from "../../components/HomeGardenItem";
 const HomeScreen = ({navigation}) => {
   const [farmTab, setFarmTab] = useState(1);
   const [gardens, setGardens] = useState([]);
-  const [name, setName] = useState("User")
+  const [data, setData] = useState(null)
   const isFocused = useIsFocused()
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, []);
-  const getList = async () => {
-    const userInfo = await AsyncStorage.getItem("userInfo");
-    setName(JSON.parse(userInfo).name);
-    await axios
-      .get(`${BASE_URL}/garden?userId=${JSON.parse(userInfo)._id}`)
-      .then((res) => setGardens(res.data))
-      .catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    getList();
-  }, [isFocused]);
 
-  const renderBanner = ({ item, index }, parallaxProps) => {
-    return <BannerSlider data={item} parallax={parallaxProps} />;
-  };
+  useEffect(() => {
+    AsyncStorage.getItem("userInfo")
+      .then((data) => {
+        setData(JSON.parse(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
+  useEffect(() => {
+    if (data!==null) {
+      axios
+        .get(`${BASE_URL}/garden?userId=${data?._id}`)
+        .then((res) => setGardens(res.data))
+        .catch((err) => console.log(err));
+    }
+  }, [isFocused,data]);
+
+  if (data === null) {
+    // Show a loading indicator while the data is being fetched
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   const onSelectSwitch = (value) => {
     setFarmTab(value);
   };
@@ -53,12 +60,12 @@ const HomeScreen = ({navigation}) => {
       <ScrollView className="p-5 mb-2">
         {/* Header */}
         <View className="flex-row justify-between mb-5">
-          <Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
+          {<Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
             Welcome{", "}
             <Text className="text-[#6a8caf]">
-              {name}
+              {data?.name}
             </Text>
-          </Text>
+          </Text>}
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <ImageBackground
               source={require("../../assets/hcmut.png")}

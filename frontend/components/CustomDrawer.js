@@ -23,8 +23,9 @@ const CustomDrawer = (props) => {
 
   useEffect(()=>{
     const getName = async () => {
-      const userInfo = await AsyncStorage.getItem("userInfo");
-      setName(JSON.parse(userInfo).name);
+      let userInfo = await AsyncStorage.getItem("userInfo");
+      userInfo = JSON.parse(userInfo);
+      if (userInfo) setName(userInfo?.name);
     }
     getName()
   },[isFocused])
