@@ -19,15 +19,16 @@ const GardenNavigator = ({ garden }) => {
       }}
     >
       <Tab.Screen
-        name="Action"
-        component={GardenActionPage}
-        initialParams={{ garden: garden }}
-      />
-      <Tab.Screen
         name="History"
         component={GardenHistoryPage}
         initialParams={{ garden: garden }}
       />
+      <Tab.Screen
+        name="Action"
+        component={GardenActionPage}
+        initialParams={{ garden: garden }}
+      />
+
       <Tab.Screen
         name="Info"
         component={GardenInfoPage}

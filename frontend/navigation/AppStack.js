@@ -18,11 +18,10 @@ const Stack = createNativeStackNavigator();
 // Sidebar Navigator
 const AppStack = () => {
   const pushNotificationFactory = createPushNotificationFactory();
-
   useEffect(()=>{
     const pushNotification = pushNotificationFactory.createPushNotification();
     pushNotification.registerForPushNotifications();
-    pushNotification.handleNotificationResponseListener();
+    //pushNotification.handleNotificationResponseListener();
   },[])
   return (
     <Drawer.Navigator

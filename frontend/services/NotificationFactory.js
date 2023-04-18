@@ -2,6 +2,7 @@ import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UNUserNotificationCenter } from "expo";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 // Abstract Factory Pattern
 
 class NotificationServiceFactory {
@@ -86,14 +87,12 @@ class AndroidPushNotification extends PushNotification {
       to: token,
       title: title,
       body: msg,
+      data: { index: 0 },
       channelId: "my-notification-channel",
       android: {
         sound: true,
         priority: "high",
-        /* data: {
-          key1: "value1",
-          key2: "value2",
-        }, */
+        data: { index: 0 },
       },
     };
 
@@ -110,16 +109,17 @@ class AndroidPushNotification extends PushNotification {
     console.log("Notification sent");
   }
 
-  async handleNotificationResponseListener() {
+  async handleNotificationResponseListener(callback) {
     const handleNotificationResponse = (response) => {
-      console.log(response);
+      // console.log(response);
       // handle the click action here
       if (response.notification.request.content.data) {
         const data = response.notification.request.content.data;
-        console.log("Data:", data);
+        callback(data.index)
       }
     };
     Notifications.addNotificationResponseReceivedListener(handleNotificationResponse)
+    
   }
 }
 
@@ -179,7 +179,7 @@ class IOSPushNotification extends PushNotification {
 
   async handleNotificationResponseListener() {
     const handleNotificationResponse = (response) => {
-      console.log(response);
+      // console.log(response);
       // handle the click action here
       if (response.notification.request.content.data) {
         const data = response.notification.request.content.data;

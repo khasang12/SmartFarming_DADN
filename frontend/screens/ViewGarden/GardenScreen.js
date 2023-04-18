@@ -11,29 +11,35 @@ import MQTTConnection from "../../services/mqttService.service";
 import { createPushNotificationFactory } from "../../services/NotificationFactory";
 const GardenScreen = ({ navigation }) => {
   const pushNotificationFactory = createPushNotificationFactory();
+  const pushNotification = pushNotificationFactory.createPushNotification();
   const [gardens, setGardens] = useState([]);
   const isFocused = useIsFocused();
   const getList = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     await axios
       .get(`${BASE_URL}/garden?userId=${JSON.parse(userInfo)._id}`)
-      .then((res) => setGardens(res.data))
+      .then((res) => {
+        setGardens(res.data)
+        pushNotification.handleNotificationResponseListener((index) =>
+          navigation.navigate("GardenDetail", res.data[index])
+        )
+      })
       .catch((err) => console.log(err));
   };
-  const getToken = async () => {
-    const pushNotification = pushNotificationFactory.createPushNotification();
+  const pushMsg = async () => {
     pushNotification.createPushMsg(
       await AsyncStorage.getItem("expoPushToken"),
-      "You've got mail! 📬",
-      "Welcome to Garden Screen"
+      "Alert!",
+      "Humidity is very low"
     );
   };
   useEffect(() => {
-    getToken();
-  }, []);
-  useEffect(() => {
     getList();
   }, [isFocused]);
+  useEffect(() => {
+    pushMsg();
+  }, []);
+  
   
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">

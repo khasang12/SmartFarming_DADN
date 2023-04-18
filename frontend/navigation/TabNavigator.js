@@ -45,7 +45,7 @@ const TabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Notifications"
         component={NotiScreen}
         options={{
@@ -55,7 +55,7 @@ const TabNavigator = () => {
           ),
           tabBarBadge: 3,
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
