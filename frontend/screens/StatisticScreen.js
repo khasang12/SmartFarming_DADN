@@ -63,48 +63,88 @@ const chartStyles = {
 
 const StatsScreen = ({ route, navigation }) => {
   const garden = route.params;
-  const [data, setData] = useState([]); // the information of a garden
-  const [weeklyAverages, setWeeklyAverages] = useState([]);
+  console.log(garden['_id'])
+  const [data, setData] = useState([]);
+  const feedArray = garden.topic_list.sensor;
+  console.log(feedArray);
 
-  const getData = async () => {
-    await axios.get(`${BASE_URL}/sensor/`)
-      .then((res) => { setData(res.data) })
-  }
 
-  const calculateWeeklyAverages = (data) => {
-    const feedKeys = ['Potato_Stack/feeds/iot-cnpm.sensor1', 'Potato_Stack/feeds/iot-cnpm.sensor2', 'Potato_Stack/feeds/iot-cnpm.sensor4'];
-    const days = 7;
-    if (data && data.length > 0) {
-      const averages = feedKeys.map(feedKey =>
-        Array.from({ length: days }, (_, i) => calculateAverage(feedKey, i + 1, data))
-      );
-      setWeeklyAverages(averages);
-    }
-  }
+  const baseUrl = "https://io.adafruit.com/api/v2/Potato_Stack/feeds/";
+  const [sensor2Data, setSensor2Data] = useState([]);
+  const [sensor4Data, setSensor4Data] = useState([]);
+  const [sensor1Data, setSensor1Data] = useState([]);
 
-  const calculateAverage = (feedKey, days, data) => {
-    const now = moment();
-    const start = moment().subtract(days, 'days');
-    const filteredData = data.filter(
-      sensor => sensor.feed_key === feedKey &&
-        moment(sensor.created_at).isBetween(start, now, null, '[]') // Include start and end dates in range
-    );
-    if (filteredData.length === 0) return 0; // Return 0 if no data found
-    const sum = filteredData.reduce((total, sensor) => total + sensor.value, 0);
-    return Math.round(((sum / filteredData.length) + Number.EPSILON) * 100) / 100;
-  }
 
+  // Function to fetch data for a feed and store it in the respective array
+  const fetchData = (feed, dataArray, setData) => {
+    return fetch(baseUrl + feed + "/data")
+      .then(response => response.json())
+      .then(data => {
+        // Extract values from the fetched data
+        data.forEach(item => {
+          dataArray.push({ value: item.value, created_at: item.created_at });
+        });
+        // Set the data array using setData function
+        setData(dataArray);
+      })
+      .catch(error => console.error(error));
+  };
+
+  // Fetch data for sensor2
   useEffect(() => {
-    getData();
+    fetchData("iot-cnpm.sensor2", [], setSensor2Data);
   }, []);
 
+  // Fetch data for sensor4
   useEffect(() => {
-    if (data && data.length > 0) {
-      calculateWeeklyAverages(data);
-    }
-  }, [data]);
+    fetchData("iot-cnpm.sensor4", [], setSensor4Data);
+  }, []);
 
-  if (data.length === 0 || weeklyAverages.length === 0 || weeklyAverages[0].length === 0 || weeklyAverages[1].length === 0 || weeklyAverages[2].length === 0) {
+  // Fetch data for sensor1
+  useEffect(() => {
+    fetchData("iot-cnpm.sensor1", [], setSensor1Data);
+  }, []);
+
+  const calculateWeeklyAverages = (dataArray) => {
+    const weeklyAverages = Array(7).fill(0); // Initialize an array of 7 elements with 0 as default value
+    const dataCounts = Array(7).fill(0); // Initialize an array to store the count of data points for each day
+
+    // Get local time offset in minutes
+    const offset = new Date().getTimezoneOffset();
+
+    // Iterate over the data array
+    dataArray.forEach(item => {
+      const date = new Date(item.created_at); // Convert the created_at string to a Date object
+      const day = (date.getUTCDay() + Math.floor(offset / 60 / 24) + 7) % 7; // Get the day index accounting for UTC offset
+      const value = parseInt(item.value); // Parse the value as integer
+      weeklyAverages[day] += value; // Add the value to the respective day's total
+      dataCounts[day]++; // Increment the data count for the respective day
+    });
+
+    // Calculate the average for each day
+    for (let i = 0; i < 7; i++) {
+      if (dataCounts[i] > 0) {
+        weeklyAverages[i] /= dataCounts[i]; // Divide the total by the count of data points for the day
+      }
+      weeklyAverages[i] = Math.round(weeklyAverages[i] * 100) / 100; // Round the average to 2 decimal places
+    }
+
+    return weeklyAverages;
+  };
+
+  const weeklyAveragesHumidity = calculateWeeklyAverages(sensor1Data);
+  const weeklyAveragesTemperature = calculateWeeklyAverages(sensor4Data);
+  const weeklyAveragesLight = calculateWeeklyAverages(sensor2Data);
+  console.log(weeklyAveragesHumidity)
+  console.log(weeklyAveragesTemperature)
+  console.log(weeklyAveragesLight)
+
+  humidityData.datasets[0].data = weeklyAveragesHumidity;
+  temperatureData.datasets[0].data = weeklyAveragesTemperature;
+  lightData.datasets[0].data = weeklyAveragesLight;
+
+
+  if (weeklyAveragesHumidity.length === 0 || weeklyAveragesTemperature.length === 0 || weeklyAveragesLight.length === 0 ) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <LottieView
@@ -117,21 +157,13 @@ const StatsScreen = ({ route, navigation }) => {
       </View>
     );
   }
-  else {
-    const humidities = weeklyAverages[0];
-    const temperatures = weeklyAverages[1];
-    const lights = weeklyAverages[2];
-    humidityData.datasets[0].data = humidities;
-    temperatureData.datasets[0].data = temperatures;
-    lightData.datasets[0].data = lights;
-  }
+
 
   //it has this format: 
   // [[26.588888888888892, 26.537499999999994, 25, 26.580000000000002, 26.52799999999999, 25, 27], 
   // [51.684615384615384, 54.082608695652176, 40.300000000000004, 51.684615384615384, 45.92, 54.082608695652176, 45.92], 
   // [818.8666666666667, 1476, 732.8823529411765, 585.5909090909091, 1222.875, 936.2307692307693, 0]]
 
-  console.log(humidityData.datasets[data])
 
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
