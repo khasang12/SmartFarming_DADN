@@ -10,7 +10,6 @@ import { set } from "react-native-reanimated";
 
 const GardenItem = ({ navigation, garden }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [isAuto, setIsAuto] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
   const handleGardenNavigation = () => {
@@ -26,23 +25,6 @@ const GardenItem = ({ navigation, garden }) => {
                   .then((res)=>{setIsDelete(true)})
   };
   if (isDelete) return null;
-  const autoGarden = async () => {
-    console.log(garden.x_aio_key);
-    const headers = {
-      "X-AIO-Key": await garden.x_aio_key,
-    };
-    await setIsAuto(!isAuto);
-    await axios
-        .post(
-          "https://io.adafruit.com/api/v2/Potato_Stack/feeds/auto/data",
-          { datum: { value: isAuto ? "0" : "1" } },
-          {headers}
-        )
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => console.log(err));
-  };
   return (
     <View
       className={`bg-white p-3 mb-5 rounded-xl flex flex-row justify-between ${
@@ -50,29 +32,27 @@ const GardenItem = ({ navigation, garden }) => {
       }`}
     >
       <View>
-        <View className="flex-row justify-between mb-5">
+        <View
+          className="flex-row justify-between mb-3
+        "
+        >
           <View>
             <Text style={{ fontSize: 18, fontFamily: "HindBold" }}>
               {garden.name}
             </Text>
-            {/* <Text style={{ fontSize: 14, fontFamily: "HindLight" }}>
-              Latitude: {lat}, Longitude: {lon}
-            </Text> */}
+            <Text style={{ fontSize: 14, fontFamily: "HindLight" }}>
+              Latitude:{" "}
+              {garden.boundary[0] ? garden.boundary[0].latitude : "None"}
+            </Text>
+            <Text style={{ fontSize: 14, fontFamily: "HindLight" }}>
+              Longitude:{" "}
+              {garden.boundary[0] ? garden.boundary[0].longitude : "None"}
+            </Text>
           </View>
         </View>
         <View className="mb-3 flex-col gap-y-2">
           <Text>Group key: {garden.group_key}</Text>
           <Text>Description: {garden.desc}</Text>
-          <View className="flex-row items-center">
-            <Text className="text-md">Auto</Text>
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isAuto ? "#f5dd4b" : "#f4f3f4"}
-              onValueChange={autoGarden}
-              disabled={garden.x_aio_key ? false : true}
-              value={isAuto}
-            />
-          </View>
         </View>
         <TouchableOpacity
           style={styles.button}
@@ -117,6 +97,20 @@ const GardenItem = ({ navigation, garden }) => {
             opacity={0.7}
           />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Settings", { garden: garden });
+          }}
+        >
+          <MaterialIcons
+            color="#6a8caf"
+            size={30}
+            name="settings"
+            opacity={0.7}
+          />
+        </TouchableOpacity>
+        
         <DeleteModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}

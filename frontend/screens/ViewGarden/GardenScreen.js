@@ -37,7 +37,7 @@ const GardenScreen = ({ navigation }) => {
     getList();
   }, [isFocused]);
   useEffect(() => {
-    pushMsg();
+    //pushMsg();
   }, []);
   
   
