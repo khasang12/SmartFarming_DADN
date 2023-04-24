@@ -12,13 +12,16 @@ import SettingsScreen from "../screens/ViewGarden/SettingsScreen";
 
 const Stack = createNativeStackNavigator();
 
-export const GardenStack = () => {
+export const GardenStack = ({ route }) => {
   return (
     <Stack.Navigator initialRouteName="Garden">
       <Stack.Screen
         name="Garden"
         component={GardenScreen}
         options={{ headerShown: false }}
+        initialParams={
+          route.params ? { garden: route.params.garden } : undefined
+        }
       />
       <Stack.Screen
         name="AddGarden"

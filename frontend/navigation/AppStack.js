@@ -9,8 +9,8 @@ import ProfileScreen from "../screens/Profile/ProfileScreen";
 
 import CustomDrawer from "../components/CustomDrawer";
 import TabNavigator from "./TabNavigator";
-import GardenScreen from "../screens/ViewGarden/GardenScreen";
 import { createPushNotificationFactory } from "../services/NotificationFactory";
+import { GardenStack } from "./CRUDGardenStack";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -21,7 +21,6 @@ const AppStack = () => {
   useEffect(()=>{
     const pushNotification = pushNotificationFactory.createPushNotification();
     pushNotification.registerForPushNotifications();
-    //pushNotification.handleNotificationResponseListener();
   },[])
   return (
     <Drawer.Navigator
@@ -49,7 +48,7 @@ const AppStack = () => {
       />
       <Drawer.Screen
         name="Gardens"
-        component={GardenScreen}
+        component={GardenStack}
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons name="fence" size={22} color={color} />

@@ -44,9 +44,21 @@ class PushNotification {
     );
   }
 
+  async schedulePushMsg(title, msg, time) {
+    throw new Error(
+      "schedulePushMsg(title, msg, time) method must be implemented"
+    );
+  }
+
   async handleNotificationResponseListener() {
     throw new Error(
       "handleNotificationResponseListener() method must be implemented"
+    );
+  }
+
+  async destroyNotificationResponseListener() {
+    throw new Error(
+      "destroyNotificationResponseListener() method must be implemented"
     );
   }
 }
@@ -88,7 +100,7 @@ class AndroidPushNotification extends PushNotification {
       title: title,
       body: msg,
       data: { index: 0 },
-      channelId: "my-notification-channel",
+      channelId: "alert",
       android: {
         sound: true,
         priority: "high",
@@ -109,17 +121,44 @@ class AndroidPushNotification extends PushNotification {
     console.log("Notification sent");
   }
 
+  async schedulePushMsg(title, msg, time) {
+    await Notifications.setNotificationChannelAsync("schedule", {
+      name: "Schedule notifications",
+      importance: Notifications.AndroidImportance.HIGH,
+    });
+    const identifier = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: title,
+        body: msg,
+      },
+      trigger: {
+        seconds: time,
+        channelId: "schedule",
+        repeats: true,
+      },
+    });
+    await Notifications.cancelScheduledNotificationAsync(identifier);
+  }
+
   async handleNotificationResponseListener(callback) {
     const handleNotificationResponse = (response) => {
       // console.log(response);
       // handle the click action here
       if (response.notification.request.content.data) {
         const data = response.notification.request.content.data;
-        callback(data.index)
+        callback(data.index);
       }
     };
-    Notifications.addNotificationResponseReceivedListener(handleNotificationResponse)
-    
+    const sub = Notifications.addNotificationResponseReceivedListener(
+      handleNotificationResponse
+    );
+    return sub;
+  }
+
+  async destroyNotificationResponseListener(listener) {
+    if (listener) {
+      listener.remove();
+    }
   }
 }
 
@@ -162,7 +201,7 @@ class IOSPushNotification extends PushNotification {
         sound: "default",
         title: title,
         body: msg,
-        categoryId: "my-notification-category",
+        categoryId: "alert",
       },
     };
 
@@ -177,6 +216,29 @@ class IOSPushNotification extends PushNotification {
     });
   }
 
+  async schedulePushMsg(title, msg, time) {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== "granted") {
+      return;
+    }
+    await Notifications.setNotificationChannelAsync("schedule", {
+      name: "Schedule notifications",
+      importance: Notifications.AndroidImportance.HIGH,
+    });
+    const identifier = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: title,
+        body: msg,
+      },
+      trigger: {
+        seconds: time,
+        channelId: "schedule",
+        repeats: true,
+      },
+    });
+    await Notifications.cancelScheduledNotificationAsync(identifier);
+  }
+
   async handleNotificationResponseListener() {
     const handleNotificationResponse = (response) => {
       // console.log(response);
@@ -189,6 +251,12 @@ class IOSPushNotification extends PushNotification {
     UNUserNotificationCenter.setDelegate({
       handleNotificationResponse: handleNotificationResponse,
     });
+  }
+
+  async destroyNotificationResponseListener(listener) {
+    if (listener) {
+      listener.remove();
+    }
   }
 }
 

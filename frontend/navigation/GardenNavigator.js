@@ -9,7 +9,6 @@ const Tab = createMaterialTopTabNavigator();
 
 // Top Navigator for GardenScreen
 const GardenNavigator = ({ garden }) => {
-
   return (
     <Tab.Navigator
       screenOptions={{
