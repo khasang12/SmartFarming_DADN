@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
-import { MQTTContext } from "../screens/ViewGarden/GardenDetailScreen";
+import { MQTTContext } from "../context/MQTTContext";
 
 export default function OutputListItem({ otype, item, photo, name, disable }) {
   const { width: windowWidth } = Dimensions.get("window");
@@ -32,7 +32,7 @@ export default function OutputListItem({ otype, item, photo, name, disable }) {
         {!disable && otype !== "sensor" && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Device", { ...item, otype, conn:conn });
+              navigation.navigate("Device", { ...item, ...otype, ...conn });
             }}
             className="bg-[#6a8caf] p-3 w-25 rounded-md"
           >

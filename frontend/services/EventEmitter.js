@@ -30,9 +30,7 @@ export class EventEmitter {
     emit(event, ...args) { 
         let emitter = this.listeners[event]
         if (!emitter) return false;
-        console.log(emitter);
         emitter.forEach((f) => {
-            console.log(f);
             f(...args)
         })
         return true;
