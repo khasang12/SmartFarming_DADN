@@ -8,6 +8,7 @@ import AddGardenScreen from "../screens/AddGarden/AddGardenScreen";
 import DeviceScreen from "../screens/ViewGarden/DeviceScreen";
 import GardenDetailScreen from "../screens/ViewGarden/GardenDetailScreen";
 import GardenScreen from "../screens/ViewGarden/GardenScreen";
+import SettingsScreen from "../screens/ViewGarden/SettingsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,15 +36,15 @@ export const GardenStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="GardenDetail"
         component={GardenDetailScreen}
         options={{ headerShown: false }}
       />
-      {/* <Stack.Screen
-        name="GardenProfile"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
-      /> */}
       <Stack.Screen
         name="Device"
         component={DeviceScreen}
