@@ -91,7 +91,7 @@ const HomeScreen = ({navigation}) => {
         <ScrollView horizontal>
           {gardens &&
             gardens.map((item, index) => (
-              <HomeGardenItem key={index} garden={item} />
+              <HomeGardenItem key={index} garden={item} navigation={navigation} />
             ))}
         </ScrollView>
 

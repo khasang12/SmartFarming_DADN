@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../config/config";
 import axios from "axios";
 
-const HomeGardenItem = ({ garden }) => {
+const HomeGardenItem = ({ garden, navigation }) => {
     const isFocused = useIsFocused()
   const { topic_list, group_key, userId } = garden;
   const [sensorsData, setSensorsData] = useState([]);
@@ -29,13 +29,15 @@ const HomeGardenItem = ({ garden }) => {
     Promise.all(promises).then(() => setSensorsData(list));
   };
   return (
-    <TouchableOpacity className="bg-[#b4f5bc] rounded-lg p-5 mr-5 items-center">
+    <TouchableOpacity className="bg-[#b4f5bc] rounded-lg p-5 mr-5 items-center" onPress={()=>navigation.navigate("GardenStack",{garden:garden})}>
       <Text className="font-bold text-xl mb-3">{garden.name}</Text>
       <View className="flex-row justify-between">
         {sensorsData &&
           sensorsData.map((item, index) => (
             <ItemValue key={index} name={item.name} value={item.value} />
           ))}
+        {sensorsData &&
+          sensorsData.length==0 &&<Text className="items-center justify-center flex-row flex-1">No sensors found</Text>}
       </View>
     </TouchableOpacity>
   );

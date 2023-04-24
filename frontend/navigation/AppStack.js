@@ -56,15 +56,6 @@ const AppStack = () => {
         }}
       />
       <Drawer.Screen
-        name="Notifications"
-        component={NotiScreen}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="bell" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
