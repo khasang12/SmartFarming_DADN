@@ -11,7 +11,7 @@ import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 const SettingsScreen = ({ navigation, route }) => {
   const [isAuto, setIsAuto] = useState(false);
   const isFocused = useIsFocused()
-  const [data,setData] = useState({temp:"30 32",humid:"59 65",light:"500 1800",moist:"0 10"});
+  const [data,setData] = useState({temp:"",humid:"",light:"",moist:""});
   const garden = route.params?.garden;
   useEffect(()=>{
     axios
@@ -19,12 +19,22 @@ const SettingsScreen = ({ navigation, route }) => {
         "https://io.adafruit.com/api/v2/Potato_Stack/feeds/auto/data?limit=1"
       )
       .then((res) => setIsAuto(res.data[0].value==="1"?true:false))
-      .then(()=>Toast.show({
-            type: "success",
-            text1: "Procedure Complete",
-            text2: "Threshold Updated",
-        }))
+    axios
+      .get(
+        "https://io.adafruit.com/api/v2/Potato_Stack/feeds/control/data?limit=1"
+      )
+      .then((res) => parseThreshold(res.data[0].value));
+      
   },[isFocused])
+  const parseThreshold = (str) => {
+    const arr = str.split(" ");
+    setData({
+      temp: arr.slice(0, 2).join(" "),
+      humid: arr.slice(2, 4).join(" "),
+      light: arr.slice(4, 6).join(" "),
+      moist: arr.slice(6).join(" "),
+    });
+  }
   const autoGarden = async () => {
     const headers = {
       "X-AIO-Key": await garden.x_aio_key,
@@ -58,6 +68,13 @@ const SettingsScreen = ({ navigation, route }) => {
       .then((res) => {
         console.log(res.data);
       })
+      .then(() =>
+        Toast.show({
+          type: "success",
+          text1: "Procedure Complete",
+          text2: "Threshold Updated",
+        })
+      )
       .catch((err) => console.log(err));
   }
   return (

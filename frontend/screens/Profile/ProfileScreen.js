@@ -41,7 +41,9 @@ const ProfileScreen = ({ route, navigation }) => {
       </View>
 
       {/* Settings */}
-      <View></View>
+      <View>
+        
+      </View>
     </View>
   );
 };
