@@ -18,29 +18,25 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
   const [valueUpdated, setValueUpdated] = useState(undefined);
 
   handleUpdate = (string) => {
-    console.log(string);
     setValueUpdated(string);
   }
   
-  useEffect(() => {
-    if(conn.connected == true)
+  if(conn && conn.connected == true)
+  {
+    try 
     {
-      try 
-      {
-        conn.subcribeTopic(feed_key,handleUpdate);
-      }
-      catch(err) 
-      {
-        console.log(err);
-      }
+      conn.subcribeTopic(feed_key,handleUpdate);
     }
-    else 
+    catch(err) 
     {
-      setValueUpdated('chưa kết nối')
+      console.log(err);
     }
-  },[])
+  }
+  else 
+  {
+    setValueUpdated('chưa kết nối')
+  }
 
-  
   function getValue({topic, payloadString})
   {
     if (topic == feed_key) 
