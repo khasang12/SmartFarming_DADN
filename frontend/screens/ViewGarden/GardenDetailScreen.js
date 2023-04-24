@@ -6,11 +6,11 @@ import { useState, useEffect } from "react";
 import MQTTConnection from "../../services/mqttService.service";
 import { useIsFocused } from "@react-navigation/native";
 import { Context } from "react";
+import { MQTTProvider, MQTTContext } from "../../context/MQTTContext";
 
-export const MQTTContext = React.createContext(null);
 const GardenDetailScreen = ({ route, navigation }) => {
   const garden = route.params;
-  userName = "Potato_Stack"
+  /* userName = "Potato_Stack"
   password = "aio_JZvY63VOPyGgS4WZFaZ6Z5ueDEc2"
   const isFocused = useIsFocused();
 
@@ -26,7 +26,7 @@ const GardenDetailScreen = ({ route, navigation }) => {
      } 
     }  
     init();
-  }, [isFocused]);
+  }, [isFocused]); */
 
   return (
     <View className="pt-10 px-3 flex-1 justify-center bg-[#eef9bf]">
@@ -57,11 +57,14 @@ const GardenDetailScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       {/* Navigator */}
-      {conn ? (      
-      <MQTTContext.Provider value={conn}> 
-        <GardenNavigator garden={garden} />
-      </MQTTContext.Provider>  
-      ):(null)}    
+      {     
+      // <MQTTContext.Provider value={conn}> 
+      //   <GardenNavigator garden={garden} />
+      // </MQTTContext.Provider>  
+        <MQTTProvider>
+          <GardenNavigator garden={garden} />
+        </MQTTProvider>
+      }    
     </View>
   );
 };
