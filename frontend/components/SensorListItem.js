@@ -6,19 +6,49 @@ import { Dimensions, StyleSheet } from "react-native";
 import { BASE_URL } from "../config/config";
 import { useContext } from "react";
 import { MQTTContext } from "../context/MQTTContext";
+import { createPushNotificationFactory } from "../services/NotificationFactory";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
+const getMinMaxThreshold = (typ) => {
+  if (typ.includes("Temp")) {
+    return [28, 35];
+  } else if (typ.includes("Humid")) {
+    return [40, 65];
+  } else if (typ.includes("Light")) {
+    return [500, 1800];
+  } else {
+    return [0, 10];
+  }
+}
 
 export default function SensorListItem({ feed_key, otype, item, photo, name, disable, value }) {
-
+  const threshold = getMinMaxThreshold(name)
   const {conn} = useContext(MQTTContext);
   const [connect, setConnect] = useState(true);
   const { width: windowWidth } = Dimensions.get("window");
   const [showInfo, setShowInfo] = useState(false);
   const [valueUpdated, setValueUpdated] = useState(undefined);
+  const pushNotificationFactory = createPushNotificationFactory();
+  const pushNotification = pushNotificationFactory.createPushNotification();
 
-  handleUpdate = (string) => {
+  handleUpdate = async (string) => {
     setValueUpdated(string);
+    console.log("update",string);
+    const val = eval(string);
+    if (val < threshold[0]){
+      pushNotification.createPushMsg(
+        await AsyncStorage.getItem("expoPushToken"),
+        "Alert!",
+        name+" is too low. Please take action now."
+      );
+    }
+    if (val > threshold[1]) {
+      pushNotification.createPushMsg(
+        await AsyncStorage.getItem("expoPushToken"),
+        "Alert!",
+        name + " is too high. Please take action now."
+      );
+    }
   }
   
   if(conn && conn.connected == true)
