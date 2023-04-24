@@ -11,6 +11,7 @@ if (__DEV__) {
     "Non-serializable values were found in the navigation state.",
     "VirtualizedLists should never be nested inside plain ScrollViews",
     "AxiosError: Request failed with status code 404",
+    "Calling getExpoPushTokenAsync without specifying a projectId is deprecated and will no longer be supported in SDK 49+",
   ];
 
   const warn = console.warn;

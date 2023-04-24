@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -10,12 +10,19 @@ import ProfileScreen from "../screens/Profile/ProfileScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import TabNavigator from "./TabNavigator";
 import GardenScreen from "../screens/ViewGarden/GardenScreen";
+import { createPushNotificationFactory } from "../services/NotificationFactory";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
 // Sidebar Navigator
 const AppStack = () => {
+  const pushNotificationFactory = createPushNotificationFactory();
+  useEffect(()=>{
+    const pushNotification = pushNotificationFactory.createPushNotification();
+    pushNotification.registerForPushNotifications();
+    //pushNotification.handleNotificationResponseListener();
+  },[])
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}

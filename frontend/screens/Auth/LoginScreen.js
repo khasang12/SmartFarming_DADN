@@ -20,7 +20,7 @@ const LoginScreen = () => {
     navigation.setOptions({ headerShown: false });
   }, []);
   return (
-    <View className="flex-1 justify-center bg-[#ffffff]">
+    <View className="flex-1 justify-center bg-[#eef9bf]">
       <View className="px-5">
         <View className="items-center">
           <Image
@@ -30,22 +30,22 @@ const LoginScreen = () => {
           />
         </View>
 
-        <View className="items-center" style={{
-          marginBottom: 50
-        }}>
+        <View
+          className="items-center"
+          style={{
+            marginBottom: 50,
+          }}
+        >
           <Text
             style={{
               fontFamily: "MontserratSemiBold",
-              fontSize: 30,
+              fontSize: 38,
               fontWeight: "500",
               color: "#000",
               marginBottom: 10,
             }}
           >
             Login
-          </Text>
-          <Text>
-            Welcome back!
           </Text>
         </View>
 
@@ -90,7 +90,7 @@ const LoginScreen = () => {
 
         <View className="flex-row justify-center, mb-5">
           <Text>Don't have an account yet?</Text>
-          
+
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={{ color: "#6a8caf", fontWeight: "700" }}>
               {" "}

@@ -43,7 +43,6 @@ const GardenItem = ({ navigation, garden }) => {
         })
         .catch((err) => console.log(err));
   };
-  console.log(isAuto);
   return (
     <View
       className={`bg-white p-3 mb-5 rounded-xl flex flex-row justify-between ${
