@@ -4,9 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import NotiScreen from "../screens/Noti/NotiScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
-
 import CustomDrawer from "../components/CustomDrawer";
 import TabNavigator from "./TabNavigator";
 import { createPushNotificationFactory } from "../services/NotificationFactory";

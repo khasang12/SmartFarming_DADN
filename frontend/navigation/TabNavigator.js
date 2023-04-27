@@ -2,7 +2,6 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import NotiScreen from "../screens/Noti/NotiScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 
 

@@ -1,17 +1,29 @@
-import { ScrollView, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import { ScrollView, Text, RefreshControl } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import ActionHistory from "../components/ActionHistory";
 import axios from "axios";
 import { BASE_URL } from "../config/config";
 
 const GardenActionPage = ({ route, navigation }) => {
   const [outputData, setOutputData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const { topic_list, group_key } = route.params?.garden;
   const outputDevices = [
     ...topic_list.fan,
     ...topic_list.pump,
     ...topic_list.motor,
   ];
+  useEffect(() => {
+    getOutputInfo(outputDevices);
+  }, []);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    // Perform the data fetching operation here
+    getOutputInfo(outputDevices).then(() => {
+      setRefreshing(false);
+    });
+  }, []);
 
   const getOutputInfo = async (outputs) => {
     let promises = [];
@@ -40,14 +52,15 @@ const GardenActionPage = ({ route, navigation }) => {
     );
   };
 
-  useEffect(() => {
-    getOutputInfo(outputDevices);
-  }, []);
-
   return (
-    <ScrollView className="pt-3 flex-1 bg-[#eef9bf]">
+    <ScrollView
+      className="pt-3 flex-1 bg-[#eef9bf]"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {/* List of Gardens */}
-      {outputData && outputData.length > 0 ?
+      {outputData && outputData.length > 0 ? (
         outputData.map((item, index) => (
           <ActionHistory
             key={index}
@@ -57,7 +70,12 @@ const GardenActionPage = ({ route, navigation }) => {
             user="Sang Kha"
             timestamp={item.last_update}
           />
-        )):<Text className="justify-center items-center flex-row flex-1">No Data</Text>}
+        ))
+      ) : (
+        <Text className="justify-center items-center flex-row flex-1">
+          No Data
+        </Text>
+      )}
     </ScrollView>
   );
 };
