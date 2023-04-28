@@ -23,6 +23,7 @@ const data = {
 }
 const ViewMapScreen = ({route,navigation}) => {
   const {name,desc,boundary} = route.params
+  if(boundary==undefined) return null;
   return (
     <View style={styles.container}>
       <MapView

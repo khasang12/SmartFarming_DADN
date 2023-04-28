@@ -20,15 +20,19 @@ const GardenScreen = ({ navigation, route }) => {
       })
       .catch((err) => console.log(err));
   };
-  
+
   useEffect(() => {
     // navigate due to alert
-    if (route.params!=undefined){
+    if (route.params != undefined) {
       axios.post(`${BASE_URL}/garden/activate`, {
         gardenId: route.params.garden._id,
       });
       navigation.navigate("GardenDetail", route.params.garden);
     }
+  }, []);
+  
+  useEffect(() => {
+    // navigate due to alert
     getList();
   }, [isFocused]);
   

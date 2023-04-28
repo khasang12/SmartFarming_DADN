@@ -37,11 +37,15 @@ const GardenDetailScreen = ({ route, navigation }) => {
         </Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("ViewMap", {
-              boundary: garden.boundary,
-              name: garden.name,
-              desc: garden.desc,
-            });
+            if (garden.boundary.length>0)
+              navigation.navigate("ViewMap", {
+                boundary: garden.boundary,
+                name: garden.name,
+                desc: garden.desc,
+              });
+            else{
+              alert("Map not found")
+            }
           }}
           className="bg-[#6a8caf] p-3 mb-7 rounded-md"
         >

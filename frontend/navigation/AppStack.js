@@ -4,9 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import NotiScreen from "../screens/Noti/NotiScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
-
 import CustomDrawer from "../components/CustomDrawer";
 import TabNavigator from "./TabNavigator";
 import { createPushNotificationFactory } from "../services/NotificationFactory";
@@ -52,15 +50,6 @@ const AppStack = () => {
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons name="fence" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Notifications"
-        component={NotiScreen}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="bell" size={22} color={color} />
           ),
         }}
       />

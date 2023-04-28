@@ -1,5 +1,5 @@
-import { ScrollView, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import { ScrollView, Text, RefreshControl } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { gardenHistory } from "../data";
 import GardenHistory from "../components/GardenHistory";
 import { TouchableOpacity } from "react-native";
@@ -11,6 +11,20 @@ import { BASE_URL } from "../config/config";
 const GardenHistoryPage = ({ route, navigation }) => {
   const [sensorsData, setSensorsData] = useState([]);
   const { topic_list, group_key } = route.params?.garden;
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    getSensorsInfo(topic_list.sensor);
+  }, []);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    // Perform the data fetching operation here
+    getSensorsInfo(topic_list.sensor).then(() => {
+      setRefreshing(false);
+    });
+  }, []);
 
   const getSensorsInfo = async (sensors) => {
     let promises = [];
@@ -37,15 +51,18 @@ const GardenHistoryPage = ({ route, navigation }) => {
       )
     );
   };
-  useEffect(() => {
-    getSensorsInfo(topic_list.sensor);
-  }, []);
+  
   return (
-    <ScrollView className="pt-3 flex-1 bg-[#eef9bf]">
+    <ScrollView
+      className="pt-3 flex-1 bg-[#eef9bf]"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {/* Button to navigate Statistics */}
 
       {/* List of Gardens */}
-      {sensorsData && sensorsData.length >0 ? (
+      {sensorsData && sensorsData.length > 0 ? (
         sensorsData.map((item, index) => (
           <GardenHistory
             key={index}

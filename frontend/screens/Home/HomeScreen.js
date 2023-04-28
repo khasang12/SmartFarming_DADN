@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
+  RefreshControl,
 } from "react-native";
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState, useEffect, useCallback } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { sliderData, farmers, devices } from "../../data";
 import Carousel from "react-native-snap-carousel";
@@ -27,6 +28,30 @@ const HomeScreen = ({navigation}) => {
   const [gardens, setGardens] = useState([]);
   const [data, setData] = useState(null)
   const isFocused = useIsFocused()
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    // Perform the data fetching operation here
+    if (data !== null) {
+      setRefreshing(true);
+      axios
+        .get(`${BASE_URL}/garden?userId=${data?._id}`)
+        .then((res) => setGardens(res.data))
+        .then(() => {
+          setRefreshing(false);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data !== null) {
+      axios
+        .get(`${BASE_URL}/garden?userId=${data?._id}`)
+        .then((res) => setGardens(res.data))
+        .catch((err) => console.log(err));
+    }
+  }, [isFocused, data]);
 
   useEffect(() => {
     AsyncStorage.getItem("userInfo")
@@ -35,14 +60,6 @@ const HomeScreen = ({navigation}) => {
       })
       .catch((error) => console.error(error));
   }, []);
-  useEffect(() => {
-    if (data!==null) {
-      axios
-        .get(`${BASE_URL}/garden?userId=${data?._id}`)
-        .then((res) => setGardens(res.data))
-        .catch((err) => console.log(err));
-    }
-  }, [isFocused,data]);
 
   if (data === null) {
     // Show a loading indicator while the data is being fetched
@@ -57,15 +74,20 @@ const HomeScreen = ({navigation}) => {
   };
   return (
     <View className="pt-3 flex-1 justify-center bg-[#eef9bf]">
-      <ScrollView className="p-5 mb-2">
+      <ScrollView
+        className="p-5 mb-2"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {/* Header */}
         <View className="flex-row justify-between mb-5">
-          {<Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
-            Welcome{", "}
-            <Text className="text-[#6a8caf]">
-              {data?.name}
+          {
+            <Text style={{ fontSize: 24, fontFamily: "MontserratSemiBold" }}>
+              Welcome{", "}
+              <Text className="text-[#6a8caf]">{data?.name}</Text>
             </Text>
-          </Text>}
+          }
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <ImageBackground
               source={require("../../assets/hcmut.png")}
@@ -91,7 +113,11 @@ const HomeScreen = ({navigation}) => {
         <ScrollView horizontal>
           {gardens &&
             gardens.map((item, index) => (
-              <HomeGardenItem key={index} garden={item} />
+              <HomeGardenItem
+                key={index}
+                garden={item}
+                navigation={navigation}
+              />
             ))}
         </ScrollView>
 
