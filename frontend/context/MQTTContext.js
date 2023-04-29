@@ -1,16 +1,12 @@
 import React, { createContext, useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { BASE_URL } from "../config/config";
-import { useIsFocused } from "@react-navigation/native";
 import MQTTConnection from "../services/mqttService.service";
 
 export const MQTTContext = createContext();
 
-export const MQTTProvider = ({ children }) => {
+export const MQTTProvider = ({userName, password, children }) => {
     
-    userName = "Potato_Stack"
-    password = "aio_JZvY63VOPyGgS4WZFaZ6Z5ueDEc2"
+    // userName = "Potato_Stack"
+    // password = "aio_JZvY63VOPyGgS4WZFaZ6Z5ueDEc2"
 
     const [conn, setConn] = useState(undefined);
 

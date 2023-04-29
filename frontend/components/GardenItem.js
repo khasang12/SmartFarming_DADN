@@ -11,9 +11,14 @@ import { set } from "react-native-reanimated";
 const GardenItem = ({ navigation, garden }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-
-  const handleGardenNavigation = () => {
-    axios.post(`${BASE_URL}/garden/activate`, {gardenId: garden._id})
+  
+  const handleGardenNavigation = async () => {
+    axios.post(`${BASE_URL}/garden/activate`, 
+      {
+        gardenId: garden._id,
+        pushToken: await AsyncStorage.getItem("expoPushToken"),
+      }
+    )
     navigation.navigate("GardenDetail", garden);
   };
   const handleStatisticNavigation = () => {

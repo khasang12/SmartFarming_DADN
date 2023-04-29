@@ -1,0 +1,12 @@
+diff --git a/node_modules/@react-native-picker/picker/android/build.gradle b/node_modules/@react-native-picker/picker/android/build.gradle
+index b700d8c..45e2e58 100644
+--- a/node_modules/@react-native-picker/picker/android/build.gradle
++++ b/node_modules/@react-native-picker/picker/android/build.gradle
+@@ -38,6 +38,6 @@ repositories {
+ 
+ dependencies {
+   //noinspection GradleDynamicVersion
+-  api 'com.facebook.react:react-native:+'
++  implementation 'com.facebook.react:react-native:+'
+ }
+   

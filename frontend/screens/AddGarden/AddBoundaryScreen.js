@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import MapView, { MAP_TYPES, Polygon } from "react-native-maps";
+import { PROVIDER_GOOGLE } from "react-native-maps";
 
 const { width, height } = Dimensions.get("window");
 
@@ -140,7 +141,7 @@ const AddBoundaryScreen = ({navigation,route}) => {
   return (
     <View style={styles.container}>
       <MapView
-        provider={data.provider}
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
         mapType={MAP_TYPES.HYBRID}
         initialRegion={data.region}
