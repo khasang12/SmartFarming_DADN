@@ -23,7 +23,7 @@ import { BASE_URL } from "../../config/config";
 import axios from "axios";
 import HomeGardenItem from "../../components/HomeGardenItem";
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [farmTab, setFarmTab] = useState(1);
   const [gardens, setGardens] = useState([]);
   const [data, setData] = useState(null)
@@ -121,16 +121,6 @@ const HomeScreen = ({navigation}) => {
             ))}
         </ScrollView>
 
-        {/* <Carousel
-          data={sliderData}
-          sliderWidth={screenWidth}
-          sliderHeight={screenWidth}
-          itemWidth={screenWidth - 60}
-          renderItem={renderBanner}
-          loop={true}
-          hasParallaxImages={true}
-        /> */}
-
         {/* Devices & Farmers */}
         <View className="mt-8 flex-row justify-between">
           <Text style={{ fontSize: 24, fontFamily: "HindBold" }}>
@@ -165,7 +155,7 @@ const HomeScreen = ({navigation}) => {
           devices
             .filter((item) => item.type !== "sensor")
             .map((item, index) => (
-              <SensorListItem
+              <OutputListItem
                 key={index}
                 otype="sensor"
                 name={item.name}
@@ -185,7 +175,7 @@ const HomeScreen = ({navigation}) => {
               phone={item.phone}
               disable={true}
               photo="https://icon2.cleanpng.com/20180420/gee/kisspng-computer-icons-farmer-icon-design-clip-art-farmer-5ada50596fc531.0730372315242568574578.jpg"
-              onPress={() => {}}
+              onPress={() => { }}
             />
           ))}
       </ScrollView>

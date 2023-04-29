@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Dimensions, ScrollView, SafeAreaView } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { Rect, Text as TextSVG, Svg } from "react-native-svg";
-import axios from 'axios';
-import { BASE_URL } from "../config/config";
 import { StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
-import moment from 'moment';
 let humidityData = {
   labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   datasets: [
@@ -148,7 +144,7 @@ const StatsScreen = ({ route, navigation }) => {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <LottieView
-          source={require('../assets/images/loading.json')}
+          source={require('../../assets/images/loading.json')}
           autoPlay
           loop
           style={{ width: 200, height: 200 }}
