@@ -15,12 +15,12 @@ export class MqttService {
 export class MQTTSubscriber {
   public mqttClient;
   public static cb; // Call back notify function
-
   // @Inject(SensorService)
   // protected readonly sensorService: SensorService
 
   constructor(
     protected topic: string[],
+    protected thresholds:number[], 
     protected username: string,
     protected password: string,
     protected sensorService : any
@@ -64,12 +64,13 @@ export class MQTTSubscriber {
     this.topic = this.topic.filter((elem) => newTopic.indexOf(elem) >= 0);
     return true;
   }
-
   clearDevice() {
     this.topic = [];
   }
+  setThreshHold(thresholds : number[]) {
+    this.thresholds = thresholds;
+  }
 }
-
 
 export class SensorSubcriber extends MQTTSubscriber {
   launch() {
@@ -78,10 +79,9 @@ export class SensorSubcriber extends MQTTSubscriber {
       this.mqttClient.subscribe(this.topic, () => {
         console.log(`Subscribe to topic '${this.topic}'`);
       });
-    });
-
+    });    
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic, payload);
+      MQTTSubscriber.cb(topic, payload.toString());
       console.log(`Received Message On Sensor: ${payload}`);
       this.sensorService.create({
         desc: '',
@@ -95,7 +95,6 @@ export class SensorSubcriber extends MQTTSubscriber {
     });
   }
 }
-
 
 export class PumpSubcriber extends MQTTSubscriber {
   launch() {
@@ -211,18 +210,19 @@ class SubcriberFactory {
   createSubcriber(
     type: string,
     topic: string[],
+    thresholds: number[],
     username: string,
     password: string,
     sensorService
   ): MQTTSubscriber {
     if (type === 'sensor') {
-      return new SensorSubcriber(topic, username, password, sensorService);
+      return new SensorSubcriber(topic, thresholds, username, password, sensorService);
     } else if (type === 'pump') {
-      return new PumpSubcriber(topic, username, password, sensorService);
+      return new PumpSubcriber(topic, thresholds, username, password, sensorService);
     } else if (type === 'motor') {
-      return new MotorSubcriber(topic, username, password, sensorService);
+      return new MotorSubcriber(topic, thresholds, username, password, sensorService);
     } else if (type === 'fan') {
-      return new FanSubcriber(topic, username, password,sensorService);
+      return new FanSubcriber(topic, thresholds, username, password,sensorService);
     }
     return null;
   }
@@ -252,10 +252,11 @@ export class MqttManager {
       status: 'Device Type Not Found',
     };
   }
-  addSubcriber(type: string, topic: string[] = []) {
+  addSubcriber(type: string, topic: string[] = [], thresholds: number[]) {
     const newSubscriber: MQTTSubscriber = new SubcriberFactory().createSubcriber(
       type,
       topic,
+      thresholds,
       this.username,
       this.password,
       this.sensorService

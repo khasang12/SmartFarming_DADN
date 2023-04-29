@@ -92,11 +92,9 @@ export class GardenController {
 
     }
     console.log(exist);
-    
     if (exist && exist.hasOwnProperty("gardenId")) {
       throw new InternalServerErrorException(GardenBusinessErrors.ExistedGarden(exist.gardenId))  
     }
-
     const gkey = payload.group_key;
     const topic_list = payload.topic_list;
     const userList = [];
@@ -119,9 +117,10 @@ export class GardenController {
       userId: owner['_id'],
       x_aio_key: payload.x_aio_key,
     });
+
     const mqttManager = this.mqttService.getManager(username, x_aio_key);
     for (let k in topic_list) {
-      mqttManager.addSubcriber(k, topic_list[k]);
+      mqttManager.addSubcriber(k, topic_list[k].map(elem => payload.group_key+"/feeds/"+elem),[50,70]);
     }
     // Build Garden
     const garden: ConcreteGarden = new GardenBuilder()
@@ -130,7 +129,7 @@ export class GardenController {
       .setId(GardenManagerService.getCurrentNumber())
       .setOwner(owner)
       .setMQTTDevices(mqttManager)
-      .setObserverList(userList)
+      .setObserverList([])
       .build();
     garden.launch();
     GardenManagerService.addGarden(garden);
@@ -166,31 +165,31 @@ export class GardenController {
   }
 
   @Post('activate')
-  async activate(@Body('gardenId') gardenId: string) {
+  async activate(@Body('gardenId') gardenId: string, @Body('pushToken') pushToken: string) {
     const garden:Garden = await this.gardenService.findOne(gardenId)
     try {
-      GardenManagerService.findGarden(garden.name, garden.userId[0]);
+      const g = GardenManagerService.findGarden(garden.name, garden.userId[0]);
+      const gid = g.gardenId;
+      const activeGarden:ConcreteGarden = GardenManagerService.getGarden(gid);
+      activeGarden.subcribe(pushToken);  
     } catch (e) {
-      // Not find garden in garden manager
-
-      // const mqttManager = this.mqttService.getManager(
-      //   username,
-      //   owner_x_aio_key,
-      // );
-      // for (let k in topic_list) {
-      //   mqttManager.addSubcriber(k, topic_list[k]);
-      // }
-      // // Build Garden
-      // const garden: ConcreteGarden = new GardenBuilder()
-      //   .setGroupKey(gkey)
-      //   .setGardenName(gardenName)
-      //   .setId(GardenManagerService.getCurrentNumber())
-      //   .setOwner(owner)
-      //   .setMQTTDevices(mqttManager)
-      //   .setObserverList(userList)
-      //   .build();
-      // garden.launch();
-      // GardenManagerService.addGarden(garden);
+      const owner:User = await this.userService.findOne(garden.userId[0].toString())
+      const mqttManager = this.mqttService.getManager(garden.adaUserName, garden.x_aio_key);
+      for (let k in garden.topic_list) {
+        mqttManager.addSubcriber(k, garden.topic_list[k].map(elem => garden.group_key+"/feeds/"+elem),[50,70]);
+      }
+      // Build Garden
+      const activateGarden: ConcreteGarden = new GardenBuilder()
+        .setGroupKey(garden.group_key)
+        .setGardenName(garden.name)
+        .setId(GardenManagerService.getCurrentNumber())
+        .setOwner(owner)
+        .setMQTTDevices(mqttManager)
+        .setObserverList([pushToken])
+        .build();
+      activateGarden.launch();
+      GardenManagerService.addGarden(activateGarden);
     }
+
   }
 }
