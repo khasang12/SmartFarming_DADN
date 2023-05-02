@@ -10,7 +10,7 @@ import { BASE_URL } from "../../config/config";
 
 
 const AddDeviceScreen = ({navigation, route}) => {
-  const {garden_name,desc,group_name,group_key,feeds,boundary,garden_data, adaUserName, x_aio_key} = route.params
+  const {garden_name,desc,group_name,group_key,feeds,thresholds,boundary,garden_data, adaUserName, x_aio_key} = route.params
   const data = feeds.map((item)=>({label: item.name, value: item.key}))
   const [selectedSensors, setSelectedSensors] = useState(garden_data?garden_data.topic_list.sensor:[]);
   const [selectedFans, setSelectedFans] = useState(garden_data?garden_data.topic_list.fan:[]);
@@ -18,6 +18,7 @@ const AddDeviceScreen = ({navigation, route}) => {
   const [selectedPumps, setSelectedPumps] = useState(garden_data?garden_data.topic_list.pump:[]);
   const handleAddGarden = async (e) => {
     let userInfo = await AsyncStorage.getItem("userInfo");
+    console.log(feeds);
     const sendingData = {
       adaUserName: adaUserName,
       x_aio_key:x_aio_key,
@@ -26,6 +27,7 @@ const AddDeviceScreen = ({navigation, route}) => {
       group_key: group_key,
       group_name: group_name,
       userId: await JSON.parse(userInfo)._id,
+      thresholds: thresholds,
       topic_list: {
         sensor: selectedSensors,
         fan: selectedFans,
@@ -34,7 +36,7 @@ const AddDeviceScreen = ({navigation, route}) => {
       },
       boundary: boundary ? boundary : [],
     };
-    console.log(sendingData);
+    sendingData.topic_list["sensor"].push("auto")
     if(!garden_data){
       axios
         .post(`${BASE_URL}/garden/create`, sendingData)

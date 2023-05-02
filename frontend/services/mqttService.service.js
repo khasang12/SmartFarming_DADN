@@ -1,5 +1,6 @@
 import { EventEmitter } from "./EventEmitter";
 import Paho from "paho-mqtt";
+import Toast from "react-native-toast-message";
 
 class MQTTConnection {
     topics = []
@@ -55,7 +56,13 @@ class MQTTConnection {
     }
     onFailure(err) {
       console.log('Connect failed!');
-      console.log(err);
+      Toast.show({
+        type: "error",
+        text1: "Procedure Incomplete",
+        text2: err.response.data.reason,
+      });
+      console.log("Reconnecting");
+      this.connect();
     }
 
     subcribeTopic(topic,callback) {

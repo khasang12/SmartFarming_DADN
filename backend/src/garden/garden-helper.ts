@@ -1,8 +1,9 @@
+import axios from 'axios';
 import { MqttManager } from 'src/mqtt/mqtt.service';
 import { User } from 'src/user/models/user.model';
 interface Subject {
-  subcribe(observer: Observer): void;
-  unsubcribe(observer: Observer): void;
+  subcribe(observer: string): void;
+  unsubcribe(observer: string): void;
   notify(news: string): void;
 }
 /* 
@@ -19,49 +20,42 @@ export class ConcreteGarden implements Subject {
     public gardenId: number,
     private groupKey: string,
     private Owner: User,
-    private observers: Observer[],
+    private observers: string[],
     private mqttManager: MqttManager,
   ) {}
-  subcribe(observer: Observer): void {
-    this.observers.push(observer);
+  subcribe(pushToken: string): void {
+    if(!this.observers.includes(pushToken))
+      this.observers.push(pushToken);
   }
-  unsubcribe(observer: Observer): void {
-    this.observers = this.observers.filter((ele) => ele.id !== observer.id);
+  unsubcribe(pushToken : string): void {
+    this.observers = this.observers.filter(ele => ele != pushToken);
   }
-
   // Wrap this function as callback and pass to Subcribers --> becasue this context
-  notify = ((payload) => {
-    if (this.observers)
-      this.observers.forEach((observer) => observer.update(payload));
+  notify = ((title:string,payload:string) => {
+    axios.post(
+      "https://exp.host/--/api/v2/push/send",
+      {
+        to: this.observers,
+        sound: "default",
+        title: this.gardenName,
+        body: payload
+      }
+    ).catch((err) => {
+      console.log(err);
+    });
   }).bind(this);
 
   /* devices : [MQTTSubcriber] */
   addDevice(topic: string[], type: string) {
     return;
   }
-
   getMqttManager() {
     return this.mqttManager;
   }
-
   launch() {
-    this.subcribe(new Observer(this.Owner));
     this.mqttManager.setNotify(this.notify);
     this.mqttManager.launch();
   }
 }
 
-export class Observer extends User {
-  public static count = 0;
-  public id;
-  constructor(user: User) {
-    super();
-    super.name = user.name;
-    super.password = user.password;
-    //.......
-    this.id = Observer.count++;
-  }
-  update(payload: any): void {
-    console.log(`${this.name} Receive Message: ${payload.toString()}`);
-  }
-}
+

@@ -1,10 +1,6 @@
-import { Inject } from '@nestjs/common';
 import { MqttManager } from 'src/mqtt/mqtt.service';
 import { User } from 'src/user/models/user.model';
-import { GardenService } from './garden.service';
-import { ConcreteGarden, Observer } from './garden-helper';
-
-
+import { ConcreteGarden } from './garden-helper';
 
 export class GardenBuilder {
   public gardenName: string;
@@ -12,7 +8,7 @@ export class GardenBuilder {
   public gardenDesc: string;
   public groupKey:string;
   public Owner!: User;
-  public subscribers!: Observer[];
+  public subscribers!: string[];
   public mqttManager!: MqttManager;
   constructor() {
     this.Owner = null;
@@ -24,7 +20,7 @@ export class GardenBuilder {
     this.Owner = Owner;
     return this;
   }
-  setObserverList(subscribers: Observer[]): GardenBuilder {
+  setstringList(subscribers: string[]): GardenBuilder {
     this.subscribers = subscribers;
     return this;
   }
@@ -46,6 +42,10 @@ export class GardenBuilder {
   }
   setGroupKey(gkey : string) {
     this.groupKey = gkey;
+    return this;
+  }
+  setObserverList(pushTokenList: string[]) {
+    this.subscribers = pushTokenList
     return this;
   }
   build(): ConcreteGarden {

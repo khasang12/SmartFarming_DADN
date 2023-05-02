@@ -22,6 +22,9 @@ export class Garden {
   @Prop()
   desc: string;
 
+  @Prop()
+  thresholds: number[];
+
   @Prop({ required: true })
   boundary: [{ latitude: number; longitude: number }];
 

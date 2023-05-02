@@ -13,5 +13,6 @@ export class CreateGardenDTO extends Garden {
     motor: string[];
     pump: string[];
   };
+  thresholds: number[];
   boundary: [{ latitude: number; longitude: number }];
 }

@@ -19,12 +19,17 @@ const SettingsScreen = ({ navigation, route }) => {
         "https://io.adafruit.com/api/v2/Potato_Stack/feeds/auto/data?limit=1"
       )
       .then((res) => setIsAuto(res.data[0].value==="1"?true:false))
+      .catch((err) => {
+        console.log(err);
+      })
     axios
       .get(
         "https://io.adafruit.com/api/v2/Potato_Stack/feeds/control/data?limit=1"
       )
-      .then((res) => parseThreshold(res.data[0].value));
-      
+      .then((res) => parseThreshold(res.data[0].value))
+      .catch((err) => {
+        console.log(err);
+      });
   },[isFocused])
   const parseThreshold = (str) => {
     const arr = str.split(" ");

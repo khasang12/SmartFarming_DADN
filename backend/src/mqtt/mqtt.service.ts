@@ -1,29 +1,39 @@
 import { Inject, Injectable } from '@nestjs/common';
+import axios from 'axios';
 import { connect } from 'mqtt';
 import { SensorService } from 'src/sensor/sensor.service';
-
 
 @Injectable()
 export class MqttService {
   @Inject(SensorService)
-  private readonly sensorService: SensorService
+  private readonly sensorService: SensorService;
   getManager(username: string, password: string) {
     return new MqttManager(username, password, this.sensorService);
   }
 }
-
+const getMinMaxThreshold = (typ: string, thresholds: number[]) => {
+  if (typ.includes('Temp')) {
+    return [thresholds[0], thresholds[1]];
+  } else if (typ.includes('Humid')) {
+    return [thresholds[2], thresholds[3]];
+  } else if (typ.includes('Light')) {
+    return [thresholds[4], thresholds[5]];
+  } else {
+    return [thresholds[6], thresholds[7]];
+  }
+};
 export class MQTTSubscriber {
   public mqttClient;
   public static cb; // Call back notify function
-
   // @Inject(SensorService)
   // protected readonly sensorService: SensorService
 
   constructor(
     protected topic: string[],
+    protected thresholds: number[],
     protected username: string,
     protected password: string,
-    protected sensorService : any
+    protected sensorService: any,
   ) {
     const host = 'io.adafruit.com';
     const port = '1883';
@@ -64,14 +74,32 @@ export class MQTTSubscriber {
     this.topic = this.topic.filter((elem) => newTopic.indexOf(elem) >= 0);
     return true;
   }
-
   clearDevice() {
     this.topic = [];
   }
+  setThreshHold(thresholds: number[]) {
+    this.thresholds = thresholds;
+  }
 }
 
-
 export class SensorSubcriber extends MQTTSubscriber {
+  private topicWithType: any[];
+  constructor(
+    topicWithType: any[],
+    thresholds,
+    username,
+    password,
+    sensorService,
+  ) {
+    super(
+      topicWithType.map((elem) => elem.feed),
+      thresholds,
+      username,
+      password,
+      sensorService,
+    );
+    this.topicWithType = topicWithType;
+  }
   launch() {
     this.mqttClient.on('connect', () => {
       console.log('Connected');
@@ -79,23 +107,48 @@ export class SensorSubcriber extends MQTTSubscriber {
         console.log(`Subscribe to topic '${this.topic}'`);
       });
     });
-
-    this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic, payload);
-      console.log(`Received Message On Sensor: ${payload}`);
-      this.sensorService.create({
-        desc: '',
-        feed_key: topic,
-        last_update: new Date(),
-        name: 'sensor',
-        status: true,
-        type: 'sensor',
-        value: payload,
-      });
+    this.mqttClient.on('message', (topic: string, payload: any) => {
+      console.log(topic, payload);
+      
+      if (topic.includes('/auto')) {
+        this.thresholds = payload.toString().split(' ');
+        MQTTSubscriber.cb(
+          topic,
+          `Thresh holds update: ${this.thresholds.join(' ')}`,
+        );
+        this.sensorService.create({
+          desc: '',
+          feed_key: topic,
+          last_update: new Date(),
+          name: 'Thresholds Update',
+          status: true,
+          type: 'sensor',
+          value: parseInt(this.thresholds.join(' ')),
+        });
+      } else {
+        const typ = this.topicWithType.find((elem) => elem.feed == topic).type;
+        const threshold = getMinMaxThreshold(typ, this.thresholds);
+        const value = parseInt(payload.toString());        
+        if (value < threshold[0] || value > threshold[1]) {
+          MQTTSubscriber.cb(
+            topic,
+            `${typ} sensor too ${value < threshold[0] ? "Low" : "High"} - ${topic} - ${payload.toString()}`,
+          );
+          console.log(`Received Message On Sensor: ${payload}`);
+          this.sensorService.create({
+            desc: '',
+            feed_key: topic,
+            last_update: new Date(),
+            name: 'sensor',
+            status: true,
+            type: 'sensor',
+            value: payload,
+          });
+        }
+      }
     });
   }
 }
-
 
 export class PumpSubcriber extends MQTTSubscriber {
   launch() {
@@ -106,7 +159,10 @@ export class PumpSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic, payload);
+      MQTTSubscriber.cb(
+        topic,
+        `Pump ${topic}: ${payload.toString() == '1' ? 'ON' : 'OFF'}`,
+      );
       console.log(`Received Message On Pump: ${payload}`);
       this.sensorService.create({
         desc: '',
@@ -142,7 +198,10 @@ export class FanSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic, payload);
+      MQTTSubscriber.cb(
+        topic,
+        `Fan ${topic}: ${payload.toString() == '1' ? 'ON' : 'OFF'}`,
+      );
       console.log(`Received Message On Fan: ${payload}`);
       this.sensorService.create({
         desc: '',
@@ -153,7 +212,6 @@ export class FanSubcriber extends MQTTSubscriber {
         type: 'fan',
         value: payload,
       });
-      
     });
   }
   publish(feed_key: string, payload: string): any {
@@ -179,7 +237,10 @@ export class MotorSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(topic, payload);
+      MQTTSubscriber.cb(
+        topic,
+        `Motor ${topic}: ${payload.toString() == '1' ? 'ON' : 'OFF'}`,
+      );
       console.log('Received Message On Motor:');
       this.sensorService.create({
         desc: '',
@@ -205,24 +266,70 @@ export class MotorSubcriber extends MQTTSubscriber {
   }
 }
 
-// Factory Pattern
-
 class SubcriberFactory {
-  createSubcriber(
+  async createSubcriber(
     type: string,
     topic: string[],
+    thresholds: number[],
     username: string,
     password: string,
-    sensorService
-  ): MQTTSubscriber {
+    sensorService,
+  ): Promise<MQTTSubscriber> {
     if (type === 'sensor') {
-      return new SensorSubcriber(topic, username, password, sensorService);
+      // Factory Pattern
+      const promiseArray = topic.map((elem) =>
+        axios.get('https://io.adafruit.com/api/v2/' + elem),
+      );
+      let topicWithType;
+      await Promise.all(promiseArray)
+        .then((response) => {
+          topicWithType = topic.map((elem, i) => {
+            let data:string;
+            if (response[i].data.name.includes('temperature')) data = 'Temp';
+            else if (response[i].data.name.includes('humidity')) data = 'Humid';
+            else if (response[i].data.name.includes('light')) data = 'Light';
+            else data = ""
+            return {
+              feed: elem,
+              type: data,
+            };
+          });
+          return topicWithType;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return new SensorSubcriber(
+        topicWithType,
+        thresholds,
+        username,
+        password,
+        sensorService,
+      );
     } else if (type === 'pump') {
-      return new PumpSubcriber(topic, username, password, sensorService);
+      return new PumpSubcriber(
+        topic,
+        thresholds,
+        username,
+        password,
+        sensorService,
+      );
     } else if (type === 'motor') {
-      return new MotorSubcriber(topic, username, password, sensorService);
+      return new MotorSubcriber(
+        topic,
+        thresholds,
+        username,
+        password,
+        sensorService,
+      );
     } else if (type === 'fan') {
-      return new FanSubcriber(topic, username, password,sensorService);
+      return new FanSubcriber(
+        topic,
+        thresholds,
+        username,
+        password,
+        sensorService,
+      );
     }
     return null;
   }
@@ -231,7 +338,11 @@ class SubcriberFactory {
 export class MqttManager {
   private Subcribers;
   private notifyFunction;
-  constructor(private username: string, private password: string, private sensorService: any) {
+  constructor(
+    private username: string,
+    private password: string,
+    private sensorService: any,
+  ) {
     this.Subcribers = {};
   }
   launch(): void {
@@ -252,14 +363,16 @@ export class MqttManager {
       status: 'Device Type Not Found',
     };
   }
-  addSubcriber(type: string, topic: string[] = []) {
-    const newSubscriber: MQTTSubscriber = new SubcriberFactory().createSubcriber(
-      type,
-      topic,
-      this.username,
-      this.password,
-      this.sensorService
-    );
+  async addSubcriber(type: string, topic: string[] = [], thresholds: number[]) {
+    const newSubscriber: MQTTSubscriber =
+      await new SubcriberFactory().createSubcriber(
+        type,
+        topic,
+        thresholds,
+        this.username,
+        this.password,
+        this.sensorService,
+      );
 
     if (newSubscriber === null) throw Error('Device Type not Available');
 
@@ -280,6 +393,7 @@ export class MqttManager {
     } catch (error) {
       console.log(error);
       return false;
+
     }
     return true;
   }

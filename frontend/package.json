@@ -1,12 +1,12 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^1.5.0",
@@ -22,7 +22,7 @@
     "@rneui/themed": "^4.0.0-rc.7",
     "axios": "^1.3.4",
     "deprecated-react-native-prop-types": "^4.0.0",
-    "expo": "~48.0.4",
+    "expo": "~48.0.15",
     "expo-mail-composer": "~12.1.1",
     "expo-network": "~5.2.1",
     "expo-notifications": "~0.18.1",
@@ -34,9 +34,10 @@
     "nativewind": "^2.0.11",
     "os": "^0.1.2",
     "paho-mqtt": "^1.1.0",
+    "patch-package": "^7.0.0",
     "react": "18.2.0",
     "react_native_mqtt": "^1.3.1",
-    "react-native": "0.71.3",
+    "react-native": "0.71.7",
     "react-native-accordion-list-view": "^2.0.1",
     "react-native-cards": "^1.1.4",
     "react-native-chart-kit": "^6.12.0",
@@ -47,7 +48,6 @@
     "react-native-onboarding-swiper": "^1.2.0",
     "react-native-pager-view": "6.1.2",
     "react-native-paper": "^5.7.0",
-    "react-native-picker": "^4.3.7",
     "react-native-reanimated": "~2.14.4",
     "react-native-safe-area-context": "^4.5.0",
     "react-native-safe-area-view": "^1.1.1",
@@ -59,7 +59,8 @@
     "react-native-toast-message": "^2.1.6",
     "react-native-vector-icons": "^9.2.0",
     "sp-react-native-mqtt": "^0.5.1",
-    "tailwindcss": "^3.2.7"
+    "tailwindcss": "^3.2.7",
+    "expo-splash-screen": "~0.18.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -19,6 +19,11 @@ export class Garden {
     ],
   })
   boundary: [{ latitude: number; longitude: number }];
+  
+  @ApiProperty({
+    description: "Threshold of sensor type : [temp-low, temp-high, Humid - low, Humid - High, -, -]"
+  })
+  thresholds: number[];
 
   @ApiProperty({ description: 'Group key', example: 'group1' })
   group_key: string;

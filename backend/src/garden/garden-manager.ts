@@ -27,7 +27,7 @@ export class GardenManagerService implements OnModuleInit {
   }
   static findGarden(name: string, owner: User) { 
     for (const key in this.gardenList) {
-        if(this.gardenList[key].gardenName == name && JSON.stringify(this.gardenList[key].Owner) === JSON.stringify(owner)) {  
+        if(this.gardenList[key].gardenName == name && JSON.stringify(this.gardenList[key].Owner._id) === JSON.stringify(owner)) {  
           return {
               gardenId: this.gardenList[key].gardenId
             }

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "Smart Farming",
+    "slug": "smartfarming",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,12 +19,23 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/ArgiVision.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.smartfarming.mobile",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBXCLq-NHW-3e66Mhhthq3d5KgVS0C96oc"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "64e6dc13-3baf-40de-9077-8901675698d5"
+      }
     }
   }
 }

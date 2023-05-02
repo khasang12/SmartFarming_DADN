@@ -45,6 +45,7 @@ const AddGardenScreen = ({ navigation, route }) => {
           x_aio_key: data.x_aio_key,
           garden_name: data.garden_name,
           desc: data.desc,
+          thresholds: [30,32,59,65,500,1800,0,10],
           group_name: data.group_name,
           group_key: data.group_key,
           feeds: res.data.feeds,
