@@ -11,4 +11,11 @@ export const GardenBusinessErrors = {
       reason: `Provided garden is existed, id:${id}`,
     };
   },
+  DuplicatedGarden: (name:string) => {
+    return {
+      apiErrorCode: 'E_0002_0004',
+      errorMessage: 'Duplicated Garden',
+      reason: `Provided garden is existed, ${name}`,
+    };
+  },
 };

@@ -85,15 +85,24 @@ export class GardenController {
     // call DB to get user info
     const gardenName = payload.name;
     let owner: User = await this.userService.findOne(payload.userId);
-    // check if garden is created
+    // check if garden is created'
+    const check = 
+    (
+      await this.gardenService.findAllByUserId({ userId: payload.userId })
+    ).filter((elem) => elem.name == payload.name);
+
+   
+    if(check.length)
+      throw new InternalServerErrorException(GardenBusinessErrors.DuplicatedGarden(payload.name));
+
     let exist:any
     try {
-      exist = GardenManagerService.findGarden(gardenName, owner);   
+      exist = GardenManagerService.findGarden(gardenName, owner);    
     }
     catch(e) {
 
     }
-    console.log(exist);
+
     if (exist && exist.hasOwnProperty("gardenId")) {
       throw new InternalServerErrorException(GardenBusinessErrors.ExistedGarden(exist.gardenId))  
     }
