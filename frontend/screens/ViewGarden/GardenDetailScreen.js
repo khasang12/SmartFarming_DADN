@@ -46,8 +46,7 @@ const GardenDetailScreen = ({ route, navigation }) => {
       {/* Navigator */}
       {     
         <MQTTProvider
-          userName={garden.adaUserName}
-          password={garden.x_aio_key}
+          garden={garden}
         >
           <GardenNavigator garden={garden} />
         </MQTTProvider>
