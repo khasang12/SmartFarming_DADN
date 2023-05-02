@@ -243,7 +243,9 @@ class IOSPushNotification extends PushNotification {
     const handleNotificationResponse = (response) => {
       // console.log(response);
       // handle the click action here
+      console.log(response.notification.request.content.data);
       if (response.notification.request.content.data) {
+
         const data = response.notification.request.content.data;
         console.log("Data:", data);
       }

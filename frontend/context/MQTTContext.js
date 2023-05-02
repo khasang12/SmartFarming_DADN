@@ -8,6 +8,7 @@ export const MQTTProvider = ({userName, password, children }) => {
     // userName = "Potato_Stack"
     // password = "aio_JZvY63VOPyGgS4WZFaZ6Z5ueDEc2"
 
+    console.log(userName, password);
     const [conn, setConn] = useState(undefined);
 
     useEffect(() => {

@@ -18,7 +18,9 @@ const GardenItem = ({ navigation, garden }) => {
         gardenId: garden._id,
         pushToken: await AsyncStorage.getItem("expoPushToken"),
       }
-    )
+    ).catch((err) => {
+      console.log(err);
+    });
     navigation.navigate("GardenDetail", garden);
   };
   const handleStatisticNavigation = () => {

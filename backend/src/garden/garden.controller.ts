@@ -80,6 +80,8 @@ export class GardenController {
   @ApiBadRequestResponse({ description: 'Create Garden Failed' })
   @Post('create')
   async create(@Body() payload: CreateGardenDTO) {
+    console.log(payload);
+    
     // call DB to get user info
     const gardenName = payload.name;
     let owner: User = await this.userService.findOne(payload.userId);
@@ -100,7 +102,7 @@ export class GardenController {
     const userList = [];
     const username = payload.adaUserName;
     const x_aio_key = payload.x_aio_key;
-    console.log(x_aio_key);
+
     this.gardenService.create({
       adaUserName: payload.adaUserName,
       boundary: payload.boundary,
@@ -108,6 +110,7 @@ export class GardenController {
       group_key: payload.group_key,
       group_name: payload.group_name,
       name: payload.name,
+      thresholds: payload.thresholds,
       topic_list: {
         sensor: payload.topic_list.sensor,
         fan: payload.topic_list.fan,
@@ -120,7 +123,7 @@ export class GardenController {
 
     const mqttManager = this.mqttService.getManager(username, x_aio_key);
     for (let k in topic_list) {
-      mqttManager.addSubcriber(k, topic_list[k].map(elem => payload.group_key+"/feeds/"+elem),[50,70]);
+      mqttManager.addSubcriber(k, topic_list[k].map(elem => payload.group_key+"/feeds/"+elem), k === "sensor" ? payload.thresholds: [0,1]);
     }
     // Build Garden
     const garden: ConcreteGarden = new GardenBuilder()
@@ -176,7 +179,7 @@ export class GardenController {
       const owner:User = await this.userService.findOne(garden.userId[0].toString())
       const mqttManager = this.mqttService.getManager(garden.adaUserName, garden.x_aio_key);
       for (let k in garden.topic_list) {
-        mqttManager.addSubcriber(k, garden.topic_list[k].map(elem => garden.group_key+"/feeds/"+elem),[50,70]);
+        await mqttManager.addSubcriber(k, garden.topic_list[k].map(elem => garden.group_key+"/feeds/"+elem),k === "sensor" ? garden.thresholds : [0,1]);
       }
       // Build Garden
       const activateGarden: ConcreteGarden = new GardenBuilder()

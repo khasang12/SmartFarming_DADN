@@ -58,6 +58,9 @@ export class SensorController {
       limit ? result.slice(0,limit) : result[0],
       result[result.length - 1],
     ];
+    if(!first) {
+      console.log(payload);
+    }
     if (!Array.isArray(newest)){
       if (payload.type === 1) return first;
       return {

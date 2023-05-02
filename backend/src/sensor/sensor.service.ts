@@ -33,7 +33,6 @@ export class SensorService {
     return await this.model.find({feed_key:device.feed_key}).sort({$natural:-1}).exec();  
   }
 
-
   async update(id: string, updateSensor: UpdateSensor): Promise<Sensor> {
     return await this.model.findByIdAndUpdate(id, updateSensor).exec();
   }

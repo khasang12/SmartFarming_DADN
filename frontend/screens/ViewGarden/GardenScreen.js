@@ -26,6 +26,8 @@ const GardenScreen = ({ navigation, route }) => {
     if (route.params != undefined) {
       axios.post(`${BASE_URL}/garden/activate`, {
         gardenId: route.params.garden._id,
+      }).catch((err) => {
+        console.log(err);
       });
       navigation.navigate("GardenDetail", route.params.garden);
     }
