@@ -1,6 +1,9 @@
+import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
 import axios from 'axios';
 import { MqttManager } from 'src/mqtt/mqtt.service';
 import { User } from 'src/user/models/user.model';
+import { GardenBusinessErrors } from './error/GardenBusinessError';
+import { InternalServerErrorException } from '@nestjs/common';
 interface Subject {
   subcribe(observer: string): void;
   unsubcribe(observer: string): void;
@@ -24,6 +27,9 @@ export class ConcreteGarden implements Subject {
     private mqttManager: MqttManager,
   ) {}
   subcribe(pushToken: string): void {
+    if (!pushToken) {
+      throw new InternalServerErrorException(GardenBusinessErrors.InvalidPushToken(pushToken));
+    }
     if(!this.observers.includes(pushToken))
       this.observers.push(pushToken);
   }
@@ -32,6 +38,8 @@ export class ConcreteGarden implements Subject {
   }
   // Wrap this function as callback and pass to Subcribers --> becasue this context
   notify = ((title:string,payload:string) => {
+    console.log(this.gardenName);
+    
     axios.post(
       "https://exp.host/--/api/v2/push/send",
       {

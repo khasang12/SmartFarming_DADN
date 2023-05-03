@@ -11,8 +11,8 @@ const DeviceScreen = ({ route, navigation }) => {
   const animation = useRef(null);
   const { name, feed_key, type, status, value, desc, last_update,conn} =
     route.params;
+  console.log(conn);
   const [isEnabled, setIsEnabled] = useState(false);
-  
   const toggleEnable = async () => {
     curValue = !isEnabled
     setIsEnabled(curValue)
@@ -57,9 +57,6 @@ const DeviceScreen = ({ route, navigation }) => {
     setIsEnabled(string == "1" ? true : false)
   }
 
-
-
-  
   return (
     <View className="flex-col justify-items-start pt-5 px-3 bg-[#eef9bf] flex-1">
       <Text

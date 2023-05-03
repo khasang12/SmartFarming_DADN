@@ -18,4 +18,11 @@ export const GardenBusinessErrors = {
       reason: `Provided garden is existed, ${name}`,
     };
   },
+  InvalidPushToken: (name:string) => {
+    return {
+      apiErrorCode: 'E_0002_0005',
+      errorMessage: 'Invalid Push Token',
+      reason: `Your push token is Invalid, ${name}`,
+    };
+  },
 };

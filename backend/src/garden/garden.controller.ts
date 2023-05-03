@@ -108,7 +108,8 @@ export class GardenController {
     }
     const gkey = payload.group_key;
     const topic_list = payload.topic_list;
-    const userList = [];
+    // Add 2 special topic to topic_list
+    topic_list["sensor"] = topic_list["sensor"].concat(["auto", "control"]);
     const username = payload.adaUserName;
     const x_aio_key = payload.x_aio_key;
 
@@ -129,7 +130,6 @@ export class GardenController {
       userId: owner['_id'],
       x_aio_key: payload.x_aio_key,
     });
-
     const mqttManager = this.mqttService.getManager(username, x_aio_key);
     for (let k in topic_list) {
       mqttManager.addSubcriber(k, topic_list[k].map(elem => payload.group_key+"/feeds/"+elem), k === "sensor" ? payload.thresholds: [0,1]);
