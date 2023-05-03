@@ -57,6 +57,7 @@ const ItemValue = ({name,value}) => {
       }
     };
     const icon = IconByName(name);
+    if(icon=="") {return}
     return (
       <View className="flex-col items-center mx-3">
         <MaterialCommunityIcons name={icon[0]} color={icon[1]} size={40} />
