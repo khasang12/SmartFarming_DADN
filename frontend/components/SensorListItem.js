@@ -9,20 +9,21 @@ import { MQTTContext } from "../context/MQTTContext";
 import { createPushNotificationFactory } from "../services/NotificationFactory";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const getMinMaxThreshold = (typ) => {
+const getMinMaxThreshold = (typ,str) => {
+  const arr = str.split(" ");
   if (typ.includes("Temp")) {
-    return [28, 35];
+    return arr.slice(0, 2).join(" ");
   } else if (typ.includes("Humid")) {
-    return [40, 65];
+    return arr.slice(2, 4).join(" ");
   } else if (typ.includes("Light")) {
-    return [500, 1800];
+    return arr.slice(4, 6).join(" ");
   } else {
-    return [0, 10];
+    return arr.slice(6).join(" ");
   }
-}
+};
 
 export default function SensorListItem({ feed_key, otype, item, photo, name, disable, value }) {
-  const threshold = getMinMaxThreshold(name)
+  const [threshold,setThreshold] = useState([0,0])
   const {conn} = useContext(MQTTContext);
   const [connect, setConnect] = useState(true);
   const { width: windowWidth } = Dimensions.get("window");
@@ -30,6 +31,17 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
   const [valueUpdated, setValueUpdated] = useState(undefined);
   const pushNotificationFactory = createPushNotificationFactory();
   const pushNotification = pushNotificationFactory.createPushNotification();
+  useEffect(() => {
+    axios
+      .get(
+        "https://io.adafruit.com/api/v2/Potato_Stack/feeds/control/data?limit=1"
+      )
+      .then((res) => setThreshold(getMinMaxThreshold(name,res.data[0].value)))
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  
   handleUpdate = async (string) => {
     setValueUpdated(string)
     const val = eval(string);
