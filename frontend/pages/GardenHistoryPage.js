@@ -15,13 +15,16 @@ const GardenHistoryPage = ({ route, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    getSensorsInfo(topic_list.sensor);
+    sensors = topic_list.sensor.filter(item => item!="control" && item!="auto")
+    getSensorsInfo(sensors);
   }, []);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-
+    sensors = topic_list.sensor.filter(
+      (item) => item != "control" && item != "auto"
+    );
     // Perform the data fetching operation here
-    getSensorsInfo(topic_list.sensor).then(() => {
+    getSensorsInfo(sensors).then(() => {
       setRefreshing(false);
     });
   }, []);
@@ -29,16 +32,16 @@ const GardenHistoryPage = ({ route, navigation }) => {
   const getSensorsInfo = async (sensors) => {
     let promises = [];
     let list = [];
-      for (let sensorId of sensors) {
-        await promises.push(
-          axios
-            .post(`${BASE_URL}/sensor/device/latest?limit=10`, {
-              feed_key: `${group_key}/feeds/${sensorId}`,
-              type: "sensor",
-            })
-            .then((res) => {list = list.concat(res.data)})
-            .catch((err) => console.err("1"+err))
-        );
+    for (let sensorId of sensors) {
+      await promises.push(
+        axios
+          .post(`${BASE_URL}/sensor/device/latest?limit=10`, {
+            feed_key: `${group_key}/feeds/${sensorId}`,
+            type: "sensor",
+          })
+          .then((res) => {list = list.concat(res.data)})
+          .catch((err) => console.err(err))
+      );
     }
     Promise.all(promises).then(() =>
       setSensorsData(
