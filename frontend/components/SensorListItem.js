@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 import { BASE_URL } from "../config/config";
@@ -30,10 +30,8 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
   const [valueUpdated, setValueUpdated] = useState(undefined);
   const pushNotificationFactory = createPushNotificationFactory();
   const pushNotification = pushNotificationFactory.createPushNotification();
-
   handleUpdate = async (string) => {
-    setValueUpdated(string);
-    console.log("update",string);
+    setValueUpdated(string)
     const val = eval(string);
     if (val < threshold[0]){
       pushNotification.createPushMsg(
@@ -49,23 +47,19 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
         name + " is too high. Please take action now."
       );
     }
-  }
+  };
   
-  if(conn && conn.connected == true)
-  {
+  init = () => {
     try 
     {
       conn.subcribeTopic(feed_key,handleUpdate);
     }
     catch(err) 
-    {
-      console.log(err);
-    }
-  }
-  else 
-  {
-    setValueUpdated('chưa kết nối')
-  }
+    {}
+  } 
+
+  init();
+
 
   function getValue({topic, payloadString})
   {

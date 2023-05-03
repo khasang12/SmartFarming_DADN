@@ -36,6 +36,7 @@ const GardenInfoPage = ({ route, navigation }) => {
   };
 
   const getSensorsInfo = async (sensors) => {
+    sensors = sensors.filter(elem => elem != "auto" && elem != "control")
     let promises = [];
     let list = [];
     for (let sensorId of sensors) {

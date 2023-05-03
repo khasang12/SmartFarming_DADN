@@ -85,21 +85,31 @@ export class GardenController {
     // call DB to get user info
     const gardenName = payload.name;
     let owner: User = await this.userService.findOne(payload.userId);
-    // check if garden is created
+    // check if garden is created'
+    const check = 
+    (
+      await this.gardenService.findAllByUserId({ userId: payload.userId })
+    ).filter((elem) => elem.name == payload.name);
+
+   
+    if(check.length)
+      throw new InternalServerErrorException(GardenBusinessErrors.DuplicatedGarden(payload.name));
+
     let exist:any
     try {
-      exist = GardenManagerService.findGarden(gardenName, owner);   
+      exist = GardenManagerService.findGarden(gardenName, owner);    
     }
     catch(e) {
 
     }
-    console.log(exist);
+
     if (exist && exist.hasOwnProperty("gardenId")) {
       throw new InternalServerErrorException(GardenBusinessErrors.ExistedGarden(exist.gardenId))  
     }
     const gkey = payload.group_key;
     const topic_list = payload.topic_list;
-    const userList = [];
+    // Add 2 special topic to topic_list
+    topic_list["sensor"] = topic_list["sensor"].concat(["auto", "control"]);
     const username = payload.adaUserName;
     const x_aio_key = payload.x_aio_key;
 
@@ -120,7 +130,6 @@ export class GardenController {
       userId: owner['_id'],
       x_aio_key: payload.x_aio_key,
     });
-
     const mqttManager = this.mqttService.getManager(username, x_aio_key);
     for (let k in topic_list) {
       mqttManager.addSubcriber(k, topic_list[k].map(elem => payload.group_key+"/feeds/"+elem), k === "sensor" ? payload.thresholds: [0,1]);

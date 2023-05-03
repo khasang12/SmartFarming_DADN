@@ -24,7 +24,7 @@ const getMinMaxThreshold = (typ: string, thresholds: number[]) => {
 };
 export class MQTTSubscriber {
   public mqttClient;
-  public static cb; // Call back notify function
+  public cb; // Call back notify function
   // @Inject(SensorService)
   // protected readonly sensorService: SensorService
 
@@ -84,6 +84,7 @@ export class MQTTSubscriber {
 
 export class SensorSubcriber extends MQTTSubscriber {
   private topicWithType: any[];
+  private auto: boolean;
   constructor(
     topicWithType: any[],
     thresholds,
@@ -98,6 +99,7 @@ export class SensorSubcriber extends MQTTSubscriber {
       password,
       sensorService,
     );
+    this.auto = true;
     this.topicWithType = topicWithType;
   }
   launch() {
@@ -109,10 +111,9 @@ export class SensorSubcriber extends MQTTSubscriber {
     });
     this.mqttClient.on('message', (topic: string, payload: any) => {
       console.log(topic, payload);
-      
-      if (topic.includes('/auto')) {
+      if (topic.includes('/control')) {
         this.thresholds = payload.toString().split(' ');
-        MQTTSubscriber.cb(
+        this.cb(
           topic,
           `Thresh holds update: ${this.thresholds.join(' ')}`,
         );
@@ -125,14 +126,22 @@ export class SensorSubcriber extends MQTTSubscriber {
           type: 'sensor',
           value: parseInt(this.thresholds.join(' ')),
         });
+      } else if (topic.includes('/auto')) {
+        this.auto = payload.toString() == '1' ? true : false;
+        this.cb(
+          topic,
+          `Turn Automation:${this.auto  ? 'On' : 'Off'}`,
+        );
       } else {
         const typ = this.topicWithType.find((elem) => elem.feed == topic).type;
         const threshold = getMinMaxThreshold(typ, this.thresholds);
-        const value = parseInt(payload.toString());        
+        const value = parseInt(payload.toString());
         if (value < threshold[0] || value > threshold[1]) {
-          MQTTSubscriber.cb(
+          this.auto && this.cb(
             topic,
-            `${typ} sensor too ${value < threshold[0] ? "Low" : "High"} - ${topic} - ${payload.toString()}`,
+            `${typ} sensor too ${
+              value < threshold[0] ? 'Low' : 'High'
+            } - ${topic} - ${payload.toString()}`,
           );
           console.log(`Received Message On Sensor: ${payload}`);
           this.sensorService.create({
@@ -159,7 +168,7 @@ export class PumpSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(
+      this.cb(
         topic,
         `Pump ${topic}: ${payload.toString() == '1' ? 'ON' : 'OFF'}`,
       );
@@ -198,7 +207,7 @@ export class FanSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(
+      this.cb(
         topic,
         `Fan ${topic}: ${payload.toString() == '1' ? 'ON' : 'OFF'}`,
       );
@@ -237,7 +246,7 @@ export class MotorSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic, payload) => {
-      MQTTSubscriber.cb(
+      this.cb(
         topic,
         `Motor ${topic}: ${payload.toString() == '1' ? 'ON' : 'OFF'}`,
       );
@@ -284,11 +293,11 @@ class SubcriberFactory {
       await Promise.all(promiseArray)
         .then((response) => {
           topicWithType = topic.map((elem, i) => {
-            let data:string;
+            let data: string;
             if (response[i].data.name.includes('temperature')) data = 'Temp';
             else if (response[i].data.name.includes('humidity')) data = 'Humid';
             else if (response[i].data.name.includes('light')) data = 'Light';
-            else data = ""
+            else data = '';
             return {
               feed: elem,
               type: data,
@@ -393,7 +402,6 @@ export class MqttManager {
     } catch (error) {
       console.log(error);
       return false;
-
     }
     return true;
   }
@@ -422,7 +430,9 @@ export class MqttManager {
   }
 
   setNotify(cb: any) {
-    MQTTSubscriber.cb = cb;
+    for (const type in this.Subcribers) {
+      this.Subcribers[type].cb = cb;
+    }
   }
 
   getInfo() {

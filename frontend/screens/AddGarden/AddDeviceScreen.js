@@ -36,7 +36,6 @@ const AddDeviceScreen = ({navigation, route}) => {
       },
       boundary: boundary ? boundary : [],
     };
-    sendingData.topic_list["sensor"].push("auto")
     if(!garden_data){
       axios
         .post(`${BASE_URL}/garden/create`, sendingData)

@@ -60,6 +60,7 @@ export class SensorController {
     ];
     if(!first) {
       console.log(payload);
+      
     }
     if (!Array.isArray(newest)){
       if (payload.type === 1) return first;
