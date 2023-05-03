@@ -62,17 +62,18 @@ class MQTTConnection {
         text2: err.response.data.reason,
       });
       console.log("Reconnecting");
-      this.connect();
+      //this.connect();
     }
 
     subcribeTopic(topic,callback) {
-      if (!this.connected)
-        this.connect()
       if (!this.topics.includes(topic)) {
         this.emitter.addListener(topic,callback)
         this.topics.push(topic)
         console.log("Subscribe Topic:", topic);
-        this.client.subscribe(topic, { qos: 0 });
+        try {
+          this.client.subscribe(topic, { qos: 0 });
+        } catch (error) {
+        }
       }
     }  
 

@@ -21,7 +21,8 @@ export const MQTTProvider = ({garden, children }) => {
                 setConn(newClient);
                 Gardens.list[name] = newClient
             }else {
-                Gardens.list[name].client.disconnect();
+                if (Gardens.list[name] && Gardens.list[name].client.isConnected())
+                    Gardens.list[name].client.disconnect();
                 delete Gardens.list[name];
                 console.log(Gardens.list);
                 const newClient = new MQTTConnection([], adaUserName, x_aio_key);

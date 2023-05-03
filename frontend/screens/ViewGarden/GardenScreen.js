@@ -27,7 +27,17 @@ const GardenScreen = ({ navigation, route }) => {
       axios.post(`${BASE_URL}/garden/activate`, {
         gardenId: route.params.garden._id,
       }).catch((err) => {
-        console.log(err);
+        Alert.alert(
+          //title
+          'Error',
+          //body
+          err.response.data.error,
+          [
+            { text: 'OK', onPress: () => console.log('Yes Pressed') },
+          ],
+          { cancelable: false }
+          //clicking out side of alert will not cancel
+        );
       });
       navigation.navigate("GardenDetail", route.params.garden);
     }

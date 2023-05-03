@@ -6,13 +6,14 @@ import { BASE_URL } from "../config/config";
 import axios from "axios";
 
 const HomeGardenItem = ({ garden, navigation }) => {
-    const isFocused = useIsFocused()
+  const isFocused = useIsFocused()
   const { topic_list, group_key, userId } = garden;
   const [sensorsData, setSensorsData] = useState([]);
   useEffect(() => {
     getSensorsInfo(topic_list.sensor);
   }, [isFocused]);
   const getSensorsInfo = async (sensors) => {
+    sensors = sensors.filter(elem => elem != "auto" && elem != "control")
     let promises = [];
     let list = [];
     for (let sensorId of sensors) {
