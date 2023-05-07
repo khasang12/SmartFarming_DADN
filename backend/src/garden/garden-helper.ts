@@ -4,6 +4,7 @@ import { MqttManager } from 'src/mqtt/mqtt.service';
 import { User } from 'src/user/models/user.model';
 import { GardenBusinessErrors } from './error/GardenBusinessError';
 import { InternalServerErrorException } from '@nestjs/common';
+import { log } from 'console';
 interface Subject {
   subcribe(observer: string): void;
   unsubcribe(observer: string): void;
@@ -38,19 +39,21 @@ export class ConcreteGarden implements Subject {
   }
   // Wrap this function as callback and pass to Subcribers --> becasue this context
   notify = ((title:string,payload:string) => {
-    console.log(this.gardenName);
-    
-    axios.post(
-      "https://exp.host/--/api/v2/push/send",
-      {
-        to: this.observers.filter(elem => elem),
-        sound: "default",
-        title: this.gardenName,
-        body: payload
-      }
-    ).catch((err) => {
-      console.log(err);
-    });
+    const notiList:string[] = this.observers.filter(elem => elem);
+    console.log(this.gardenName,"Notify: ", notiList);
+    if(notiList.length) {
+      axios.post(
+        "https://exp.host/--/api/v2/push/send",
+        {
+          to: this.observers.filter(elem => elem),
+          sound: "default",
+          title: this.gardenName,
+          body: payload
+        }
+      ).catch((err) => {
+        console.log(err);
+      });
+    }
   }).bind(this);
 
   /* devices : [MQTTSubcriber] */

@@ -110,7 +110,8 @@ export class SensorSubcriber extends MQTTSubscriber {
       });
     });
     this.mqttClient.on('message', (topic: string, payload: any) => {
-      console.log(topic, payload);
+      console.log(topic,":", payload.toString());
+      
       if (topic.includes('/control')) {
         this.thresholds = payload.toString().split(' ');
         this.cb(
@@ -390,7 +391,6 @@ export class MqttManager {
 
     return this;
   }
-
   removeDevices(feed_keys: string[], type: string): boolean {
     try {
       if (this.Subcribers.hasOwnProperty(type)) {
@@ -405,7 +405,6 @@ export class MqttManager {
     }
     return true;
   }
-
   addDevices(feed_keys: string[], type: string): boolean {
     try {
       if (this.Subcribers.hasOwnProperty(type)) {
@@ -420,7 +419,6 @@ export class MqttManager {
     }
     return true;
   }
-
   removeSubcriber(subcType: string): boolean {
     if (subcType in this.Subcribers) {
       delete this.Subcribers[subcType];
@@ -428,13 +426,11 @@ export class MqttManager {
     }
     return false;
   }
-
   setNotify(cb: any) {
     for (const type in this.Subcribers) {
       this.Subcribers[type].cb = cb;
     }
   }
-
   getInfo() {
     return {
       adaUser: this.username,
