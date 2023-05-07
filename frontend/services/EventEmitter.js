@@ -6,7 +6,7 @@ export class EventEmitter {
         return this;
     }
     on(event, fn) {
-        this.addListener.addListener(event, fn)
+        this.addListener(event, fn)
     }
     
     removeListener(event, fn) {

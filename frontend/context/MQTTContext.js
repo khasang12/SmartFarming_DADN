@@ -8,16 +8,15 @@ class Gardens {
 }
 
 export const MQTTProvider = ({garden, children }) => {
-    
 
     const {name,adaUserName,x_aio_key} = garden
     const [conn, setConn] = useState(undefined);
     useEffect(() => {
         async function init() {
             if (conn == undefined && !Gardens.list[name]) {
+                const newClient =  new  MQTTConnection([], adaUserName, x_aio_key);
                 console.log("Connecting...");
-                const newClient = new MQTTConnection([], adaUserName, x_aio_key);
-                await newClient.connect();
+                await newClient.connect()
                 setConn(newClient);
                 Gardens.list[name] = newClient
             }else {
@@ -25,7 +24,7 @@ export const MQTTProvider = ({garden, children }) => {
                     Gardens.list[name].client.disconnect();
                 delete Gardens.list[name];
                 console.log(Gardens.list);
-                const newClient = new MQTTConnection([], adaUserName, x_aio_key);
+                const newClient =  new MQTTConnection([], adaUserName, x_aio_key);
                 await newClient.connect();
                 setConn(newClient);
                 Gardens.list[name] = newClient

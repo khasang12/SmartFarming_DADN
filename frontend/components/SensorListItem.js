@@ -41,8 +41,7 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
         console.log(err);
       });
   }, []);
-  
-  handleUpdate = async (string) => {
+  const handleUpdate = async (string) => {
     setValueUpdated(string)
     const val = eval(string);
     if (val < threshold[0]){
@@ -61,17 +60,20 @@ export default function SensorListItem({ feed_key, otype, item, photo, name, dis
     }
   };
   
-  init = () => {
+  const init =  () => {
     try 
     {
       conn.subcribeTopic(feed_key,handleUpdate);
     }
     catch(err) 
-    {}
-  } 
+    {
+      console.log(err)
 
-  init();
-
+    }
+  }
+  useEffect(()=>{
+    init()
+  }, [])
 
   function getValue({topic, payloadString})
   {
