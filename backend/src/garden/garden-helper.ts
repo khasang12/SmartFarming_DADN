@@ -27,7 +27,7 @@ export class ConcreteGarden implements Subject {
     private mqttManager: MqttManager,
   ) {}
   subcribe(pushToken: string): void {
-    if (!pushToken) {
+    if (pushToken===null || pushToken === undefined) {
       throw new InternalServerErrorException(GardenBusinessErrors.InvalidPushToken(pushToken));
     }
     if(!this.observers.includes(pushToken))
@@ -43,7 +43,7 @@ export class ConcreteGarden implements Subject {
     axios.post(
       "https://exp.host/--/api/v2/push/send",
       {
-        to: this.observers,
+        to: this.observers.filter(elem => elem),
         sound: "default",
         title: this.gardenName,
         body: payload

@@ -21,9 +21,9 @@ class MQTTConnection {
       this.emitter = new EventEmitter()
       this.client.onMessageArrived = (this.onMessageArrived).bind(this);
     }
-    connect() {
+    async connect() {
       if (!this.connected) {
-        this.client.connect({
+        await this.client.connect({
           onSuccess: (this.onConnect).bind(this),
           onFailure: (this.onFailure).bind(this),
           cleanSession: true,
@@ -32,7 +32,6 @@ class MQTTConnection {
           password: this._password,
           keepAliveInterval: 5
         })
-        this.connected = true
       }      
       return this.client
     }
@@ -41,12 +40,17 @@ class MQTTConnection {
       this.emitter.emit(topic,payloadString)       
     }
 
-    onConnect() {     
-      console.log("Connect successfully"); 
-      for (let topic of this.topics) {
+    async onConnect() {     
+      await  Promise.all(this.topics.map((topic)=>{
+        this.client.subscribe(topic, { qos: 0 })
+        console.log("subscribe");
+      }))
+      /* for (let topic of this.topics) {
         console.log("Subcribe Topic:", topic);
         this.client.subscribe(topic, { qos: 0 })
-      }
+      } */
+      this.connected = true
+      return 
     }
     onConnectionLost(responseObject) {
       if (responseObject.errorCode !== 0) {
@@ -69,7 +73,6 @@ class MQTTConnection {
       if (!this.topics.includes(topic)) {
         this.emitter.addListener(topic,callback)
         this.topics.push(topic)
-        console.log("Subscribe Topic:", topic);
         try {
           this.client.subscribe(topic, { qos: 0 });
         } catch (error) {
