@@ -1,19 +1,14 @@
 import {
   View,
-  Image,
   Text,
   ScrollView,
   TouchableOpacity,
   ImageBackground,
-  TextInput,
   RefreshControl,
 } from "react-native";
-import React, { useLayoutEffect, useState, useEffect, useCallback } from "react";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { sliderData, farmers, devices } from "../../data";
-import Carousel from "react-native-snap-carousel";
-import BannerSlider from "../../components/BannerSlider";
-import { Dimensions, StyleSheet } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { useIsFocused} from "@react-navigation/native";
+import { farmers, devices } from "../../data";
 import CustomSwitch from "../../components/CustomSwitch";
 import FarmerListItem from "../../components/FarmerListItem";
 import SensorListItem from "../../components/SensorListItem";

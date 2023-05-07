@@ -13,6 +13,12 @@ function getMUICode(name) {
   if (name.includes("Motor")) {
     return "curtains";
   }
+  if (name.includes("Auto")) {
+    return "autorenew";
+  }
+  if (name.includes("Control")) {
+    return "camera-control";
+  }
 }
 const ActionHistory = ({ name, feed, value, user, timestamp }) => {
   return ( timestamp &&
@@ -41,7 +47,7 @@ const ActionHistory = ({ name, feed, value, user, timestamp }) => {
               color: "black",
             }}
           >
-            Feed: {feed.slice(-16)}
+            Feed: {feed.slice(feed.lastIndexOf("/")+1)}
           </Text>
           <Text
             style={{
