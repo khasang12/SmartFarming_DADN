@@ -12,14 +12,16 @@ class MQTTConnection {
     _password = null   
     emitter = null
     connected = false
+    loading = null;
 
-    constructor(topics, userName, password) {
+    constructor(topics, userName, password, loading) {
       this.topics = topics
       this._userName = userName
       this._password = password
       this.client = new Paho.Client(this._host, this._port, this._id);
       this.emitter = new EventEmitter()
       this.client.onMessageArrived = (this.onMessageArrived).bind(this);
+      this.loading = loading;
     }
     async connect() {
       if (!this.connected) {
@@ -39,18 +41,14 @@ class MQTTConnection {
       console.log("onMessageArrived:", topic, payloadString);  
       this.emitter.emit(topic,payloadString)       
     }
-
     async onConnect() {     
-      await  Promise.all(this.topics.map((topic)=>{
+      console.log("Connect Successfully");
+      await Promise.all(this.topics.map((topic)=>{
         this.client.subscribe(topic, { qos: 0 })
-        console.log("subscribe");
+        console.log("subscribe", topic);
       }))
-      /* for (let topic of this.topics) {
-        console.log("Subcribe Topic:", topic);
-        this.client.subscribe(topic, { qos: 0 })
-      } */
       this.connected = true
-      return 
+      this.loading();
     }
     onConnectionLost(responseObject) {
       if (responseObject.errorCode !== 0) {
@@ -68,15 +66,13 @@ class MQTTConnection {
       console.log("Reconnecting");
       //this.connect();
     }
-
     subcribeTopic(topic,callback) {
       if (!this.topics.includes(topic)) {
         this.emitter.addListener(topic,callback)
         this.topics.push(topic)
         try {
           this.client.subscribe(topic, { qos: 0 });
-        } catch (error) {
-        }
+        } catch (error) { }
       }
     }  
 

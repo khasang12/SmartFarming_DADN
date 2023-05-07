@@ -11,6 +11,7 @@ import axios from "axios";
 
 const GardenDetailScreen = ({ route, navigation }) => {
   const garden = route.params;
+  const [loading, setLoading] = useState(true);
   return (
     <View className="pt-10 px-3 flex-1 justify-center bg-[#eef9bf]">
       {/* Header */}
